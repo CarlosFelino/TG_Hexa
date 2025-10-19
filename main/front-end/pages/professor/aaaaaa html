@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Ordem | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/professor.css">
+    <link rel="stylesheet" href="../../assets/css/criar-ordem.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
+</head>
+<body class="professor-dashboard">
+    <!-- Navbar Superior -->
+    <header class="professor-navbar">
+        <div class="navbar-content">
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <a href="painel-professor.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
+
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span class="user-name">Prof. Carlos</span>
+                    <span class="user-email">carlos.sousa25@fatec.sp.gov.br</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Foto do Professor" class="profile-avatar" id="profile-toggle">
+                    <div class="dropdown-content" id="profile-dropdown">
+                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral -->
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="criar-ordem.html" class="active">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Criar Ordem</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-ordens.html">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Minhas Ordens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-ordens.html#andamento">
+                        <i class="fas fa-tasks"></i>
+                        <span>Acompanhamento</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="professor-content">
+        <div class="order-header">
+            <a href="painel-professor.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+            <h1>Criar Nova Ordem de Serviço</h1>
+        </div>
+
+        <form id="order-form" class="order-form">
+            <!-- Seção de Tipo de Solicitação -->
+            <div class="form-section">
+                <h2><i class="fas fa-tag"></i> Tipo de Solicitação</h2>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="request-type" value="problem" checked>
+                            <span class="radio-label">Relatar Problema</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="request-type" value="installation">
+                            <span class="radio-label">Solicitar Instalação</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Localização -->
+            <div class="form-section">
+                <h2><i class="fas fa-map-marker-alt"></i> Localização</h2>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="location-type" value="classroom" checked>
+                            <span class="radio-label">Sala de Aula</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="location-type" value="lab">
+                            <span class="radio-label">Laboratório</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sala de Aula -->
+                <div id="classroom-fields" class="location-fields">
+                    <div class="form-group">
+                        <label for="classroom">Sala*</label>
+                        <select id="classroom" name="classroom" required>
+                            <option value="">Selecione a sala...</option>
+                            <optgroup label="Bloco 3 - Térreo">
+                                <option value="101">101</option>
+                                <option value="102">102</option>
+                                <option value="103">103</option>
+                                <option value="104">104</option>
+                                <option value="105">105</option>
+                                <option value="106">106</option>
+                                <option value="107">107</option>
+                                <option value="108">108</option>
+                                <option value="109">109</option>
+                                <option value="110">110</option>
+                                <option value="111">111</option>
+                                <option value="112">112</option>
+                                <option value="113">113</option>
+                            </optgroup>
+                            <optgroup label="Bloco 4 - Térreo">
+                                <option value="304">304</option>
+                                <option value="305">305</option>
+                                <option value="307">307</option>
+                                <option value="310">310</option>
+                                <option value="311">311</option>
+                                <option value="312">312</option>
+                                <option value="313">313</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Laboratório -->
+                <div id="lab-fields" class="location-fields" style="display:none;">
+                    <div class="form-group">
+                        <label for="lab">Laboratório*</label>
+                        <select id="lab" name="lab">
+                            <option value="">Selecione o laboratório...</option>
+                            <optgroup label="Bloco 3 - Piso 1">
+                                <option value="202">202 (30 posições)</option>
+                                <option value="203">203 (30 posições)</option>
+                                <option value="204">204 (30 posições)</option>
+                                <option value="205">205 (30 posições)</option>
+                                <option value="206">206 (30 posições)</option>
+                                <option value="207">207 (30 posições)</option>
+                                <option value="208">208 (15 posições)</option>
+                                <option value="209">209 (21 posições)</option>
+                                <option value="210">210 (30 posições)</option>
+                                <option value="211">211 (30 posições)</option>
+                                <option value="213">213 (30 posições)</option>
+                                <option value="214">214 (30 posições)</option>
+                                <option value="215">215 (30 posições)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="position-group">
+                        <label for="position">Posição (Opcional)</label>
+                        <input type="text" id="position" name="position" placeholder="Ex: Posição 12">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="computer-type">Tipo de Computador</label>
+                        <select id="computer-type" name="computer-type">
+                            <option value="">Selecione...</option>
+                            <option value="desktop">Desktop</option>
+                            <option value="notebook">Notebook</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Problema -->
+            <div id="problem-section" class="form-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> Detalhes do Problema</h2>
+
+                <div class="form-group">
+                    <label for="equipment-type">Equipamento*</label>
+                    <select id="equipment-type" name="equipment-type" required>
+                        <option value="">Selecione o equipamento...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="problem-type">Tipo de Problema*</label>
+                    <select id="problem-type" name="problem-type" required>
+                        <option value="">Selecione o tipo de problema...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="problem-description">Descrição Detalhada*</label>
+                    <textarea id="problem-description" name="problem-description" rows="4" required placeholder="Descreva o problema com detalhes..."></textarea>
+                </div>
+            </div>
+
+            <!-- Seção de Instalação -->
+            <div id="installation-section" class="form-section" style="display:none;">
+                <h2><i class="fas fa-download"></i> Detalhes da Instalação</h2>
+
+                <div class="form-group">
+                    <label for="app-name">Nome do Aplicativo*</label>
+                    <input type="text" id="app-name" name="app-name" placeholder="Ex: Visual Studio Code">
+                </div>
+
+                <div class="form-group">
+                    <label for="app-version">Versão (Opcional)</label>
+                    <input type="text" id="app-version" name="app-version" placeholder="Ex: 1.75.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="app-link">Link de Download (Opcional)</label>
+                    <input type="url" id="app-link" name="app-link" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label for="installation-notes">Observações</label>
+                    <textarea id="installation-notes" name="installation-notes" rows="4" placeholder="Alguma informação adicional sobre a instalação..."></textarea>
+                </div>
+            </div>
+
+            <!-- Seção de Anexos -->
+            <div class="form-section">
+                <h2><i class="fas fa-paperclip"></i> Anexos (Opcional)</h2>
+                <div class="form-group">
+                    <div class="file-upload">
+                        <input type="file" id="file-upload" name="file-upload" accept="image/*,.pdf" multiple>
+                        <label for="file-upload" class="upload-btn">
+                            <i class="fas fa-plus"></i> Adicionar Arquivos
+                        </label>
+                        <div id="file-list" class="file-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancel-btn">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Enviar Ordem
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script src="../../assets/js/professor.js"></script>
+    <script src="../../assets/js/criar-ordem.js"></script>
+</body>
+</html>

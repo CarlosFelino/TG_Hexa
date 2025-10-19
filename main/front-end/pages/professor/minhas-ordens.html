@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Ordens | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/professor.css">
+    <link rel="stylesheet" href="../../assets/css/minhas-ordens.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
+</head>
+<body class="professor-dashboard">
+
+    <!-- Navbar Superior -->
+    <header class="professor-navbar">
+        <div class="navbar-content">
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="painel-professor.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span class="user-name" id="userName"></span>
+                    <span class="user-email" id="userEmail"></span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Foto do Professor" class="profile-avatar">
+                    <div class="dropdown-content">
+                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral -->
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="criar-ordem.html">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Criar Ordem</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-ordens.html" class="active">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Minhas Ordens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-ordens.html#andamento">
+                        <i class="fas fa-tasks"></i>
+                        <span>Acompanhamento</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="professor-content">
+        <div class="orders-header">
+            <h1><i class="fas fa-clipboard-list"></i> Minhas Ordens de Serviço</h1>
+            <div class="filters-container">
+                <div class="filter-group">
+                    <button class="filter-btn active" data-status="all"><i class="fas fa-list"></i> Todas</button>
+                    <button class="filter-btn" data-status="pending"><i class="fas fa-clock"></i> Pendentes</button>
+                    <button class="filter-btn" data-status="in-progress"><i class="fas fa-spinner"></i> Em Andamento</button>
+                    <button class="filter-btn" data-status="completed"><i class="fas fa-check-circle"></i> Concluídas</button>
+                </div>
+                <div class="filter-group">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-orders" placeholder="Buscar por sala, equipamento...">
+                    </div>
+                    <div class="date-filter">
+                        <label for="date-from"><i class="fas fa-calendar-alt"></i> De:</label>
+                        <input type="date" id="date-from">
+                        <label for="date-to">Até:</label>
+                        <input type="date" id="date-to">
+                        <button id="apply-dates" class="small-btn"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo Estatístico -->
+        <div class="stats-summary">
+            <div class="stat-card">
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-value" id="pendingOrders">0</div>
+                <div class="stat-label">Pendentes</div>
+            </div>
+            <div class="stat-card in-progress">
+                <div class="stat-value" id="inProgressOrders">0</div>
+                <div class="stat-label">Em Andamento</div>
+            </div>
+            <div class="stat-card completed">
+                <div class="stat-value" id="completedOrders">0</div>
+                <div class="stat-label">Concluídas</div>
+            </div>
+        </div>
+
+        <!-- Lista de Ordens -->
+        <div class="orders-list" id="orders-list">
+            <!-- Cards preenchidos via JavaScript -->
+        </div>
+
+        <!-- Paginação -->
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <!-- Modal de Detalhes -->
+    <div id="order-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalhes da Ordem</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-order-details"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Dados do usuário
+            const user = JSON.parse(localStorage.getItem("currentUser")) || {};
+            document.getElementById("userName").textContent = user.name || "Professor";
+            document.getElementById("userEmail").textContent = user.email || "";
+
+            const token = localStorage.getItem("authToken");
+
+            // Função para buscar ordens do backend
+            async function fetchOrders() {
+                try {
+                    const res = await fetch("/api/ordens", {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    return data.ordens || [];
+                } catch (err) {
+                    console.error("Erro ao buscar ordens:", err);
+                    return [];
+                }
+            }
+
+            // Função para criar cards dinamicamente
+            function renderOrders(orders) {
+                const ordersList = document.getElementById("orders-list");
+                ordersList.innerHTML = "";
+                let total = orders.length;
+                let pending = 0, inProgress = 0, completed = 0;
+
+                orders.forEach(order => {
+                    const statusClass = order.status.replace(" ", "-").toLowerCase();
+                    if(statusClass === "pending") pending++;
+                    else if(statusClass === "in-progress") inProgress++;
+                    else if(statusClass === "completed") completed++;
+
+                    const card = document.createElement("div");
+                    card.className = `order-card ${statusClass}`;
+                    card.dataset.id = order.id;
+
+                    card.innerHTML = `
+                        <div class="order-header">
+                            <span class="order-id">#${order.id}</span>
+                            <span class="order-date">${new Date(order.created_at).toLocaleDateString()}</span>
+                            <span class="order-status ${statusClass}">
+                                <i class="fas fa-${statusClass === 'pending' ? 'clock' : statusClass === 'in-progress' ? 'spinner' : 'check-circle'}"></i> ${order.status}
+                            </span>
+                        </div>
+                        <div class="order-content">
+                            <h3>${order.local_detalhe} - ${order.equipamento || order.app_nome || ""}</h3>
+                            <p class="order-description">${order.descricao || ""}</p>
+                            <div class="order-meta">
+                                <span><i class="fas fa-tag"></i> ${order.tipo_problema || order.local_tipo}</span>
+                                <span><i class="fas fa-user-cog"></i> Técnico: ${order.tecnico || "Não atribuído"}</span>
+                                ${order.avaliacao ? `<span><i class="fas fa-star"></i> Avaliação: ${order.avaliacao}/5</span>` : ""}
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <button class="btn btn-small btn-view"><i class="fas fa-eye"></i> Detalhes</button>
+                            ${statusClass === "completed" ? `<button class="btn btn-small btn-feedback"><i class="fas fa-star"></i> Avaliar</button>` : ""}
+                        </div>
+                    `;
+                    ordersList.appendChild(card);
+                });
+
+                document.getElementById("totalOrders").textContent = total;
+                document.getElementById("pendingOrders").textContent = pending;
+                document.getElementById("inProgressOrders").textContent = inProgress;
+                document.getElementById("completedOrders").textContent = completed;
+            }
+
+            const orders = await fetchOrders();
+            renderOrders(orders);
+        });
+    </script>
+</body>
+</html>

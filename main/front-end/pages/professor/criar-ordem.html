@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Ordem | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/professor.css">
+    <link rel="stylesheet" href="../../assets/css/criar-ordem.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
+</head>
+<body class="professor-dashboard">
+    <!-- Navbar Superior -->
+    <header class="professor-navbar">
+        <div class="navbar-content">
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <a href="painel-professor.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
+
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span class="user-name">Prof. Carlos</span>
+                    <span class="user-email">carlos.sousa25@fatec.sp.gov.br</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Foto do Professor" class="profile-avatar" id="profile-toggle">
+                    <div class="dropdown-content" id="profile-dropdown">
+                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral -->
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="criar-ordem.html" class="active">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Criar Ordem</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-ordens.html">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Minhas Ordens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-professor.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="professor-content">
+        <div class="order-header">
+            <a href="painel-professor.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+            <h1>Criar Nova Ordem de Serviço</h1>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="abrir-problema">
+                <i class="fas fa-tools"></i>
+                <h2>Relatar Problema</h2>
+                <p>Informe defeitos em equipamentos ou falta de conectividade.</p>
+            </div>
+            <div class="card" id="abrir-instalacao">
+                <i class="fas fa-download"></i>
+                <h2>Solicitar Instalação</h2>
+                <p>Peça instalação de aplicativos ou softwares.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal RELATAR PROBLEMA -->
+    <div class="modal-overlay" id="modal-problema">
+        <div class="modal-content">
+            <span class="close" data-close="problema">&times;</span>
+            <h2><i class="fas fa-tools"></i> Relatar Problema</h2>
+
+            <form id="form-problema">
+                <!-- Seleção do Tipo de Ambiente -->
+                <label for="tipo-ambiente"><i class="fas fa-door-open"></i> Tipo de Ambiente</label>
+                <select id="tipo-ambiente" required>
+                    <option value="">Selecione...</option>
+                    <option value="sala">Sala de Aula</option>
+                    <option value="laboratorio">Laboratório</option>
+                </select>
+
+                <!-- Seleção da Sala (dinâmico) -->
+                <label for="local-detalhe"><i class="fas fa-map-marker-alt"></i> Local</label>
+                <select id="local-detalhe" required></select>
+
+                <!-- Seleção do Kit (dinâmico) -->
+                <label for="tipo-kit"><i class="fas fa-desktop"></i> Equipamento</label>
+                <select id="tipo-kit" required></select>
+
+                <!-- Seleção do Problema (dinâmico) -->
+                <label for="tipo-problema"><i class="fas fa-exclamation-triangle"></i> Tipo de Problema</label>
+                <select id="tipo-problema" required></select>
+
+                <!-- Descrição do Problema -->
+                <label for="descricao-problema"><i class="fas fa-file-alt"></i> Descrição Detalhada</label>
+                <textarea id="descricao-problema" placeholder="Descreva o problema com mais detalhes..."></textarea>
+
+                <!-- Anexos -->
+                <label for="file-upload-problema"><i class="fas fa-paperclip"></i> Anexos (máx. 3)</label>
+                <input type="file" id="file-upload-problema" multiple>
+                <div id="file-list-problema"></div>
+
+                <button type="submit"><i class="fas fa-paper-plane"></i> Enviar Problema</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal SOLICITAR INSTALAÇÃO -->
+    <div class="modal-overlay" id="modal-instalacao">
+        <div class="modal-content">
+            <span class="close" data-close="instalacao">&times;</span>
+            <h2><i class="fas fa-download"></i> Solicitar Instalação</h2>
+
+            <form id="form-instalacao">
+                <label for="app-name-instalacao"><i class="fas fa-cube"></i> Nome do Aplicativo</label>
+                <input type="text" id="app-name-instalacao" required placeholder="Ex: Google Chrome, Visual Studio Code...">
+
+                <label for="app-version-instalacao"><i class="fas fa-code-branch"></i> Versão (opcional)</label>
+                <input type="text" id="app-version-instalacao" placeholder="Ex: 120.0.6099.109">
+
+                <label for="app-link-instalacao"><i class="fas fa-link"></i> Link para Download (opcional)</label>
+                <input type="url" id="app-link-instalacao" placeholder="https://...">
+
+                <button type="submit"><i class="fas fa-paper-plane"></i> Solicitar Instalação</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../assets/js/criar-ordem.js"></script>
+</body>
+</html>

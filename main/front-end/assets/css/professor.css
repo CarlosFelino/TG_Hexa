@@ -1,0 +1,578 @@
+/* =======================
+   Painel do Professor
+   ======================= */
+:root {
+    --primary-bg: #ffffff;
+    --secondary-bg: #f5f7fa;
+    --text-dark: #101728;
+    --text-medium: #555;
+    --border-light: #e1e5eb;
+    --card-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+.professor-dashboard {
+    display: grid;
+    grid-template-areas:
+        "navbar navbar"
+        "sidebar content";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 70px 1fr;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* Navbar Superior */
+.professor-navbar {
+    grid-area: navbar;
+    background: linear-gradient(135deg, #101728 0%, #0a101f 100%);
+    color: white;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 1rem;
+    display: none;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.logo {
+    height: 35px;
+    transition: transform 0.3s;
+}
+
+.logo-text {
+    color: white;
+    font-weight: bold;
+    margin-left: 10px;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.profile-info {
+    text-align: right;
+    margin-right: 15px;
+}
+
+.user-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.user-email {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s;
+}
+
+.profile-avatar:hover {
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: white;
+    min-width: 180px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.dropdown-content a:hover {
+    background: #f0f0f0;
+    color: var(--secondary);
+}
+
+.dropdown-content a i {
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
+}
+
+.profile-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Menu Lateral */
+.sidebar {
+    grid-area: sidebar;
+    background: white;
+    border-right: 1px solid #e1e5eb;
+    padding: 1.5rem 0;
+    transition: all 0.3s;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 5px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #555;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-nav a:hover {
+    background: #f8f9fa;
+    color: var(--secondary);
+}
+
+.sidebar-nav a.active {
+    background: rgba(122, 4, 235, 0.05);
+    color: var(--secondary);
+    border-left-color: var(--secondary);
+}
+
+.sidebar-nav a i {
+    font-size: 1.1rem;
+    margin-right: 12px;
+    width: 24px;
+    text-align: center;
+}
+
+.sidebar-nav a span {
+    font-size: 0.95rem;
+}
+
+/* Conteúdo Principal */
+.professor-content {
+    grid-area: content;
+    padding: 2rem;
+    background: #f5f7fa;
+    overflow-y: auto;
+}
+
+.welcome-banner {
+    margin-bottom: 2.5rem;
+}
+
+.welcome-banner h1 {
+    font-size: 2.2rem;
+    color: #101728;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-banner p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.action-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.action-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #101728;
+}
+
+.action-card p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.card-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Ordens Recentes */
+.recent-orders {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+.recent-orders h2 {
+    font-size: 1.4rem;
+    color: #101728;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.recent-orders h2 i {
+    margin-right: 10px;
+    color: var(--secondary);
+}
+
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.order-card {
+    border-radius: 8px;
+    padding: 1.2rem;
+    border-left: 4px solid #ddd;
+    transition: all 0.3s;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.order-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #101728;
+}
+
+.order-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.order-status {
+    display: flex;
+    align-items: center;
+}
+
+.order-status i {
+    margin-right: 5px;
+}
+
+.order-details {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.order-details:hover {
+    color: var(--accent);
+}
+
+/* Status das Ordens */
+.status-pending {
+    border-left-color: #ff9800;
+}
+
+.status-pending .order-status {
+    color: #ff9800;
+}
+
+.status-in-progress {
+    border-left-color: #2196f3;
+}
+
+.status-in-progress .order-status {
+    color: #2196f3;
+}
+
+.status-completed {
+    border-left-color: #4caf50;
+}
+
+.status-completed .order-status {
+    color: #4caf50;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .professor-dashboard {
+        grid-template-areas:
+            "navbar navbar"
+            "content content";
+    }
+    
+    .sidebar {
+        position: fixed;
+        top: 70px;
+        left: -250px;
+        bottom: 0;
+        width: 250px;
+        z-index: 90;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .professor-content {
+        padding: 1.5rem;
+    }
+    
+    .welcome-banner h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .professor-navbar {
+        padding: 0 1rem;
+    }
+    
+    .logo-text {
+        display: none;
+    }
+    
+    .profile-info {
+        display: none;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =======================
+   Formulário de Ordem
+   ======================= */
+.order-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.order-header {
+    margin-bottom: 2rem;
+}
+
+.back-link {
+    color: var(--secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.order-form {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.radio-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.radio-card {
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.radio-card input {
+    display: none;
+}
+
+.radio-card:hover {
+    border-color: var(--secondary);
+}
+
+.radio-card input:checked + .radio-content {
+    color: var(--secondary);
+    border-color: var(--secondary);
+    background: rgba(122, 4, 235, 0.05);
+}
+
+.radio-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--text-medium);
+}
+
+.radio-content i {
+    font-size: 1.8rem;
+}
+
+/* Dropdowns dinâmicos */
+.select-group {
+    margin-bottom: 1.5rem;
+}
+
+.select-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.select-group select, 
+.select-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+}
+
+.checkbox-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.checkbox-card {
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Anexos */
+.file-upload {
+    border: 2px dashed var(--border-light);
+    padding: 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .radio-options, .checkbox-options {
+        grid-template-columns: 1fr;
+    }
+}

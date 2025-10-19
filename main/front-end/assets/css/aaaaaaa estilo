@@ -1,0 +1,413 @@
+/* =======================
+   criar-ordem.css
+   ======================= */
+
+/* Estrutura Principal */
+.order-form {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.order-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.order-header h1 {
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    margin: 1rem 0 0.5rem;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.back-link i {
+    margin-right: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.back-link:hover i {
+    transform: translateX(-3px);
+}
+
+/* Seções do Formulário */
+.form-section {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: #f9fafc;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.form-section:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.form-section h2 {
+    font-size: 1.3rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-section h2 i {
+    margin-right: 10px;
+    color: var(--secondary);
+    width: 24px;
+    text-align: center;
+}
+
+/* Grupos de Formulário */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.form-group label[required]::after {
+    content: " *";
+    color: #e74c3c;
+}
+
+/* Campos de Entrada */
+input[type="text"],
+input[type="url"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    background-color: #fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(122, 4, 235, 0.1);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Radio Buttons Personalizados */
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.radio-option {
+    position: relative;
+    cursor: pointer;
+    flex: 1;
+    min-width: 200px;
+}
+
+.radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.radio-label {
+    display: block;
+    padding: 1rem 1.5rem;
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.radio-option input[type="radio"]:checked + .radio-label {
+    background: rgba(122, 4, 235, 0.05);
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.radio-option:hover .radio-label {
+    border-color: var(--secondary);
+}
+
+/* Select Personalizado */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+}
+
+/* Upload de Arquivos */
+.file-upload {
+    position: relative;
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.upload-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    background: #f0f2f5;
+    border: 1px dashed var(--border-light);
+    border-radius: 6px;
+    color: var(--text-medium);
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.upload-btn:hover {
+    background: #e6e9f0;
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.upload-btn i {
+    margin-right: 0.5rem;
+}
+
+.file-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.file-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.8rem;
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.file-item i {
+    margin-right: 0.3rem;
+    color: var(--secondary);
+}
+
+.file-item .remove-file {
+    margin-left: 0.5rem;
+    color: #e74c3c;
+    cursor: pointer;
+}
+
+/* Botões */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+}
+
+.btn i {
+    margin-right: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--secondary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(122, 4, 235, 0.3);
+}
+
+.btn-secondary {
+    background: #f0f2f5;
+    color: var(--text-medium);
+}
+
+.btn-secondary:hover {
+    background: #e6e9f0;
+    color: var(--text-dark);
+}
+
+/* Campos Dinâmicos */
+.location-fields {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid var(--border-light);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .order-form {
+        padding: 1rem;
+    }
+
+    .form-section {
+        padding: 1rem;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .radio-option {
+        min-width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-section h2 {
+        font-size: 1.1rem;
+    }
+}
+
+/* alteração pro card*/
+/* Conteúdo Principal */
+.professor-content {
+    grid-area: content;
+    padding: 2rem;
+    background: #f5f7fa;
+    overflow-y: auto;
+}
+
+.welcome-banner {
+    margin-bottom: 2.5rem;
+}
+
+.welcome-banner h1 {
+    font-size: 2.2rem;
+    color: #101728;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-banner p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.action-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.action-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #101728;
+}
+
+.action-card p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.card-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}

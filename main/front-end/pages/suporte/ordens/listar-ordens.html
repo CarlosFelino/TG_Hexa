@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Ordens | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/professor.css">
+    <link rel="stylesheet" href="../../assets/css/minhas-ordens.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
+
+    <style>
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            box-shadow: var(--shadow-md);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .orders-table th, .orders-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .orders-table th {
+            background: var(--accent-color);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .orders-table tr:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .status {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status.pending { background: #ffcc80; color: #805700; }
+        .status.in-progress { background: #81d4fa; color: #01579b; }
+        .status.completed { background: #a5d6a7; color: #1b5e20; }
+
+        .actions button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--accent-color);
+        }
+
+        .actions button:hover {
+            color: var(--accent-hover);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1em;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body class="professor-dashboard">
+    <!-- Navbar -->
+    <header class="professor-navbar">
+        <div class="navbar-content">
+            <a href="painel-professor.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span id="userName"></span>
+                    <span id="userEmail"></span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Avatar" class="profile-avatar">
+                    <div class="dropdown-content">
+                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo -->
+    <main class="professor-content">
+        <h1><i class="fas fa-list-ul"></i> Lista de Ordens</h1>
+
+        <div class="orders-container">
+            <table class="orders-table" id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Local</th>
+                        <th>Equipamento</th>
+                        <th>Problema</th>
+                        <th>Status</th>
+                        <th>Técnico</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersBody">
+                    <tr><td colspan="8" class="loading">Carregando ordens...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal de Detalhes -->
+    <div id="order-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalhes da Ordem</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-order-details"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const user = JSON.parse(localStorage.getItem("currentUser")) || {};
+            document.getElementById("userName").textContent = user.name || "Usuário";
+            document.getElementById("userEmail").textContent = user.email || "";
+
+            const token = localStorage.getItem("authToken");
+
+            async function fetchOrders() {
+                try {
+                    const res = await fetch("/api/ordens", {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    return data.ordens || [];
+                } catch (err) {
+                    console.error("Erro ao buscar ordens:", err);
+                    return [];
+                }
+            }
+
+            function renderTable(orders) {
+                const tbody = document.getElementById("ordersBody");
+                tbody.innerHTML = "";
+
+                if (orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="loading">Nenhuma ordem encontrada.</td></tr>`;
+                    return;
+                }
+
+                orders.forEach(order => {
+                    const tr = document.createElement("tr");
+                    const statusClass = order.status.replace(" ", "-").toLowerCase();
+
+                    tr.innerHTML = `
+                        <td>#${order.id}</td>
+                        <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                        <td>${order.local_detalhe || "-"}</td>
+                        <td>${order.equipamento || order.app_nome || "-"}</td>
+                        <td>${order.tipo_problema || "-"}</td>
+                        <td><span class="status ${statusClass}">${order.status}</span></td>
+                        <td>${order.tecnico || "Não atribuído"}</td>
+                        <td class="actions">
+                            <button class="view-btn" data-id="${order.id}"><i class="fas fa-eye"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            const orders = await fetchOrders();
+            renderTable(orders);
+
+            // Modal de detalhes
+            document.getElementById("ordersTable").addEventListener("click", async (e) => {
+                if (e.target.closest(".view-btn")) {
+                    const id = e.target.closest(".view-btn").dataset.id;
+                    const order = (await fetchOrders()).find(o => o.id == id);
+                    if (!order) return;
+
+                    const modal = document.getElementById("order-details-modal");
+                    document.getElementById("modal-order-details").innerHTML = `
+                        <p><strong>ID:</strong> #${order.id}</p>
+                        <p><strong>Status:</strong> ${order.status}</p>
+                        <p><strong>Local:</strong> ${order.local_detalhe}</p>
+                        <p><strong>Equipamento:</strong> ${order.equipamento || order.app_nome}</p>
+                        <p><strong>Descrição:</strong> ${order.descricao || "Sem descrição"}</p>
+                        <p><strong>Técnico:</strong> ${order.tecnico || "Não atribuído"}</p>
+                        ${order.avaliacao ? `<p><strong>Avaliação:</strong> ${order.avaliacao}/5</p>` : ""}
+                    `;
+                    modal.style.display = "flex";
+                }
+            });
+
+            document.querySelectorAll(".modal-close").forEach(btn =>
+                btn.addEventListener("click", () => {
+                    document.getElementById("order-details-modal").style.display = "none";
+                })
+            );
+        });
+    </script>
+</body>
+</html>

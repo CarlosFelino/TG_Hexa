@@ -1,0 +1,37 @@
+2025-10-06 21:08:17.672 UTC [3246] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-10-06 21:08:17.673 UTC [3246] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-06 21:08:17.673 UTC [3246] LOG:  could not bind IPv6 address "::1": Cannot assign requested address
+2025-10-06 21:08:17.677 UTC [3246] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-10-06 21:08:17.683 UTC [3249] LOG:  database system was shut down at 2025-10-06 20:46:35 UTC
+2025-10-06 21:08:17.699 UTC [3246] LOG:  database system is ready to accept connections
+2025-10-06 21:13:17.783 UTC [3247] LOG:  checkpoint starting: time
+2025-10-06 21:13:18.037 UTC [3247] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.018 s, total=0.255 s; sync files=3, longest=0.012 s, average=0.006 s; distance=0 kB, estimate=0 kB; lsn=0/1990F18, redo lsn=0/1990EC0
+2025-10-06 21:25:46.000 UTC [3507] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-10-06 21:25:46.003 UTC [3507] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-06 21:25:46.007 UTC [3507] LOG:  could not bind IPv6 address "::1": Cannot assign requested address
+2025-10-06 21:25:46.013 UTC [3507] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-10-06 21:25:46.020 UTC [3510] LOG:  database system was interrupted; last known up at 2025-10-06 21:13:18 UTC
+2025-10-06 21:25:46.049 UTC [3510] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-10-06 21:25:46.068 UTC [3510] LOG:  redo starts at 0/1990EC0
+2025-10-06 21:25:46.068 UTC [3510] LOG:  invalid record length at 0/1990FC8: expected at least 24, got 0
+2025-10-06 21:25:46.068 UTC [3510] LOG:  redo done at 0/1990F90 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-10-06 21:25:46.085 UTC [3508] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-10-06 21:25:46.109 UTC [3508] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.007 s, total=0.029 s; sync files=2, longest=0.005 s, average=0.004 s; distance=0 kB, estimate=0 kB; lsn=0/1990FC8, redo lsn=0/1990FC8
+2025-10-06 21:25:46.116 UTC [3507] LOG:  database system is ready to accept connections
+2025-10-06 21:30:46.209 UTC [3508] LOG:  checkpoint starting: time
+2025-10-06 21:30:47.065 UTC [3508] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.802 s, sync=0.026 s, total=0.857 s; sync files=9, longest=0.005 s, average=0.003 s; distance=2 kB, estimate=2 kB; lsn=0/1991840, redo lsn=0/19917E8
+2025-10-06 22:10:39.642 UTC [3507] LOG:  received fast shutdown request
+2025-10-06 22:10:39.666 UTC [3507] LOG:  aborting any active transactions
+2025-10-06 22:10:39.667 UTC [3507] LOG:  background worker "logical replication launcher" (PID 3513) exited with exit code 1
+2025-10-06 22:10:39.668 UTC [3508] LOG:  shutting down
+2025-10-06 22:10:39.679 UTC [3508] LOG:  checkpoint starting: shutdown immediate
+2025-10-06 22:10:39.742 UTC [3508] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.040 s, total=0.075 s; sync files=9, longest=0.014 s, average=0.005 s; distance=2 kB, estimate=2 kB; lsn=0/1992160, redo lsn=0/1992160
+2025-10-06 22:10:39.747 UTC [3507] LOG:  database system is shut down
+2025-10-07 18:51:29.591 UTC [339] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-10-07 18:51:29.611 UTC [339] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-07 18:51:29.613 UTC [339] LOG:  could not bind IPv6 address "::1": Cannot assign requested address
+2025-10-07 18:51:29.619 UTC [339] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-10-07 18:51:29.636 UTC [342] LOG:  database system was shut down at 2025-10-06 22:10:39 UTC
+2025-10-07 18:51:29.669 UTC [339] LOG:  database system is ready to accept connections
+2025-10-07 18:56:29.735 UTC [340] LOG:  checkpoint starting: time
+2025-10-07 18:56:29.779 UTC [340] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.018 s, total=0.045 s; sync files=2, longest=0.010 s, average=0.009 s; distance=0 kB, estimate=0 kB; lsn=0/1992268, redo lsn=0/1992210

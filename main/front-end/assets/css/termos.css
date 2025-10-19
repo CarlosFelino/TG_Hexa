@@ -1,0 +1,174 @@
+/* =======================
+   Termos de Serviço
+   ======================= */
+
+/* alterado por vitória  */
+/* Header base */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* distribui logo e botão */
+    align-items: center;
+    padding: 1rem 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Botão de fechar */
+.close-btn {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    text-decoration: none; 
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--accent);
+    transform: scale(1.2);
+}
+
+/*fim alterações */
+
+.termos-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 160px);
+}
+
+.termos-content {
+    max-width: 900px;
+    width: 100%;
+    background: rgba(16, 23, 40, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.termos-scrollable {
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+/* Scrollbar personalizada */
+.termos-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.termos-scrollable::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.termos-scrollable::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 10px;
+}
+
+.termos-scrollable::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+.termos-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.termos-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 3px;
+    background: var(--gradient);
+    border-radius: 3px;
+}
+
+.termos-intro {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+h2::before {
+    content: '•';
+    color: var(--accent);
+    position: absolute;
+    left: 0;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.termos-update {
+    font-style: italic;
+    text-align: right;
+    margin-top: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* =======================
+   Responsividade
+   ======================= */
+@media (max-width: 768px) {
+    .termos-content {
+        padding: 1.5rem;
+    }
+    
+    .termos-title {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .termos-title {
+        font-size: 1.8rem;
+    }
+    
+    .termos-intro {
+        font-size: 1rem;
+    }
+    
+    h2 {
+        padding-left: 1rem;
+    }
+    
+    h2::before {
+        left: -0.5rem;
+    }
+}
