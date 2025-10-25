@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Aplica as novas classes
         strengthBar.classList.add(strength.level);
         strengthText.classList.add(strength.level);
-        strengthText.textContent = strength.text;
+        strengthText.textContent = strength.text.charAt(0).toUpperCase() + strength.text.slice(1);
     }
 
     function calculatePasswordStrength(password) {

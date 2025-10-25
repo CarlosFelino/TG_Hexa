@@ -195,23 +195,23 @@
 
 .strength-bar.weak {
     background: linear-gradient(90deg, #ff3860, #ff6b9d);
-    width: 33%;
+    width: 33% !important;
 }
 
 .strength-bar.medium {
     background: linear-gradient(90deg, #ffdd57, #ffb347);
-    width: 66%;
+    width: 66% !important;
 }
 
 .strength-bar.strong {
     background: linear-gradient(90deg, #09c372, #00d4aa);
-    width: 100%;
+    width: 100% !important;
 }
 
 .strength-text {
     font-size: 0.85rem;
     font-weight: 600;
-    min-width: 80px;
+    min-width: 60px;
     text-align: right;
 }
 
