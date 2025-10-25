@@ -1,49 +1,57 @@
 /* =======================
    Cadastro
    ======================= */
+/* Container principal */
 .cadastro-container {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
-    background: rgba(16, 23, 40, 0.8);
-    border-radius: 10px;
-    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    background: rgba(16, 23, 40, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Header */
 .cadastro-header {
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
 }
 
 .cadastro-header h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: var(--text-light);
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 0.5rem;
 }
 
 .cadastro-header h1 i {
     color: var(--accent);
+    font-size: 1.8rem;
 }
 
 .cadastro-header p {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 0.95rem;
-    margin-top: 0.5rem;
+    font-size: 1rem;
 }
 
+/* Grid */
 .cadastro-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
 }
 
 .cadastro-column {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.8rem;
 }
 
 .user-type-toggle {
@@ -78,32 +86,35 @@
     font-size: 1.1rem;
 }
 
+/* Form Groups */
 .form-group {
     margin-bottom: 0;
+    position: relative;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     color: var(--text-light);
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.95rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .form-group label i {
     width: 20px;
     color: var(--accent);
+    font-size: 1.1rem;
 }
 
 .form-group input {
     width: 100%;
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
     color: var(--text-light);
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -112,67 +123,116 @@
 .form-group input:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(255, 0, 226, 0.1);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 4px rgba(255, 0, 226, 0.15);
 }
 
+.form-group input.invalid {
+    border-color: #ff3860;
+    box-shadow: 0 0 0 4px rgba(255, 56, 96, 0.15);
+}
+
+/* Password Wrapper */
 .password-wrapper {
     position: relative;
 }
 
 .password-wrapper input {
-    padding-right: 40px;
+    padding-right: 50px;
 }
 
 .show-password {
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    font-size: 1rem;
-    transition: color 0.3s;
+    font-size: 1.1rem;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.3s;
 }
 
 .show-password:hover {
     color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
 }
 
+/* Password Strength - MELHORADO */
 .password-strength {
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
+    display: none; /* Inicialmente escondido */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.password-strength.visible {
     display: flex;
+    opacity: 1;
+    transform: translateY(0);
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+}
+
+.strength-bar-container {
+    flex-grow: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
 }
 
 .strength-bar {
-    height: 4px;
-    flex-grow: 1;
-    background: #ff3860;
-    border-radius: 2px;
-    transition: width 0.3s, background 0.3s;
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    transition: all 0.4s ease;
+}
+
+.strength-bar.weak {
+    background: linear-gradient(90deg, #ff3860, #ff6b9d);
+    width: 33%;
+}
+
+.strength-bar.medium {
+    background: linear-gradient(90deg, #ffdd57, #ffb347);
+    width: 66%;
+}
+
+.strength-bar.strong {
+    background: linear-gradient(90deg, #09c372, #00d4aa);
+    width: 100%;
 }
 
 .strength-text {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.strength-text strong {
+    font-size: 0.85rem;
     font-weight: 600;
+    min-width: 80px;
+    text-align: right;
 }
 
+.strength-text.weak { color: #ff3860; }
+.strength-text.medium { color: #ffdd57; }
+.strength-text.strong { color: #09c372; }
+
+/* Password Match Feedback */
 .password-match-feedback {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    padding: 0.3rem 0;
+    font-size: 0.85rem;
+    margin-top: 0.6rem;
+    padding: 0.4rem 0;
     display: none;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .password-match-feedback.visible {
-    display: block;
+    display: flex;
 }
 
 .password-match-feedback.match {
@@ -183,83 +243,256 @@
     color: #ff3860;
 }
 
+.password-match-feedback i {
+    font-size: 1rem;
+}
+
+/* Form Actions */
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 1.2rem;
+    margin-top: 2.5rem;
     padding-top: 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-submit {
-    padding: 0.8rem 1.5rem;
+    padding: 1rem 2rem;
     background: var(--gradient);
-    color: #0f1819;
-    font-weight: 600;
+    color: var(--text-light);
+    font-weight: 700;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(122, 4, 235, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(122, 4, 235, 0.5);
+}
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-submit:disabled:hover {
+    transform: none;
 }
 
 .btn-cancel {
-    padding: 0.8rem 1.5rem;
+    padding: 1rem 1.8rem;
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-light);
     font-weight: 600;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 1rem;
 }
 
 .btn-cancel:hover {
     background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
-.alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
+/* =======================
+   Popups de Alerto Modernos - MELHORADOS
+   ======================= */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 16, 31, 0.9);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.alert-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.alert-modal {
+    background: var(--primary);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 450px;
+    width: 90%;
     text-align: center;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
 }
 
-.alert-success {
-    color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
+.alert-overlay.visible .alert-modal {
+    transform: scale(1);
 }
 
-.alert i {
-    margin-right: 10px;
+.alert-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
 }
+
+.alert-success .alert-icon {
+    color: #09c372;
+}
+
+.alert-error .alert-icon {
+    color: #ff3860;
+}
+
+.alert-warning .alert-icon {
+    color: #ffdd57;
+}
+
+.alert-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-light);
+}
+
+.alert-message {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.alert-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.alert-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.alert-btn-primary {
+    background: var(--gradient);
+    color: var(--text-light);
+}
+
+.alert-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+}
+
+.alert-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Success message antes do redirect */
+.success-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 16, 31, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+}
+
+.success-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.success-content {
+    text-align: center;
+    color: var(--text-light);
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.success-overlay.visible .success-content {
+    transform: translateY(0);
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #09c372;
+    margin-bottom: 1.5rem;
+    animation: bounce 1s ease;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-20px);}
+    60% {transform: translateY(-10px);}
+}
+
+.success-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.success-message {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+}
+
 
 /* Responsividade */
 @media (max-width: 900px) {
     .cadastro-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .cadastro-container {
+        margin: 1rem;
+        padding: 1.5rem;
     }
 }
 
 @media (max-width: 600px) {
-    .cadastro-container {
-        padding: 1.5rem;
-    }
-    
     .form-actions {
         flex-direction: column;
     }
@@ -268,50 +501,14 @@
         width: 100%;
         justify-content: center;
     }
-}
-
-/* =======================
-   Popups de Alerta Modernos
-   ======================= */
-.alert {
-    padding: 15px 25px;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: all 0.4s ease;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    text-align: center;
-    z-index: 999;
-    pointer-events: none;
-}
-
-.alert.visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.alert-success {
-    color: #fff;
-    background: linear-gradient(135deg, #09c372, #00a86b);
-    border: 1px solid #07a361;
-}
-
-.alert-error {
-    color: #fff;
-    background: linear-gradient(135deg, #ff3860, #e6003a);
-    border: 1px solid #e6003a;
-}
-
-.alert i {
-    font-size: 1.2rem;
+    
+    .alert-modal {
+        padding: 2rem 1.5rem;
+    }
+    
+    .alert-actions {
+        flex-direction: column;
+    }
 }
 
 /* Pequena animação de entrada/saída */
@@ -332,7 +529,6 @@
         font-size: 0.9rem;
     }
 }
-
 
 .alert-warning {
     color: #fff;
