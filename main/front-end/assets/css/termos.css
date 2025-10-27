@@ -3,15 +3,6 @@
    ======================= */
 
 /* alterado por vitória  */
-/* Header base */
-.navbar {
-    display: flex;
-    justify-content: space-between; /* distribui logo e botão */
-    align-items: center;
-    padding: 1rem 2rem;
-    position: relative;
-    z-index: 10;
-}
 
 /* Botão de fechar */
 .close-btn {

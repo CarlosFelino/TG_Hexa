@@ -1,6 +1,21 @@
 /* =======================
    Página de Créditos
    ======================= */
+/* Botão de fechar */
+.close-btn {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    text-decoration: none; 
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--accent);
+    transform: scale(1.2);
+}
 
 .creditos-container {
     display: flex;

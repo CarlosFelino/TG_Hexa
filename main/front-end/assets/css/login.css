@@ -1,4 +1,3 @@
-
 /* =======================
    Login
    ======================= */
@@ -289,6 +288,299 @@
     border: 1px solid #ff3860;
     color: #ff3860;
 }
+
+/* Sistema de Alertas Melhorado */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 16, 31, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.alert-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.alert-modal {
+    background: var(--primary);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.9) translateY(-20px);
+    transition: all 0.4s ease;
+}
+
+.alert-overlay.visible .alert-modal {
+    transform: scale(1) translateY(0);
+}
+
+.alert-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success .alert-icon {
+    color: #09c372;
+}
+
+.alert-error .alert-icon {
+    color: #ff3860;
+}
+
+.alert-warning .alert-icon {
+    color: #ffdd57;
+}
+
+.alert-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-light);
+}
+
+.alert-message {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.alert-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.alert-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    min-width: 120px;
+}
+
+.alert-btn-primary {
+    background: var(--gradient);
+    color: var(--text-light);
+}
+
+.alert-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+}
+
+.alert-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Mensagens de Erro Específicas */
+.login-error {
+    background: linear-gradient(135deg, rgba(255, 56, 96, 0.15), rgba(255, 107, 157, 0.1));
+    border: 1px solid rgba(255, 56, 96, 0.3);
+    color: #ff6b9d;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+.login-error i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.login-error.visible {
+    display: flex;
+    animation: slideInDown 0.4s ease;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Form de Redefinição de Senha - ESTILIZADO */
+#resetForm {
+    display: none;
+}
+
+#resetForm.visible {
+    display: block;
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Campos de Nova Senha Estilizados */
+#resetForm .form-group {
+    position: relative;
+}
+
+#resetForm .input-wrapper {
+    margin-bottom: 0.5rem;
+}
+
+#resetForm .password-strength {
+    margin-top: 0.8rem;
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+#resetForm .password-strength.visible {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+    align-items: center;
+    gap: 12px;
+}
+
+#resetForm .strength-bar-container {
+    flex-grow: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#resetForm .strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    transition: all 0.4s ease;
+}
+
+#resetForm .strength-bar.weak {
+    background: linear-gradient(90deg, #ff3860, #ff6b9d);
+    width: 33% !important;
+}
+
+#resetForm .strength-bar.medium {
+    background: linear-gradient(90deg, #ffdd57, #ffb347);
+    width: 66% !important;
+}
+
+#resetForm .strength-bar.strong {
+    background: linear-gradient(90deg, #09c372, #00d4aa);
+    width: 100% !important;
+}
+
+#resetForm .strength-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: right;
+}
+
+#resetForm .strength-text.weak { color: #ff3860; }
+#resetForm .strength-text.medium { color: #ffdd57; }
+#resetForm .strength-text.strong { color: #09c372; }
+
+/* Feedback de Confirmação de Senha */
+.password-match-feedback {
+    font-size: 0.85rem;
+    margin-top: 0.6rem;
+    padding: 0.4rem 0;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.password-match-feedback.visible {
+    display: flex;
+}
+
+.password-match-feedback.match {
+    color: #09c372;
+}
+
+.password-match-feedback.no-match {
+    color: #ff3860;
+}
+
+.password-match-feedback i {
+    font-size: 1rem;
+}
+
+/* Estados de Loading Melhorados */
+.btn-auth:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn-auth:disabled:hover {
+    transform: none !important;
+}
+
+/* Feedback do Reset */
+#resetFeedback {
+    margin: 1rem 0;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+#resetFeedback.success {
+    display: flex;
+    background: rgba(9, 195, 114, 0.15);
+    border: 1px solid rgba(9, 195, 114, 0.3);
+    color: #09c372;
+}
+
+#resetFeedback.error {
+    display: flex;
+    background: rgba(255, 56, 96, 0.15);
+    border: 1px solid rgba(255, 56, 96, 0.3);
+    color: #ff6b9d;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .auth-card {
@@ -297,6 +589,21 @@
     
     .card-header h1 {
         font-size: 2.5rem;
+    }
+    .alert-modal {
+        padding: 2rem 1.5rem;
+    }
+    
+    .alert-title {
+        font-size: 1.4rem;
+    }
+    
+    .alert-actions {
+        flex-direction: column;
+    }
+    
+    .alert-btn {
+        width: 100%;
     }
 }
 @media (max-width: 576px) {
@@ -315,5 +622,19 @@
     }
     .modal-card {
         padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .alert-modal {
+        padding: 1.5rem;
+    }
+    
+    .alert-icon {
+        font-size: 3rem;
+    }
+    
+    .alert-title {
+        font-size: 1.3rem;
     }
 }
