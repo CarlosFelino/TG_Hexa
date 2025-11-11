@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios - Painel Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../assets/css/relatorios.css">
+</head>
+<body>
+  <header class="header">
+    <h1><i class="fa-solid fa-chart-line"></i> Relatórios</h1>
+    <div class="user-info">
+      <span id="user-name">Administrador</span>
+      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="painel-admin.html"><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="listar-ordens.html"><i class="fa-solid fa-clipboard-list"></i> Ordens</a></li>
+        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
+        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
+        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
+        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
+        <li><a href="relatorios.html" class="active"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
+      </ul>
+    </aside>
+
+    <section class="content">
+      <h2><i class="fa-solid fa-file-lines"></i> Relatórios Disponíveis</h2>
+
+      <div class="filters">
+        <select id="select-report">
+          <option value="">Selecionar relatório</option>
+          <option value="ordens">Ordens de Serviço</option>
+          <option value="usuarios">Usuários</option>
+          <option value="patrimonio">Patrimônio</option>
+        </select>
+        <button class="add-item"><i class="fa-solid fa-download"></i> Baixar</button>
+      </div>
+
+      <p>Escolha um relatório e clique em "Baixar" para gerar o arquivo CSV/Excel correspondente.</p>
+
+      <div class="table-container">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome do Relatório</th>
+              <th>Tipo</th>
+              <th>Última Atualização</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Ordens de Serviço</td>
+              <td>CSV</td>
+              <td>08/10/2025</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Usuários</td>
+              <td>XLSX</td>
+              <td>07/10/2025</td

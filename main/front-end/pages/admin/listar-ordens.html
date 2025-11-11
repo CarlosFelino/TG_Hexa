@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordens de Serviço - Painel Premium</title>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../../assets/css/ordens-totais.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <h1><i class="fa-solid fa-clipboard-list"></i> Ordens de Serviço</h1>
+    <div class="user-info">
+      <span id="user-name">Administrador</span>
+      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="painel-admin.html" ><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="listar-ordens.html" class="active"><i class="fa-solid fa-file-invoice"></i> Ordens</a></li>
+        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
+        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
+        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
+        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
+        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line "></i> Relatórios</a></li>
+      </ul>
+    </aside>
+    <!-- CONTEÚDO -->
+    <section class="content">
+      <h2><i class="fa-solid fa-list-check"></i> Todas as Ordens</h2>
+
+      <!-- FILTROS -->
+      <div class="filters">
+        <input type="text" placeholder="Pesquisar ordem..." id="search-order">
+        <select id="filter-status">
+          <option value="">Todos os status</option>
+          <option value="pendente">Pendente</option>
+          <option value="em-andamento">Em andamento</option>
+          <option value="concluida">Concluída</option>
+        </select>
+      </div>
+
+      <!-- TABELA DE ORDENS -->
+      <div class="table-container">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Solicitante</th>
+              <th>Descrição</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#ORD-2025-001</td>
+              <td>João Silva</td>
+              <td>Problema na rede do laboratório 3</td>
+              <td>08/10/2025</td>
+              <td><span class="status pending">Pendente</span></td>
+              <td>
+                <button class="view"><i class="fa-solid fa-eye"></i></button>
+                <button class="edit"><i class="fa-solid fa-pen"></i></button>
+                <button class="delete"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>#ORD-2025-002</td>
+              <td>Maria Oliveira</td>
+              <td>Solicitação de instalação de software</td>
+              <td>07/10/2025</td>
+              <td><span class="status in-progress">Em andamento</span></td>
+              <td>
+                <button class="view"><i class="fa-solid fa-eye"></i></button>
+                <button class="edit"><i class="fa-solid fa-pen"></i></button>
+                <button class="delete"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

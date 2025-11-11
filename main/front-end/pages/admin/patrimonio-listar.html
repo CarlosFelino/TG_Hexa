@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patrimônio - Painel Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../assets/css/patrimonio-listar.css">
+</head>
+<body>
+  <header class="header">
+    <h1><i class="fa-solid fa-briefcase"></i> Patrimônio</h1>
+    <div class="user-info">
+      <span id="user-name">Administrador</span>
+      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="painel-admin.html"><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="listar-ordens.html"><i class="fa-solid fa-clipboard-list"></i> Ordens</a></li>
+        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
+        <li><a href="patrimonio-listar.html" class="active"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
+        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
+        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
+        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
+      </ul>
+    </aside>
+
+    <section class="content">
+      <div class="filters">
+        <input type="text" placeholder="Pesquisar item..." id="search-item">
+        <button class="add-item"><i class="fa-solid fa-plus"></i> Novo Item</button>
+      </div>
+
+      <div class="table-container">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descrição</th>
+              <th>Local</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Notebook Dell</td>
+              <td>Laboratório 1</td>
+        
+              <td><span class="status in-progress">Em uso</span></td>
+              <td>
+                <button class="edit"><i class="fa-solid fa-pen"></i></button>
+                <button class="delete"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Projetor Epson</td>
+              <td>Auditório</td>
+              
+              <td><span class="status pending">Disponível</span></td>
+              <td>
+                <button class="edit"><i class="fa-solid fa-pen"></i></button>
+                <button class="delete"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

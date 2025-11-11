@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Usuários - Painel Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../assets/css/gerenciar-usuarios.css">
+</head>
+<body>
+  <header class="header">
+    <h1><i class="fa-solid fa-users"></i> Gerenciar Usuários</h1>
+    <div class="user-info">
+      <span id="user-name">Administrador</span>
+      <button id="back-btn"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="painel-admin.html"><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="listar-ordens.html"><i class="fa-solid fa-clipboard-list"></i> Ordens</a></li>
+        <li><a href="gerenciar-usuarios.html" class="active"><i class="fa-solid fa-users"></i> Usuários</a></li>
+        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
+        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
+        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
+        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
+      </ul>
+    </aside>
+
+    <section class="content">
+      <div class="filters">
+        <input type="text" placeholder="Pesquisar usuário..." id="search-user">
+        <select id="filter-role">
+          <option value="">Todos os cargos</option>
+          <option value="suporte">Suporte</option>
+          <option value="professor">Professor</option>
+        </select>
+        <button class="add-user"><i class="fa-solid fa-plus"></i> Novo Usuário</button>
+      </div>
+
+      <div class="table-container">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Cargo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="usuarios-tbody">
+            <!-- Usuários serão inseridos dinamicamente pelo JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../assets/js/gerenciar-usuarios.js"></script>
+</body>
+</html>

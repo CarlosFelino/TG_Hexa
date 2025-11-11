@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Administrador</title>
+
+  <!-- FontAwesome CDN -->
+  <!-- FontAwesome 6 Free CDN -->
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="../../assets/css/admin_sistema.css">
+</head>
+
+<body>
+  <!-- =================== HEADER =================== -->
+  <header class="header">
+    <h1><i class="fa-solid fa-gauge-high" style="margin-right:8px;"></i>Painel do Administrador</h1>
+    <div class="user-info">
+      <span id="user-name">Carregando...</span>
+      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </header>
+
+  <!-- =================== CONTAINER PRINCIPAL =================== -->
+  <main class="main-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="painel-admin.html" class="active"><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="listar-ordens.html"><i class="fa-solid fa-file-invoice"></i> Ordens</a></li>
+        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
+        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
+        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
+        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
+        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line "></i> Relatórios</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <section class="content">
+      <h2>Bem-vindo, <span id="user-role">Administrador</span> <i class="fa-solid fa-crown" style="color:gold;"></i></h2>
+
+      <!-- Cards principais -->
+      <div class="card-container">
+        <a href="listar-ordens.html" class="card">
+          <i class="fa-solid fa-file-invoice fa-2x card-icon"></i>
+          <h3>Gerenciar Ordens</h3>
+          <p>Veja, edite ou exclua ordens de serviço.</p>
+        </a>
+
+        <a href="gerenciar-usuarios.html" class="card">
+          <i class="fa-solid fa-users fa-2x card-icon"></i>
+          <h3>Gerenciar Usuários</h3>
+          <p>Controle o acesso e permissões do sistema.</p>
+        </a>
+
+        <a href="patrimonio-listar.html" class="card">
+          <i class="fa-solid fa-briefcase fa-2x card-icon"></i>
+          <h3>Patrimônio</h3>
+          <p>Adicione e acompanhe equipamentos da instituição.</p>
+        </a>
+
+        <a href="importar-matriculas.html" class="card">
+          <i class="fa-solid fa-file-arrow-up fa-2x card-icon"></i>
+          <h3>Importar Matrículas</h3>
+          <p>Atualize a planilha de matrículas autorizadas.</p>
+        </a>
+
+        <a href="transferir-poder.html" class="card">
+          <i class="fa-solid fa-bolt fa-2x card-icon"></i>
+          <h3>Transferir ou Emprestar Poder</h3>
+          <p>Delegue o acesso de superusuário temporariamente.</p>
+        </a>
+
+        <a href="relatorios.html" class="card">
+          <i class="fa-solid fa-chart-line fa-2x card-icon"></i>
+          <h3>Relatórios</h3>
+          <p>Gere relatórios do sistema em PDF ou CSV.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script src="./assets/js/admin.js"></script>
+</body>
+</html>

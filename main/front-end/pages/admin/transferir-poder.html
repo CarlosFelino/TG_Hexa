@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transferir Poder - Painel Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../assets/css/transferir-poder.css">
+</head>
+<body>
+  <header class="header">
+    <h1><i class="fa-solid fa-bolt"></i> Transferir Poder</h1>
+    <div class="user-info">
+      <span id="user-name">Administrador</span>
+      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="painel-admin.html"><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="listar-ordens.html"><i class="fa-solid fa-clipboard-list"></i> Ordens</a></li>
+        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
+        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
+        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
+        <li><a href="transferir-poder.html" class="active"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
+        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
+      </ul>
+    </aside>
+
+    <section class="content">
+      <h2><i class="fa-solid fa-exchange-alt"></i> Transferência de Permissões</h2>
+
+      <div class="filters">
+        <select id="select-user">
+          <option value="">Carregando usuários...</option>
+        </select>
+
+        <div>
+          <label>
+            <input type="radio" name="transfer-type" value="permanente" checked> Transferência permanente
+          </label>
+          <label style="margin-left:1rem;">
+            <input type="radio" name="transfer-type" value="temporario"> Empréstimo temporário
+          </label>
+        </div>
+
+        <input type="date" id="end-date" style="display:none;" placeholder="Data de término">
+
+        <button id="confirm-btn" class="add-item"><i class="fa-solid fa-bolt"></i> Confirmar</button>
+      </div>
+
+      <p>Escolha um usuário do suporte e selecione o tipo de transferência de admin:</p>
+      <ul>
+        <li><b>Permanente:</b> o usuário passa a ter a posição de admin definitivamente.</li>
+        <li><b>Temporário:</b> o usuário recebe permissões de admin até a data selecionada.</li>
+      </ul>
+
+      <div class="table-container">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuário</th>
+              <th>Tipo de Transferência</th>
+              <th>Data de Término</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Conteúdo dinâmico carregado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scripts separados -->
+  <script src="../../assets/js/transferir-poder-ui.js"></script>
+  <script src="../../assets/js/transferir-poder-api.js"></script>
+</body>
+</html>
