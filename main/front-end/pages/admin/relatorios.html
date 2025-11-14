@@ -1,68 +1,354 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatórios - Painel Premium</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-  <link rel="stylesheet" href="../../assets/css/relatorios.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="../../assets/css/relatorios.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
 </head>
-<body>
-  <header class="header">
-    <h1><i class="fa-solid fa-chart-line"></i> Relatórios</h1>
-    <div class="user-info">
-      <span id="user-name">Administrador</span>
-      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
-    </div>
-  </header>
+<body class="admin-dashboard">
+    <!-- Navbar Superior - PADRONIZADO -->
+    <header class="admin-navbar">
+        <div class="navbar-content">
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
 
-  <main class="main-container">
+            <a href="painel-admin.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
+
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span class="user-name" id="userName">Administrador</span>
+                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
+                    <div class="dropdown-content">
+                        <a href="perfil-admin.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral - PADRONIZADO -->
     <aside class="sidebar">
-      <ul>
-        <li><a href="painel-admin.html"><i class="fa-solid fa-house"></i> Início</a></li>
-        <li><a href="listar-ordens.html"><i class="fa-solid fa-clipboard-list"></i> Ordens</a></li>
-        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
-        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
-        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
-        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
-        <li><a href="relatorios.html" class="active"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
-      </ul>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="painel-admin.html">
+                        <i class="fas fa-gauge-high"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listar-ordens.html">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Gerenciar Ordens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gerenciar-usuarios.html">
+                        <i class="fas fa-users"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="patrimonio-listar.html">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Patrimônio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="importar-matriculas.html">
+                        <i class="fas fa-file-arrow-up"></i>
+                        <span>Importar Matrículas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="transferir-poder.html">
+                        <i class="fas fa-bolt"></i>
+                        <span>Transferir Poder</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html" class="active">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </aside>
 
-    <section class="content">
-      <h2><i class="fa-solid fa-file-lines"></i> Relatórios Disponíveis</h2>
+    <!-- Conteúdo Principal - PADRONIZADO -->
+    <main class="admin-content">
+        <div class="page-header">
+            <h1><i class="fas fa-chart-line"></i> Relatórios</h1>
+            <p>Gere relatórios detalhados do sistema em diversos formatos</p>
+        </div>
 
-      <div class="filters">
-        <select id="select-report">
-          <option value="">Selecionar relatório</option>
-          <option value="ordens">Ordens de Serviço</option>
-          <option value="usuarios">Usuários</option>
-          <option value="patrimonio">Patrimônio</option>
-        </select>
-        <button class="add-item"><i class="fa-solid fa-download"></i> Baixar</button>
-      </div>
+        <!-- Filtros e Configurações -->
+        <div class="filters-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <div class="form-group">
+                        <label for="select-report">Tipo de Relatório *</label>
+                        <select id="select-report" required>
+                            <option value="">Selecione um relatório...</option>
+                            <option value="ordens">Ordens de Serviço</option>
+                            <option value="usuarios">Usuários do Sistema</option>
+                            <option value="patrimonio">Patrimônio</option>
+                            <option value="desempenho">Desempenho da Equipe</option>
+                            <option value="matriculas">Matrículas Autorizadas</option>
+                        </select>
+                    </div>
+                </div>
 
-      <p>Escolha um relatório e clique em "Baixar" para gerar o arquivo CSV/Excel correspondente.</p>
+                <div class="filter-group">
+                    <div class="form-group">
+                        <label for="select-format">Formato *</label>
+                        <select id="select-format" required>
+                            <option value="csv">CSV</option>
+                            <option value="xlsx">Excel (XLSX)</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                </div>
 
-      <div class="table-container">
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome do Relatório</th>
-              <th>Tipo</th>
-              <th>Última Atualização</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Ordens de Serviço</td>
-              <td>CSV</td>
-              <td>08/10/2025</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Usuários</td>
-              <td>XLSX</td>
-              <td>07/10/2025</td
+                <div class="filter-group">
+                    <div class="form-group">
+                        <label for="date-start">Data Início</label>
+                        <input type="date" id="date-start">
+                    </div>
+                    <div class="form-group">
+                        <label for="date-end">Data Fim</label>
+                        <input type="date" id="date-end">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="btn btn-secondary" id="reset-filters">
+                        <i class="fas fa-refresh"></i> Limpar
+                    </button>
+                    <button class="btn btn-primary" id="generate-report">
+                        <i class="fas fa-download"></i> Gerar Relatório
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards de Estatísticas Rápidas -->
+        <div class="stats-section">
+            <h3><i class="fas fa-chart-bar"></i> Estatísticas Rápidas</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-orders">0</h3>
+                        <p>Ordens Totais</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-users">0</h3>
+                        <p>Usuários Ativos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-patrimonio">0</h3>
+                        <p>Itens Patrimônio</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="completion-rate">0%</h3>
+                        <p>Taxa de Conclusão</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatórios Disponíveis -->
+        <div class="reports-section">
+            <div class="section-header">
+                <h3><i class="fas fa-file-lines"></i> Relatórios Disponíveis</h3>
+                <p>Selecione um relatório para visualizar detalhes ou gerar download</p>
+            </div>
+
+            <div class="reports-grid">
+                <!-- Card Ordens de Serviço -->
+                <div class="report-card">
+                    <div class="report-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="report-content">
+                        <h4>Ordens de Serviço</h4>
+                        <p>Relatório completo de todas as ordens de serviço do sistema</p>
+                        <div class="report-meta">
+                            <span><i class="fas fa-database"></i> 1.2K registros</span>
+                            <span><i class="fas fa-clock"></i> Atualizado hoje</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-table preview" data-report="ordens">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-table download" data-report="ordens">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Usuários -->
+                <div class="report-card">
+                    <div class="report-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="report-content">
+                        <h4>Usuários do Sistema</h4>
+                        <p>Lista completa de usuários com suas permissões e status</p>
+                        <div class="report-meta">
+                            <span><i class="fas fa-database"></i> 156 registros</span>
+                            <span><i class="fas fa-clock"></i> Atualizado hoje</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-table preview" data-report="usuarios">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-table download" data-report="usuarios">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Patrimônio -->
+                <div class="report-card">
+                    <div class="report-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="report-content">
+                        <h4>Patrimônio</h4>
+                        <p>Inventário completo dos itens do patrimônio institucional</p>
+                        <div class="report-meta">
+                            <span><i class="fas fa-database"></i> 89 registros</span>
+                            <span><i class="fas fa-clock"></i> Atualizado hoje</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-table preview" data-report="patrimonio">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-table download" data-report="patrimonio">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Desempenho -->
+                <div class="report-card">
+                    <div class="report-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="report-content">
+                        <h4>Desempenho da Equipe</h4>
+                        <p>Métricas de performance e tempo de resposta da equipe</p>
+                        <div class="report-meta">
+                            <span><i class="fas fa-database"></i> 45 registros</span>
+                            <span><i class="fas fa-clock"></i> Atualizado hoje</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-table preview" data-report="desempenho">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-table download" data-report="desempenho">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Matrículas -->
+                <div class="report-card">
+                    <div class="report-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="report-content">
+                        <h4>Matrículas Autorizadas</h4>
+                        <p>Lista de matrículas com acesso autorizado ao sistema</p>
+                        <div class="report-meta">
+                            <span><i class="fas fa-database"></i> 342 registros</span>
+                            <span><i class="fas fa-clock"></i> Atualizado hoje</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-table preview" data-report="matriculas">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-table download" data-report="matriculas">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Histórico de Relatórios Gerados -->
+        <div class="history-section">
+            <div class="section-header">
+                <h3><i class="fas fa-history"></i> Histórico de Relatórios</h3>
+            </div>
+
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="reports-history-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome do Relatório</th>
+                                <th>Tipo</th>
+                                <th>Formato</th>
+                                <th>Data Geração</th>
+                                <th>Tamanho</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-history-body">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Overlay para menu mobile -->
+    <div class="overlay"></div>
+
+    <script src="../../assets/js/admin.js"></script>
+    <script src="../../assets/js/relatorios.js"></script>
+</body>
+</html>

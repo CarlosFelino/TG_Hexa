@@ -1,226 +1,617 @@
-/* ========== PAINEL ADMIN ========== */
+/* =======================
+   Painel do Admin
+   ======================= */
+
 .admin-dashboard {
-    padding: 6rem 2rem 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.dashboard-header {
-    margin-bottom: 3rem;
-    text-align: center;
-}
-
-.dashboard-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    background: linear-gradient(90deg, #7a04eb, #ff00e2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.dashboard-header .subtitle {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-areas:
+        "navbar navbar"
+        "sidebar content";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 70px 1fr;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+    color: #333;
 }
 
-.dashboard-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 2rem;
-    text-decoration: none;
+/* Navbar Superior - MESMO ESTILO DO PROFESSOR */
+.admin-navbar {
+    grid-area: navbar;
+    background: linear-gradient(135deg, #101728 0%, #0a101f 100%);
     color: white;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-.dashboard-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(122, 4, 235, 0.2);
-    border-color: rgba(122, 4, 235, 0.3);
-}
-
-.dashboard-card::before {
-    content: '';
-    position: absolute;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
     top: 0;
-    left: 0;
+    z-index: 100;
+}
+
+.navbar-content {
     width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(122, 4, 235, 0.1) 0%, rgba(255, 0, 226, 0.05) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.dashboard-card:hover::before {
-    opacity: 1;
-}
-
-.card-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-}
-
-.dashboard-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.8rem;
-    color: white;
-}
-
-.dashboard-card p {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-}
-
-.card-badge {
-    display: inline-block;
-    padding: 0.3rem 0.8rem;
-    background: #ff00e2;
-    color: white;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-top: 1rem;
-}
-
-/* ========== NAVBAR ========== */
-.navbar-system {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: #101728;
-    padding: 1rem 2rem;
-    z-index: 1000;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    border-bottom: 1px solid rgba(122, 4, 235, 0.2);
-}
-
-.nav-container {
-    display: flex;
     justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
 }
 
 .menu-toggle {
     background: none;
     border: none;
     color: white;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0.5rem;
-    border-radius: 6px;
+    margin-right: 1rem;
+    display: none;
 }
 
-.menu-toggle:hover {
-    background: rgba(122, 4, 235, 0.2);
-}
-
-.logo-link {
+.logo-container {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .logo {
-    height: 32px;
-    transition: transform 0.3s ease;
+    height: 35px;
+    transition: transform 0.3s;
 }
 
 .logo-text {
     color: white;
-    font-weight: 600;
-    font-size: 1.3rem;
-    background: linear-gradient(90deg, #7a04eb, #ff00e2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-weight: bold;
+    margin-left: 10px;
+    opacity: 1;
+    transition: opacity 0.3s;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    cursor: pointer;
+    position: relative;
 }
 
-.user-info {
-    display: flex;
-    flex-direction: column;
+.profile-info {
     text-align: right;
+    margin-right: 15px;
 }
 
 .user-name {
-    color: white;
+    display: block;
     font-weight: 600;
     font-size: 0.95rem;
 }
 
 .user-email {
-    color: rgba(255,255,255,0.7);
     font-size: 0.8rem;
+    opacity: 0.8;
 }
 
-.user-avatar {
+.profile-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #7a04eb;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s;
 }
 
-.user-avatar img {
+.profile-avatar:hover {
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: white;
+    min-width: 180px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.dropdown-content a:hover {
+    background: #f0f0f0;
+    color: var(--secondary);
+}
+
+.dropdown-content a i {
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
+}
+
+.profile-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Menu Lateral - MESMO ESTILO DO PROFESSOR */
+.sidebar {
+    grid-area: sidebar;
+    background: white;
+    border-right: 1px solid #e1e5eb;
+    padding: 1.5rem 0;
+    transition: all 0.3s;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 5px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #555;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-nav a:hover {
+    background: #f8f9fa;
+    color: var(--secondary);
+}
+
+.sidebar-nav a.active {
+    background: rgba(122, 4, 235, 0.05);
+    color: var(--secondary);
+    border-left-color: var(--secondary);
+}
+
+.sidebar-nav a i {
+    font-size: 1.1rem;
+    margin-right: 12px;
+    width: 24px;
+    text-align: center;
+}
+
+.sidebar-nav a span {
+    font-size: 0.95rem;
+}
+
+/* Conteúdo Principal - MESMO ESTILO DO PROFESSOR */
+.admin-content {
+    grid-area: content;
+    padding: 2rem;
+    background: #f5f7fa;
+    overflow-y: auto;
+}
+
+.welcome-banner {
+    margin-bottom: 2.5rem;
+}
+
+.welcome-banner h1 {
+    font-size: 2.2rem;
+    color: #101728;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.welcome-banner p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Quick Actions - MESMO ESTILO DO PROFESSOR */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.action-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.action-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #101728;
+}
+
+.action-card p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.card-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* =======================
+   Seções Específicas do Admin
+   ======================= */
+
+/* Estatísticas do Sistema */
+.stats-section {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.stats-section h2 {
+    font-size: 1.4rem;
+    color: #101728;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.stats-section h2 i {
+    margin-right: 10px;
+    color: var(--secondary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.stat-info h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #101728;
+    margin-bottom: 0.3rem;
+}
+
+.stat-info p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Atividade Recente */
+.recent-activity {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+.recent-activity h2 {
+    font-size: 1.4rem;
+    color: #101728;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.recent-activity h2 i {
+    margin-right: 10px;
+    color: var(--secondary);
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s;
+}
+
+.activity-item:hover {
+    background: #e9ecef;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(122, 4, 235, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-content p {
+    margin: 0 0 0.3rem 0;
+    color: #101728;
+    font-weight: 500;
+}
+
+.activity-time {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* Overlay para Menu Mobile */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 89;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
 }
 
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr 1fr;
+/* =======================
+   Responsividade
+   ======================= */
+@media (max-width: 992px) {
+    .admin-dashboard {
+        grid-template-areas:
+            "navbar navbar"
+            "content content";
     }
     
-    .dashboard-header h1 {
-        font-size: 2rem;
+    .sidebar {
+        position: fixed;
+        top: 70px;
+        left: -250px;
+        bottom: 0;
+        width: 250px;
+        z-index: 90;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-content {
+        padding: 1.5rem;
+    }
+    
+    .welcome-banner h1 {
+        font-size: 1.8rem;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 576px) {
-    .dashboard-grid {
+    .admin-navbar {
+        padding: 0 1rem;
+    }
+    
+    .logo-text {
+        display: none;
+    }
+    
+    .profile-info {
+        display: none;
+    }
+    
+    .stats-grid {
         grid-template-columns: 1fr;
     }
     
-    .admin-dashboard {
-        padding: 5rem 1rem 1rem;
+    .quick-actions {
+        grid-template-columns: 1fr;
     }
+}
+
+
+/* =======================
+   Sistema de Alertas
+   ======================= */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 16, 31, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.alert-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.alert-modal {
+    background: var(--primary);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.9) translateY(-20px);
+    transition: all 0.4s ease;
+}
+
+.alert-overlay.visible .alert-modal {
+    transform: scale(1) translateY(0);
+}
+
+.alert-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success .alert-icon {
+    color: #09c372;
+}
+
+.alert-error .alert-icon {
+    color: #ff3860;
+}
+
+.alert-warning .alert-icon {
+    color: #ffdd57;
+}
+
+.alert-info .alert-icon {
+    color: #2196F3;
+}
+
+.alert-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-light);
+}
+
+.alert-message {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.alert-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.alert-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    min-width: 120px;
+}
+
+.alert-btn-primary {
+    background: var(--gradient);
+    color: var(--text-light);
+}
+
+.alert-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+}
+
+.alert-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }

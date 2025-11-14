@@ -1,71 +1,236 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Importar Matrículas - Painel Premium</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-  <link rel="stylesheet" href="../../assets/css/importar-matriculas.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importar Matrículas | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="../../assets/css/importar-matriculas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
 </head>
-<body>
-  <header class="header">
-    <h1><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</h1>
-    <div class="user-info">
-      <span id="user-name">Administrador</span>
-      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
-    </div>
-  </header>
+<body class="admin-dashboard">
+    <!-- Navbar Superior -->
+    <header class="admin-navbar">
+        <div class="navbar-content">
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
 
-  <main class="main-container">
+            <a href="painel-admin.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
+
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span class="user-name" id="userName">Administrador</span>
+                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
+                    <div class="dropdown-content">
+                        <a href="perfil-admin.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral -->
     <aside class="sidebar">
-      <ul>
-        <li><a href="painel-admin.html"><i class="fa-solid fa-house"></i> Início</a></li>
-        <li><a href="listar-ordens.html"><i class="fa-solid fa-clipboard-list"></i> Ordens</a></li>
-        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
-        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
-        <li><a href="importar-matriculas.html" class="active"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
-        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
-        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
-      </ul>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="painel-admin.html">
+                        <i class="fas fa-gauge-high"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listar-ordens.html">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Gerenciar Ordens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gerenciar-usuarios.html">
+                        <i class="fas fa-users"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="patrimonio-listar.html">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Patrimônio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="importar-matriculas.html" class="active">
+                        <i class="fas fa-file-arrow-up"></i>
+                        <span>Importar Matrículas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="transferir-poder.html">
+                        <i class="fas fa-bolt"></i>
+                        <span>Transferir Poder</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </aside>
 
-    <section class="content">
-      <h2><i class="fa-solid fa-upload"></i> Upload de Arquivos</h2>
+    <!-- Conteúdo Principal -->
+    <main class="admin-content">
+        <div class="page-header">
+            <h1><i class="fas fa-file-arrow-up"></i> Importar Matrículas</h1>
+            <p>Atualize a planilha de matrículas autorizadas para acesso ao sistema</p>
+        </div>
 
-      <div class="filters">
-        <input type="file" id="file-upload" accept=".csv, .xlsx">
-        <button class="add-item"><i class="fa-solid fa-upload"></i> Importar</button>
-      </div>
+        <!-- Área de Upload -->
+        <div class="upload-section">
+            <div class="upload-card">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Upload de Arquivo</h3>
+                <p>Selecione um arquivo CSV ou Excel com as matrículas autorizadas</p>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-file-excel"></i>
+                    <p>Arraste o arquivo aqui ou clique para selecionar</p>
+                    <span class="file-types">Formatos suportados: .csv, .xlsx</span>
+                    <input type="file" id="fileUpload" accept=".csv, .xlsx" hidden>
+                </div>
+                
+                <div class="upload-info">
+                    <div class="info-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>O arquivo deve conter as colunas: Matrícula, Nome, Email</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-download"></i>
+                        <a href="#" id="downloadTemplate">Baixar modelo de planilha</a>
+                    </div>
+                </div>
 
-      <p>Escolha um arquivo CSV ou Excel contendo as matrículas autorizadas. Após a importação, os usuários serão atualizados automaticamente.</p>
+                <button class="btn btn-primary" id="importBtn" disabled>
+                    <i class="fas fa-upload"></i> Importar Matrículas
+                </button>
+            </div>
 
-      <div class="table-container">
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>Matrícula</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>João Silva</td>
-              <td>20251001</td>
-              <td><span class="status in-progress">Ativo</span></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Maria Oliveira</td>
-              <td>20251002</td>
-              <td><span class="status pending">Pendente</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+            <!-- Status do Upload -->
+            <div class="upload-status" id="uploadStatus" style="display: none;">
+                <div class="status-header">
+                    <h4><i class="fas fa-sync-alt fa-spin"></i> Processando Importação</h4>
+                </div>
+                <div class="status-content">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="status-details" id="statusDetails">
+                        Preparando para importar...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Visualização -->
+        <div class="preview-section" id="previewSection" style="display: none;">
+            <div class="section-header">
+                <h3><i class="fas fa-eye"></i> Pré-visualização dos Dados</h3>
+                <p>Confira os dados antes de confirmar a importação</p>
+            </div>
+
+            <div class="preview-stats">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="previewTotal">0</h3>
+                        <p>Total de Registros</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon valid">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="previewValid">0</h3>
+                        <p>Válidos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon invalid">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="previewInvalid">0</h3>
+                        <p>Com Erros</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Dados para Importação</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-secondary" id="cancelImport">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button class="btn btn-primary" id="confirmImport">
+                            <i class="fas fa-check"></i> Confirmar Importação
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="preview-table">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="previewTableBody">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Histórico de Importações -->
+        <div class="history-section">
+            <div class="section-header">
+                <h3><i class="fas fa-history"></i> Histórico de Importações</h3>
+            </div>
+
+            <div class="history-list" id="historyList">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Overlay para menu mobile -->
+    <div class="overlay"></div>
+
+    <script src="../../assets/js/admin.js"></script>
+    <script src="../../assets/js/importar-matriculas.js"></script>
 </body>
 </html>

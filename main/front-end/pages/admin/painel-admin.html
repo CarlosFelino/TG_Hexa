@@ -1,88 +1,217 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Administrador</title>
-
-  <!-- FontAwesome CDN -->
-  <!-- FontAwesome 6 Free CDN -->
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <link rel="stylesheet" href="../../assets/css/admin_sistema.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
 </head>
+<body class="admin-dashboard">
+    <!-- Navbar Superior -->
+    <header class="admin-navbar">
+        <div class="navbar-content">
+            <!-- Menu Hambúrguer -->
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
 
-<body>
-  <!-- =================== HEADER =================== -->
-  <header class="header">
-    <h1><i class="fa-solid fa-gauge-high" style="margin-right:8px;"></i>Painel do Administrador</h1>
-    <div class="user-info">
-      <span id="user-name">Carregando...</span>
-      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
-    </div>
-  </header>
+            <!-- Logo -->
+            <a href="painel-admin.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
 
-  <!-- =================== CONTAINER PRINCIPAL =================== -->
-  <main class="main-container">
-    <!-- SIDEBAR -->
+            <!-- Perfil do Usuário -->
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span class="user-name" id="userName">Administrador</span>
+                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
+                    <div class="dropdown-content">
+                        <a href="perfil-admin.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral -->
     <aside class="sidebar">
-      <ul>
-        <li><a href="painel-admin.html" class="active"><i class="fa-solid fa-house"></i> Início</a></li>
-        <li><a href="listar-ordens.html"><i class="fa-solid fa-file-invoice"></i> Ordens</a></li>
-        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
-        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
-        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
-        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
-        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line "></i> Relatórios</a></li>
-      </ul>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="painel-admin.html" class="active">
+                        <i class="fas fa-gauge-high"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listar-ordens.html">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Gerenciar Ordens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gerenciar-usuarios.html">
+                        <i class="fas fa-users"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="patrimonio-listar.html">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Patrimônio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="importar-matriculas.html">
+                        <i class="fas fa-file-arrow-up"></i>
+                        <span>Importar Matrículas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="transferir-poder.html">
+                        <i class="fas fa-bolt"></i>
+                        <span>Transferir Poder</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <section class="content">
-      <h2>Bem-vindo, <span id="user-role">Administrador</span> <i class="fa-solid fa-crown" style="color:gold;"></i></h2>
+    <!-- Conteúdo Principal -->
+    <main class="admin-content">
+        <div class="welcome-banner">
+            <h1>Bem-vindo, <span id="welcomeName">Administrador</span> <i class="fas fa-crown" style="color: gold;"></i></h1>
+            <p>Painel de controle completo do sistema Support Nexus</p>
+        </div>
 
-      <!-- Cards principais -->
-      <div class="card-container">
-        <a href="listar-ordens.html" class="card">
-          <i class="fa-solid fa-file-invoice fa-2x card-icon"></i>
-          <h3>Gerenciar Ordens</h3>
-          <p>Veja, edite ou exclua ordens de serviço.</p>
-        </a>
+        <div class="quick-actions">
+            <!-- Card Gerenciar Ordens -->
+            <a href="listar-ordens.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(122, 4, 235, 0.1);">
+                    <i class="fas fa-file-invoice" style="color: #7a04eb;"></i>
+                </div>
+                <h3>Gerenciar Ordens</h3>
+                <p>Veja, edite ou exclua ordens de serviço</p>
+                <div class="card-badge" id="badgeOrdens">0</div>
+            </a>
 
-        <a href="gerenciar-usuarios.html" class="card">
-          <i class="fa-solid fa-users fa-2x card-icon"></i>
-          <h3>Gerenciar Usuários</h3>
-          <p>Controle o acesso e permissões do sistema.</p>
-        </a>
+            <!-- Card Gerenciar Usuários -->
+            <a href="gerenciar-usuarios.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(255, 0, 226, 0.1);">
+                    <i class="fas fa-users" style="color: #ff00e2;"></i>
+                </div>
+                <h3>Gerenciar Usuários</h3>
+                <p>Controle o acesso e permissões do sistema</p>
+                <div class="card-badge" id="badgeUsuarios">0</div>
+            </a>
 
-        <a href="patrimonio-listar.html" class="card">
-          <i class="fa-solid fa-briefcase fa-2x card-icon"></i>
-          <h3>Patrimônio</h3>
-          <p>Adicione e acompanhe equipamentos da instituição.</p>
-        </a>
+            <!-- Card Patrimônio -->
+            <a href="patrimonio-listar.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(5, 13, 235, 0.1);">
+                    <i class="fas fa-briefcase" style="color: #050deb;"></i>
+                </div>
+                <h3>Patrimônio</h3>
+                <p>Adicione e acompanhe equipamentos</p>
+                <div class="card-badge" id="badgePatrimonio">0</div>
+            </a>
 
-        <a href="importar-matriculas.html" class="card">
-          <i class="fa-solid fa-file-arrow-up fa-2x card-icon"></i>
-          <h3>Importar Matrículas</h3>
-          <p>Atualize a planilha de matrículas autorizadas.</p>
-        </a>
+            <!-- Card Importar Matrículas -->
+            <a href="importar-matriculas.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(9, 195, 114, 0.1);">
+                    <i class="fas fa-file-arrow-up" style="color: #09c372;"></i>
+                </div>
+                <h3>Importar Matrículas</h3>
+                <p>Atualize a planilha de matrículas autorizadas</p>
+                <div class="card-badge">Novo</div>
+            </a>
 
-        <a href="transferir-poder.html" class="card">
-          <i class="fa-solid fa-bolt fa-2x card-icon"></i>
-          <h3>Transferir ou Emprestar Poder</h3>
-          <p>Delegue o acesso de superusuário temporariamente.</p>
-        </a>
+            <!-- Card Transferir Poder -->
+            <a href="transferir-poder.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(255, 184, 0, 0.1);">
+                    <i class="fas fa-bolt" style="color: #ffb800;"></i>
+                </div>
+                <h3>Transferir Poder</h3>
+                <p>Delegue acesso de superusuário temporariamente</p>
+                <div class="card-badge">Admin</div>
+            </a>
 
-        <a href="relatorios.html" class="card">
-          <i class="fa-solid fa-chart-line fa-2x card-icon"></i>
-          <h3>Relatórios</h3>
-          <p>Gere relatórios do sistema em PDF ou CSV.</p>
-        </a>
-      </div>
-    </section>
-  </main>
+            <!-- Card Relatórios -->
+            <a href="relatorios.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(255, 56, 96, 0.1);">
+                    <i class="fas fa-chart-line" style="color: #ff3860;"></i>
+                </div>
+                <h3>Relatórios</h3>
+                <p>Gere relatórios do sistema em PDF ou CSV</p>
+                <div class="card-badge">+</div>
+            </a>
+        </div>
 
-  <script src="./assets/js/admin.js"></script>
+        <!-- Seção de Estatísticas Rápidas -->
+        <section class="stats-section">
+            <h2><i class="fas fa-chart-bar"></i> Estatísticas do Sistema</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: rgba(122, 4, 235, 0.1);">
+                        <i class="fas fa-file-invoice" style="color: #7a04eb;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalOrdens">0</h3>
+                        <p>Total de Ordens</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: rgba(255, 0, 226, 0.1);">
+                        <i class="fas fa-users" style="color: #ff00e2;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalUsuarios">0</h3>
+                        <p>Usuários Ativos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: rgba(9, 195, 114, 0.1);">
+                        <i class="fas fa-check-circle" style="color: #09c372;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="ordensConcluidas">0</h3>
+                        <p>Ordens Concluídas</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: rgba(255, 184, 0, 0.1);">
+                        <i class="fas fa-clock" style="color: #ffb800;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="ordensPendentes">0</h3>
+                        <p>Ordens Pendentes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Atividade Recente -->
+        <section class="recent-activity">
+            <h2><i class="fas fa-history"></i> Atividade Recente</h2>
+            <div class="activity-list" id="recentActivity"></div>
+        </section>
+    </main>
+    <div class="overlay"></div>
+    <script src="../../assets/js/admin.js"></script>
 </body>
 </html>

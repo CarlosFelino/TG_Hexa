@@ -1,96 +1,235 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ordens de Serviço - Painel Premium</title>
-
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="../../assets/css/ordens-totais.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Ordens | Support Nexus</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="../../assets/css/ordens-admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
 </head>
-<body>
-  <!-- HEADER -->
-  <header class="header">
-    <h1><i class="fa-solid fa-clipboard-list"></i> Ordens de Serviço</h1>
-    <div class="user-info">
-      <span id="user-name">Administrador</span>
-      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
-    </div>
-  </header>
+<body class="admin-dashboard">
+    <!-- Navbar Superior -->
+    <header class="admin-navbar">
+        <div class="navbar-content">
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
 
-  <main class="main-container">
+            <a href="painel-admin.html" class="logo-link">
+                <div class="logo-container">
+                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <span class="logo-text">Support Nexus</span>
+                </div>
+            </a>
+
+            <div class="user-profile">
+                <div class="profile-info">
+                    <span class="user-name" id="userName">Administrador</span>
+                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
+                    <div class="dropdown-content">
+                        <a href="perfil-admin.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral -->
     <aside class="sidebar">
-      <ul>
-        <li><a href="painel-admin.html" ><i class="fa-solid fa-house"></i> Início</a></li>
-        <li><a href="listar-ordens.html" class="active"><i class="fa-solid fa-file-invoice"></i> Ordens</a></li>
-        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
-        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
-        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
-        <li><a href="transferir-poder.html"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
-        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line "></i> Relatórios</a></li>
-      </ul>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="painel-admin.html">
+                        <i class="fas fa-gauge-high"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listar-ordens.html" class="active">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Gerenciar Ordens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gerenciar-usuarios.html">
+                        <i class="fas fa-users"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="patrimonio-listar.html">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Patrimônio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="importar-matriculas.html">
+                        <i class="fas fa-file-arrow-up"></i>
+                        <span>Importar Matrículas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="transferir-poder.html">
+                        <i class="fas fa-bolt"></i>
+                        <span>Transferir Poder</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </aside>
-    <!-- CONTEÚDO -->
-    <section class="content">
-      <h2><i class="fa-solid fa-list-check"></i> Todas as Ordens</h2>
 
-      <!-- FILTROS -->
-      <div class="filters">
-        <input type="text" placeholder="Pesquisar ordem..." id="search-order">
-        <select id="filter-status">
-          <option value="">Todos os status</option>
-          <option value="pendente">Pendente</option>
-          <option value="em-andamento">Em andamento</option>
-          <option value="concluida">Concluída</option>
-        </select>
-      </div>
+    <!-- Conteúdo Principal -->
+    <main class="admin-content">
+        <div class="page-header">
+            <h1><i class="fas fa-file-invoice"></i> Gerenciar Ordens de Serviço</h1>
+            <p>Visualize e gerencie todas as ordens do sistema</p>
+        </div>
 
-      <!-- TABELA DE ORDENS -->
-      <div class="table-container">
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Solicitante</th>
-              <th>Descrição</th>
-              <th>Data</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#ORD-2025-001</td>
-              <td>João Silva</td>
-              <td>Problema na rede do laboratório 3</td>
-              <td>08/10/2025</td>
-              <td><span class="status pending">Pendente</span></td>
-              <td>
-                <button class="view"><i class="fa-solid fa-eye"></i></button>
-                <button class="edit"><i class="fa-solid fa-pen"></i></button>
-                <button class="delete"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-            <tr>
-              <td>#ORD-2025-002</td>
-              <td>Maria Oliveira</td>
-              <td>Solicitação de instalação de software</td>
-              <td>07/10/2025</td>
-              <td><span class="status in-progress">Em andamento</span></td>
-              <td>
-                <button class="view"><i class="fa-solid fa-eye"></i></button>
-                <button class="edit"><i class="fa-solid fa-pen"></i></button>
-                <button class="delete"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+        <!-- Filtros e Estatísticas -->
+        <div class="filters-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-orders" placeholder="Buscar por ID, solicitante, descrição...">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <select id="filter-status">
+                        <option value="">Todos os status</option>
+                        <option value="pending">Pendente</option>
+                        <option value="in-progress">Em Andamento</option>
+                        <option value="completed">Concluída</option>
+                        <option value="not-completed">Não Concluída</option>
+                    </select>
+                    <select id="filter-type">
+                        <option value="">Todos os tipos</option>
+                        <option value="problema">Problema Técnico</option>
+                        <option value="instalacao">Instalação</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button class="btn btn-secondary" id="reset-filters">
+                        <i class="fas fa-refresh"></i> Limpar Filtros
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estatísticas Rápidas -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-pending">0</h3>
+                        <p>Pendentes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon in-progress">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-in-progress">0</h3>
+                        <p>Em Andamento</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-completed">0</h3>
+                        <p>Concluídas</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-orders">0</h3>
+                        <p>Total</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Ordens -->
+        <div class="orders-container">
+            <div class="table-header">
+                <h3>Lista de Ordens</h3>
+                <div class="table-actions">
+                    <button class="btn btn-primary" id="export-orders">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Solicitante</th>
+                            <th>Local</th>
+                            <th>Descrição</th>
+                            <th>Data</th>
+                            <th>Técnico</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <!-- Preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginação -->
+            <div class="pagination" id="pagination">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Detalhes -->
+    <div id="order-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalhes da Ordem</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-order-details">
+                <!-- Preenchido via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn">Fechar</button>
+                <button class="btn btn-primary" id="edit-order-btn">
+                    <i class="fas fa-edit"></i> Editar Ordem
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay para menu mobile -->
+    <div class="overlay"></div>
+
+    <script src="../../assets/js/admin.js"></script>
+    <script src="../../assets/js/ordens-admin.js"></script>
 </body>
 </html>
