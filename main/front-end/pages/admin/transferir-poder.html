@@ -1,185 +1,84 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transferir Poder | Support Nexus</title>
-    <link rel="stylesheet" href="../../assets/css/global.css">
-    <link rel="stylesheet" href="../../assets/css/admin.css">
-    <link rel="stylesheet" href="../../assets/css/transferir-poder.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transferir Poder - Painel Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../assets/css/transferir-poder.css">
 </head>
-<body class="admin-dashboard">
-    <!-- Navbar Superior - PADRONIZADO -->
-    <header class="admin-navbar">
-        <div class="navbar-content">
-            <button class="menu-toggle" aria-label="Abrir menu">
-                <i class="fas fa-bars"></i>
-            </button>
+<body>
+  <header class="header">
+    <h1><i class="fa-solid fa-bolt"></i> Transferir Poder</h1>
+    <div class="user-info">
+      <span id="user-name">Administrador</span>
+      <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </header>
 
-            <a href="painel-admin.html" class="logo-link">
-                <div class="logo-container">
-                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
-                    <span class="logo-text">Support Nexus</span>
-                </div>
-            </a>
-
-            <div class="user-profile">
-                <div class="profile-info">
-                    <span class="user-name" id="userName">Administrador</span>
-                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
-                </div>
-                <div class="profile-dropdown">
-                    <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
-                    <div class="dropdown-content">
-                        <a href="perfil-admin.html"><i class="fas fa-user"></i> Meu Perfil</a>
-                        <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Menu Lateral - PADRONIZADO -->
+  <main class="main-container">
     <aside class="sidebar">
-        <nav class="sidebar-nav">
-            <ul>
-                <li>
-                    <a href="painel-admin.html">
-                        <i class="fas fa-gauge-high"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="listar-ordens.html">
-                        <i class="fas fa-file-invoice"></i>
-                        <span>Gerenciar Ordens</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="gerenciar-usuarios.html">
-                        <i class="fas fa-users"></i>
-                        <span>Gerenciar Usuários</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="patrimonio-listar.html">
-                        <i class="fas fa-briefcase"></i>
-                        <span>Patrimônio</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="importar-matriculas.html">
-                        <i class="fas fa-file-arrow-up"></i>
-                        <span>Importar Matrículas</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="transferir-poder.html" class="active">
-                        <i class="fas fa-bolt"></i>
-                        <span>Transferir Poder</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="relatorios.html">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Relatórios</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+      <ul>
+        <li><a href="painel-admin.html"><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="listar-ordens.html"><i class="fa-solid fa-clipboard-list"></i> Ordens</a></li>
+        <li><a href="gerenciar-usuarios.html"><i class="fa-solid fa-users"></i> Usuários</a></li>
+        <li><a href="patrimonio-listar.html"><i class="fa-solid fa-briefcase"></i> Patrimônio</a></li>
+        <li><a href="importar-matriculas.html"><i class="fa-solid fa-file-arrow-up"></i> Importar Matrículas</a></li>
+        <li><a href="transferir-poder.html" class="active"><i class="fa-solid fa-bolt"></i> Transferir Poder</a></li>
+        <li><a href="relatorios.html"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
+      </ul>
     </aside>
 
-    <!-- Conteúdo Principal - PADRONIZADO -->
-    <main class="admin-content">
-        <div class="page-header">
-            <h1><i class="fas fa-bolt"></i> Transferir Poder</h1>
-            <p>Delegue temporariamente as permissões de administrador para outros usuários</p>
+    <section class="content">
+      <h2><i class="fa-solid fa-exchange-alt"></i> Transferência de Permissões</h2>
+
+      <div class="filters">
+        <select id="select-user">
+          <option value="">Carregando usuários...</option>
+        </select>
+
+        <div>
+          <label>
+            <input type="radio" name="transfer-type" value="permanente" checked> Transferência permanente
+          </label>
+          <label style="margin-left:1rem;">
+            <input type="radio" name="transfer-type" value="temporario"> Empréstimo temporário
+          </label>
         </div>
 
-        <!-- Formulário de Transferência -->
-        <div class="transfer-section">
-            <div class="transfer-card">
-                <h3><i class="fas fa-exchange-alt"></i> Nova Transferência</h3>
-                
-                <div class="form-group">
-                    <label for="select-user">Selecionar Usuário *</label>
-                    <select id="select-user" required>
-                        <option value="">Carregando usuários...</option>
-                    </select>
-                </div>
+        <input type="date" id="end-date" style="display:none;" placeholder="Data de término">
 
-                <div class="form-group">
-                    <label>Tipo de Transferência *</label>
-                    <div class="radio-group">
-                        <label class="radio-label">
-                            <input type="radio" name="transfer-type" value="permanente" checked>
-                            <span class="radio-custom"></span>
-                            Transferência Permanente
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="transfer-type" value="temporario">
-                            <span class="radio-custom"></span>
-                            Empréstimo Temporário
-                        </label>
-                    </div>
-                </div>
+        <button id="confirm-btn" class="add-item"><i class="fa-solid fa-bolt"></i> Confirmar</button>
+      </div>
 
-                <div class="form-group" id="date-field" style="display: none;">
-                    <label for="end-date">Data de Término *</label>
-                    <input type="date" id="end-date" min="">
-                </div>
+      <p>Escolha um usuário do suporte e selecione o tipo de transferência de admin:</p>
+      <ul>
+        <li><b>Permanente:</b> o usuário passa a ter a posição de admin definitivamente.</li>
+        <li><b>Temporário:</b> o usuário recebe permissões de admin até a data selecionada.</li>
+      </ul>
 
-                <div class="transfer-info">
-                    <div class="info-item">
-                        <i class="fas fa-info-circle"></i>
-                        <span><strong>Permanente:</strong> O usuário passa a ter a posição de admin definitivamente</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-info-circle"></i>
-                        <span><strong>Temporário:</strong> O usuário recebe permissões de admin até a data selecionada</span>
-                    </div>
-                </div>
+      <div class="table-container">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuário</th>
+              <th>Tipo de Transferência</th>
+              <th>Data de Término</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Conteúdo dinâmico carregado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-                <button class="btn btn-primary" id="confirm-btn">
-                    <i class="fas fa-bolt"></i> Confirmar Transferência
-                </button>
-            </div>
-        </div>
-
-        <!-- Histórico de Transferências -->
-        <div class="history-section">
-            <div class="section-header">
-                <h3><i class="fas fa-history"></i> Histórico de Transferências</h3>
-            </div>
-
-            <div class="table-container">
-                <div class="table-responsive">
-                    <table class="transfers-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Usuário</th>
-                                <th>Tipo</th>
-                                <th>Data de Término</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transfers-table-body">
-                            <!-- Preenchido via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Overlay para menu mobile -->
-    <div class="overlay"></div>
-
-    <script src="../../assets/js/admin.js"></script>
-    <script src="../../assets/js/transferir-poder.js"></script>
+  <!-- Scripts separados -->
+  <script src="../../assets/js/transferir-poder-ui.js"></script>
+  <script src="../../assets/js/transferir-poder-api.js"></script>
+  <script src="../../assets/js/globalCred.js"></script>
 </body>
 </html>

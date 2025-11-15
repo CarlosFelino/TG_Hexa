@@ -217,22 +217,22 @@
     .creditos-content {
         padding: 1.5rem;
     }
-    
+
     .creditos-title {
         font-size: 2rem;
     }
-    
+
     .creditos-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
+
     .credito-card {
         flex-direction: column;
         text-align: center;
         gap: 1rem;
     }
-    
+
     .credito-image {
         width: 100px;
         height: 100px;
@@ -244,13 +244,13 @@
     .creditos-title {
         font-size: 1.8rem;
     }
-    
+
     .creditos-section h2,
     .agradecimentos-section h2 {
         font-size: 1.5rem;
         padding-left: 1rem;
     }
-    
+
     .creditos-section h2::before,
     .agradecimentos-section h2::before {
         left: -0.5rem;

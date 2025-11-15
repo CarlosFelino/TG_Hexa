@@ -1,636 +1,276 @@
-// gerenciar-usuarios.js
-document.addEventListener('DOMContentLoaded', function() {
-    // =========================
-    // Inicialização
-    // =========================
-    const token = localStorage.getItem("authToken");
-    const user = JSON.parse(localStorage.getItem("currentUser"));
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.getElementById("usuarios-tbody");
+  const filterRole = document.getElementById("filter-role");
+  const searchInput = document.getElementById("search-user");
+  const backBtn = document.getElementById("back-btn");
+  const addUserBtn = document.querySelector(".add-user");
 
-    if (!token || !user || user.role !== 'admin') {
-        window.location.href = "../../login.html";
-        return;
-    }
+  // Modal Edit
+  const editModal = document.getElementById("edit-modal");
+  const editClose = document.getElementById("edit-close");
+  const editCancel = document.getElementById("edit-cancel");
+  const editForm = document.getElementById("edit-form");
+  const editId = document.getElementById("edit-id");
+  const editNome = document.getElementById("edit-nome");
+  const editEmail = document.getElementById("edit-email");
+  const editRole = document.getElementById("edit-role");
 
-    // =========================
-    // Elementos do DOM
-    // =========================
-    const usersTableBody = document.getElementById('users-table-body');
-    const searchInput = document.getElementById('search-users');
-    const filterRole = document.getElementById('filter-role');
-    const filterStatus = document.getElementById('filter-status');
-    const resetFiltersBtn = document.getElementById('reset-filters');
-    const addUserBtn = document.getElementById('add-user-btn');
-    const exportBtn = document.getElementById('export-users');
-    
-    // Modais
-    const userDetailsModal = document.getElementById('user-details-modal');
-    const userFormModal = document.getElementById('user-form-modal');
-    const modalCloseBtns = document.querySelectorAll('.modal-close, .modal-close-btn');
-    
-    // Elementos do formulário
-    const userForm = document.getElementById('user-form');
-    const userFormTitle = document.getElementById('user-form-title');
-    const saveUserBtn = document.getElementById('save-user-btn');
-    const editUserBtn = document.getElementById('edit-user-btn');
-    const passwordField = document.getElementById('password-field');
+  // Cache local
+  let usuariosCache = [];
 
-    // Elementos de estatísticas
-    const totalUsersEl = document.getElementById('total-users');
-    const totalProfessorsEl = document.getElementById('total-professors');
-    const totalSupportEl = document.getElementById('total-support');
-    const totalAdminsEl = document.getElementById('total-admins');
+  // Rota do backend para usuários cadastrados
+  const API_URL = "/api/admin/usuarios";
 
-    // Filtros ativos
-    let activeFilters = {
-        search: '',
-        role: '',
-        status: ''
+  // ----------------------------- MODAL AUTORIZAR MATRÍCULA -----------------------------
+  const modalAdd = document.createElement("div");
+  modalAdd.className = "modal";
+  modalAdd.style.display = "none";
+  modalAdd.innerHTML = `
+    <div class="modal-content">
+      <button class="close" id="add-close">&times;</button>
+      <h2>Autorizar Matrícula</h2>
+
+      <form id="add-form">
+        <label for="add-matricula">Matrícula:</label>
+        <input type="text" id="add-matricula" required>
+
+        <label for="add-tipo">Tipo:</label>
+        <select id="add-tipo" required>
+          <option value="professor">Professor</option>
+          <option value="suporte">Suporte</option>
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit" id="add-save" class="btn-confirm">Salvar</button>
+          <button type="button" id="add-cancel" class="btn-cancel">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modalAdd);
+
+  const addClose = document.getElementById("add-close");
+  const addCancel = document.getElementById("add-cancel");
+  const addForm = document.getElementById("add-form");
+  const addMatricula = document.getElementById("add-matricula");
+  const addTipo = document.getElementById("add-tipo");
+
+  // Abrir modal
+  addUserBtn.addEventListener("click", () => {
+    modalAdd.style.display = "flex";
+  });
+
+  // Fechar modal
+  addClose.addEventListener("click", () => modalAdd.style.display = "none");
+  addCancel.addEventListener("click", () => modalAdd.style.display = "none");
+  window.addEventListener("click", e => {
+    if (e.target === modalAdd) modalAdd.style.display = "none";
+  });
+
+  // Salvar nova matrícula autorizada
+  addForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const bodyData = {
+      matricula: addMatricula.value.trim(),
+      role: addTipo.value
     };
 
-    let usersData = [];
-    let currentPage = 1;
-    const itemsPerPage = 10;
-    let currentEditingUserId = null;
+    try {
+      const res = await fetch("/api/admin/matriculas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          matricula: addMatricula.value.trim(),
+          role: addTipo.value
+        })
+      });
 
-    // =========================
-    // Buscar usuários do backend
-    // =========================
-    async function fetchAllUsers() {
-        try {
-            const res = await fetch("/api/admin/usuarios", {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            
-            if (!res.ok) throw new Error("Falha ao carregar usuários");
-            
-            const data = await res.json();
-            usersData = data.usuarios || [];
-            
-            updateStatistics();
-            renderUsers();
-            
-        } catch (err) {
-            console.error("Erro ao carregar usuários:", err);
-            // Dados mock para demonstração
-            usersData = getMockUsers();
-            updateStatistics();
-            renderUsers();
-        }
+      if (!res.ok) throw new Error("Erro ao autorizar matrícula");
+
+      alert("Matrícula autorizada com sucesso!");
+      modalAdd.style.display = "none";
+      addForm.reset();
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao autorizar matrícula.");
+    }
+  });
+
+  // ----------------------------- LISTAR USUÁRIOS -----------------------------
+  async function carregarUsuarios() {
+    try {
+      const res = await fetch(API_URL);
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Erro ${res.status}: ${text}`);
+      }
+
+      usuariosCache = await res.json();
+      renderUsuarios(usuariosCache);
+
+    } catch (err) {
+      console.error("Erro ao carregar usuários:", err);
+      tbody.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;">
+        Erro de conexão: Verifique se a rota <b>${API_URL}</b> existe no seu servidor Node.js.
+      </td></tr>`;
+    }
+  }
+
+  function renderUsuarios(lista) {
+    tbody.innerHTML = "";
+
+    if (!lista || lista.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
+      return;
     }
 
-    // =========================
-    // Atualizar estatísticas
-    // =========================
-    function updateStatistics() {
-        const total = usersData.length;
-        const professors = usersData.filter(u => u.role === 'professor').length;
-        const support = usersData.filter(u => u.role === 'suporte').length;
-        const admins = usersData.filter(u => u.role === 'admin').length;
+    lista.forEach(u => {
+      const tr = document.createElement("tr");
+      const roleExibida = u.role || u.cargo || "N/A";
 
-        if (totalUsersEl) totalUsersEl.textContent = total;
-        if (totalProfessorsEl) totalProfessorsEl.textContent = professors;
-        if (totalSupportEl) totalSupportEl.textContent = support;
-        if (totalAdminsEl) totalAdminsEl.textContent = admins;
+      tr.innerHTML = `
+        <td>${u.id}</td>
+        <td>${u.nome}</td>
+        <td>${u.email || "—"}</td>
+        <td>${roleExibida}</td>
+        <td>
+          <button class="btn-edit" 
+            data-id="${u.id}" 
+            data-nome="${escapeHtml(u.nome)}" 
+            data-email="${escapeHtml(u.email || '')}" 
+            data-role="${roleExibida}" 
+            title="Editar">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+
+          <button class="btn-delete" data-id="${u.id}" title="Excluir">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    document.querySelectorAll(".btn-edit").forEach(btn =>
+      btn.addEventListener("click", () => abrirModalEdicao(btn))
+    );
+
+    document.querySelectorAll(".btn-delete").forEach(btn =>
+      btn.addEventListener("click", () => confirmarExclusao(btn.dataset.id))
+    );
+  }
+
+  function escapeHtml(str = "") {
+    return String(str)
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  // ----------------------------- EDITAR USUÁRIO -----------------------------
+  function abrirModalEdicao(btn) {
+    editId.value = btn.dataset.id;
+    editNome.value = btn.dataset.nome || "";
+    editEmail.value = btn.dataset.email || "";
+    editRole.value = btn.dataset.role || "professor";
+
+    editModal.style.display = "flex";
+  }
+
+  function fecharModalEdit() {
+    editModal.style.display = "none";
+    editForm.reset();
+  }
+
+  editClose.addEventListener("click", fecharModalEdit);
+  editCancel.addEventListener("click", fecharModalEdit);
+
+  window.addEventListener("click", (e) => {
+    if (e.target === editModal) fecharModalEdit();
+  });
+
+  editForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const id = editId.value;
+
+    const bodyData = {
+      nome: editNome.value.trim(),
+      email: editEmail.value.trim(),
+      role: editRole.value
+    };
+
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData)
+      });
+
+      if (!res.ok) throw new Error(`Erro HTTP ${res.status}`);
+
+      alert("Usuário atualizado!");
+      fecharModalEdit();
+      carregarUsuarios();
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao atualizar. Veja o console.");
     }
+  });
 
-    // =========================
-    // Renderizar tabela
-    // =========================
-    function renderUsers() {
-        let filteredUsers = [...usersData];
+  // ----------------------------- EXCLUIR USUÁRIO -----------------------------
+  async function confirmarExclusao(id) {
+    if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
 
-        // Aplicar filtros
-        if (activeFilters.search) {
-            const searchTerm = activeFilters.search.toLowerCase();
-            filteredUsers = filteredUsers.filter(user => 
-                user.name.toLowerCase().includes(searchTerm) ||
-                user.email.toLowerCase().includes(searchTerm) ||
-                user.matricula.toLowerCase().includes(searchTerm)
-            );
-        }
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+      });
 
-        if (activeFilters.role) {
-            filteredUsers = filteredUsers.filter(user => user.role === activeFilters.role);
-        }
+      if (!res.ok) throw new Error(`Erro HTTP ${res.status}`);
 
-        if (activeFilters.status) {
-            filteredUsers = filteredUsers.filter(user => user.status === activeFilters.status);
-        }
+      alert("Usuário excluído!");
+      carregarUsuarios();
 
-        // Paginação
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
-
-        // Renderizar tabela
-        usersTableBody.innerHTML = '';
-
-        if (paginatedUsers.length === 0) {
-            usersTableBody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-medium);">
-                        <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                        Nenhum usuário encontrado com os filtros atuais
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        paginatedUsers.forEach(user => {
-            const row = document.createElement('tr');
-            
-            // Textos para badges
-            const roleText = user.role === 'professor' ? 'Professor' : 
-                           user.role === 'suporte' ? 'Suporte' : 'Administrador';
-            
-            const statusText = user.status === 'active' ? 'Ativo' : 'Inativo';
-
-            row.innerHTML = `
-                <td><strong>${user.matricula}</strong></td>
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td><span class="role-badge ${user.role}">${roleText}</span></td>
-                <td><span class="status-badge ${user.status}">${statusText}</span></td>
-                <td>${formatDate(user.created_at)}</td>
-                <td>
-                    <div class="actions-cell">
-                        <button class="btn-table view" data-id="${user.id}" title="Ver detalhes">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="btn-table edit" data-id="${user.id}" title="Editar usuário">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-table delete" data-id="${user.id}" title="Excluir usuário">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            `;
-            
-            usersTableBody.appendChild(row);
-        });
-
-        // Adicionar event listeners aos botões
-        addTableEventListeners();
-        renderPagination(filteredUsers.length);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao excluir. Veja o console.");
     }
+  }
 
-    // =========================
-    // Event Listeners da Tabela
-    // =========================
-    function addTableEventListeners() {
-        // Botão Ver
-        document.querySelectorAll('.btn-table.view').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const userId = e.currentTarget.dataset.id;
-                showUserDetails(userId);
-            });
-        });
+  // ----------------------------- FILTROS -----------------------------
+  function aplicarFiltros() {
+    const role = filterRole.value;
+    const search = searchInput.value.trim().toLowerCase();
 
-        // Botão Editar
-        document.querySelectorAll('.btn-table.edit').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const userId = e.currentTarget.dataset.id;
-                editUser(userId);
-            });
-        });
+    const filtrados = usuariosCache.filter(u => {
+      const uRole = (u.role || u.cargo || "").toLowerCase();
+      const roleMatch = !role || uRole === role.toLowerCase();
 
-        // Botão Excluir
-        document.querySelectorAll('.btn-table.delete').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const userId = e.currentTarget.dataset.id;
-                deleteUser(userId);
-            });
-        });
-    }
+      const uNome = (u.nome || "").toLowerCase();
+      const uEmail = (u.email || "").toLowerCase();
+      const searchMatch = !search || uNome.includes(search) || uEmail.includes(search);
 
-    // =========================
-    // Funções de Ação
-    // =========================
-    function showUserDetails(userId) {
-        const user = usersData.find(u => u.id === userId);
-        if (!user) return;
+      return roleMatch && searchMatch;
+    });
 
-        const roleText = user.role === 'professor' ? 'Professor' : 
-                       user.role === 'suporte' ? 'Suporte' : 'Administrador';
+    renderUsuarios(filtrados);
+  }
 
-        document.getElementById('modal-user-details').innerHTML = `
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <label>Matrícula:</label>
-                    <span>${user.matricula}</span>
-                </div>
-                <div class="detail-item">
-                    <label>Nome Completo:</label>
-                    <span>${user.name}</span>
-                </div>
-                <div class="detail-item">
-                    <label>Email:</label>
-                    <span>${user.email}</span>
-                </div>
-                <div class="detail-item">
-                    <label>Cargo:</label>
-                    <span class="role-badge ${user.role}">${roleText}</span>
-                </div>
-                <div class="detail-item">
-                    <label>Status:</label>
-                    <span class="status-badge ${user.status}">${user.status === 'active' ? 'Ativo' : 'Inativo'}</span>
-                </div>
-                <div class="detail-item">
-                    <label>Data de Cadastro:</label>
-                    <span>${formatDate(user.created_at)}</span>
-                </div>
-                <div class="detail-item">
-                    <label>Último Acesso:</label>
-                    <span>${user.last_login ? formatDate(user.last_login) : 'Nunca acessou'}</span>
-                </div>
-            </div>
-        `;
+  filterRole.addEventListener("change", aplicarFiltros);
+  searchInput.addEventListener("input", aplicarFiltros);
 
-        userDetailsModal.classList.add('active');
-    }
+  // Voltar
+  if (backBtn)
+    backBtn.addEventListener("click", () => {
+      window.location.href = "painel-admin.html";
+    });
 
-    function editUser(userId) {
-        const user = usersData.find(u => u.id === userId);
-        if (!user) return;
-
-        currentEditingUserId = userId;
-        userFormTitle.textContent = 'Editar Usuário';
-        
-        // Preencher formulário
-        document.getElementById('user-matricula').value = user.matricula;
-        document.getElementById('user-name').value = user.name;
-        document.getElementById('user-email').value = user.email;
-        document.getElementById('user-role').value = user.role;
-        document.getElementById('user-status').value = user.status;
-        
-        // Ocultar campo de senha na edição
-        passwordField.style.display = 'none';
-        document.getElementById('user-password').required = false;
-        
-        userFormModal.classList.add('active');
-    }
-
-    function deleteUser(userId) {
-        const user = usersData.find(u => u.id === userId);
-        if (!user) return;
-
-        showCustomAlert('warning', 'Confirmar Exclusão', 
-            `Tem certeza que deseja excluir o usuário <strong>${user.name}</strong> (${user.email})? Esta ação não pode ser desfeita.`,
-            [
-                { text: 'Cancelar', action: 'secondary' },
-                { text: 'Excluir', action: 'primary', callback: () => confirmDelete(userId) }
-            ]
-        );
-    }
-
-    function confirmDelete(userId) {
-        // Simular exclusão
-        console.log(`Excluindo usuário: ${userId}`);
-        showCustomAlert('success', 'Usuário Excluído', 'O usuário foi excluído com sucesso.');
-        
-        // Atualizar lista (em produção, faria nova requisição)
-        usersData = usersData.filter(user => user.id !== userId);
-        updateStatistics();
-        renderUsers();
-    }
-
-    // =========================
-    // Gerenciar Formulário
-    // =========================
-    function setupFormHandlers() {
-        addUserBtn.addEventListener('click', () => {
-            currentEditingUserId = null;
-            userFormTitle.textContent = 'Adicionar Novo Usuário';
-            userForm.reset();
-            
-            // Mostrar campo de senha para novo usuário
-            passwordField.style.display = 'block';
-            document.getElementById('user-password').required = true;
-            
-            userFormModal.classList.add('active');
-        });
-
-        saveUserBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            if (!userForm.checkValidity()) {
-                userForm.reportValidity();
-                return;
-            }
-
-            const formData = {
-                matricula: document.getElementById('user-matricula').value,
-                name: document.getElementById('user-name').value,
-                email: document.getElementById('user-email').value,
-                role: document.getElementById('user-role').value,
-                status: document.getElementById('user-status').value
-            };
-
-            if (document.getElementById('user-password').value) {
-                formData.password = document.getElementById('user-password').value;
-            }
-
-            try {
-                if (currentEditingUserId) {
-                    // Editar usuário existente
-                    await updateUser(currentEditingUserId, formData);
-                } else {
-                    // Criar novo usuário
-                    await createUser(formData);
-                }
-                
-                userFormModal.classList.remove('active');
-                fetchAllUsers(); // Recarregar dados
-                
-            } catch (error) {
-                showCustomAlert('error', 'Erro', error.message);
-            }
-        });
-
-        // Validação de email institucional
-        document.getElementById('user-email').addEventListener('blur', function() {
-            const email = this.value;
-            if (email && !email.endsWith('@fatec.sp.gov.br')) {
-                this.setCustomValidity('Por favor, use um email institucional da Fatec (@fatec.sp.gov.br)');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
-    }
-
-    async function createUser(userData) {
-        // Simular criação de usuário
-        console.log('Criando usuário:', userData);
-        showCustomAlert('success', 'Usuário Criado', 'O usuário foi criado com sucesso.');
-        
-        // Em produção, faria:
-        // const res = await fetch("/api/admin/usuarios", {
-        //     method: "POST",
-        //     headers: { 
-        //         "Authorization": `Bearer ${token}`,
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify(userData)
-        // });
-    }
-
-    async function updateUser(userId, userData) {
-        // Simular atualização de usuário
-        console.log('Atualizando usuário:', userId, userData);
-        showCustomAlert('success', 'Usuário Atualizado', 'O usuário foi atualizado com sucesso.');
-        
-        // Em produção, faria:
-        // const res = await fetch(`/api/admin/usuarios/${userId}`, {
-        //     method: "PUT",
-        //     headers: { 
-        //         "Authorization": `Bearer ${token}`,
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify(userData)
-        // });
-    }
-
-    // =========================
-    // Sistema de Alertas Padronizado
-    // =========================
-    function showCustomAlert(type, title, message, buttons = []) {
-        const alertOverlay = document.createElement('div');
-        alertOverlay.className = `alert-overlay alert-${type}`;
-        
-        const icons = {
-            success: 'fa-check-circle',
-            error: 'fa-exclamation-circle',
-            warning: 'fa-exclamation-triangle',
-            info: 'fa-info-circle'
-        };
-
-        const buttonHTML = buttons.length > 0 ? 
-            `<div class="alert-actions">
-                ${buttons.map(btn => `
-                    <button class="alert-btn alert-btn-${btn.action}" data-action="${btn.action}">
-                        ${btn.text}
-                    </button>
-                `).join('')}
-            </div>` : '';
-
-        alertOverlay.innerHTML = `
-            <div class="alert-modal">
-                <div class="alert-icon">
-                    <i class="fas ${icons[type] || 'fa-info-circle'}"></i>
-                </div>
-                <h3 class="alert-title">${title}</h3>
-                <div class="alert-message">${message}</div>
-                ${buttonHTML}
-            </div>
-        `;
-
-        document.body.appendChild(alertOverlay);
-        
-        // Event listeners para botões
-        alertOverlay.querySelectorAll('.alert-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const action = this.dataset.action;
-                const buttonConfig = buttons.find(b => b.text === this.textContent);
-                if (buttonConfig && buttonConfig.callback) {
-                    buttonConfig.callback();
-                }
-                alertOverlay.remove();
-            });
-        });
-
-        // Fechar ao clicar fora ou pressionar ESC
-        alertOverlay.addEventListener('click', (e) => {
-            if (e.target === alertOverlay) {
-                alertOverlay.remove();
-            }
-        });
-
-        document.addEventListener('keydown', function closeOnEscape(e) {
-            if (e.key === 'Escape') {
-                alertOverlay.remove();
-                document.removeEventListener('keydown', closeOnEscape);
-            }
-        });
-
-        setTimeout(() => alertOverlay.classList.add('visible'), 10);
-    }
-
-    // =========================
-    // Paginação
-    // =========================
-    function renderPagination(totalItems) {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        const paginationEl = document.getElementById('pagination');
-        
-        if (totalPages <= 1) {
-            paginationEl.innerHTML = '';
-            return;
-        }
-
-        let paginationHTML = '';
-
-        // Botão anterior
-        paginationHTML += `
-            <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-        `;
-
-        // Páginas
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `
-                <button class="pagination-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">
-                    ${i}
-                </button>
-            `;
-        }
-
-        // Botão próximo
-        paginationHTML += `
-            <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        `;
-
-        paginationEl.innerHTML = paginationHTML;
-
-        // Event listeners da paginação
-        paginationEl.querySelectorAll('.pagination-btn:not(:disabled)').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                currentPage = parseInt(e.currentTarget.dataset.page);
-                renderUsers();
-            });
-        });
-    }
-
-    // =========================
-    // Utilitários
-    // =========================
-    function formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('pt-BR');
-    }
-
-    // =========================
-    // Dados Mock (para demonstração)
-    // =========================
-    function getMockUsers() {
-        return [
-            {
-                id: '1',
-                matricula: '12345',
-                name: 'Prof. Carlos Silva',
-                email: 'carlos.silva@fatec.sp.gov.br',
-                role: 'professor',
-                status: 'active',
-                created_at: '2024-01-01',
-                last_login: '2024-12-19'
-            },
-            {
-                id: '2',
-                matricula: '12345',
-                name: 'Técnico João Souza',
-                email: 'joao.souza@fatec.sp.gov.br',
-                role: 'suporte',
-                status: 'active',
-                created_at: '2024-01-02',
-                last_login: '2024-12-19'
-            },
-            {
-                id: '3',
-                matricula: '12345',
-                name: 'Admin Maria Oliveira',
-                email: 'maria.oliveira@fatec.sp.gov.br',
-                role: 'admin',
-                status: 'active',
-                created_at: '2024-01-03',
-                last_login: '2024-12-19'
-            },
-            {
-                id: '4',
-                matricula: '1234',
-                name: 'Prof. Ana Costa',
-                email: 'ana.costa@fatec.sp.gov.br',
-                role: 'professor',
-                status: 'inactive',
-                created_at: '2024-01-04',
-                last_login: '2024-11-15'
-            }
-        ];
-    }
-
-    // =========================
-    // Inicialização
-    // =========================
-    function init() {
-        fetchAllUsers();
-        setupFormHandlers();
-
-        // Event listeners dos filtros
-        searchInput.addEventListener('input', (e) => {
-            activeFilters.search = e.target.value;
-            currentPage = 1;
-            renderUsers();
-        });
-
-        filterRole.addEventListener('change', (e) => {
-            activeFilters.role = e.target.value;
-            currentPage = 1;
-            renderUsers();
-        });
-
-        filterStatus.addEventListener('change', (e) => {
-            activeFilters.status = e.target.value;
-            currentPage = 1;
-            renderUsers();
-        });
-
-        resetFiltersBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            filterRole.value = '';
-            filterStatus.value = '';
-            activeFilters = { search: '', role: '', status: '' };
-            currentPage = 1;
-            renderUsers();
-        });
-
-        exportBtn.addEventListener('click', () => {
-            showCustomAlert('info', 'Exportar Usuários', 'A funcionalidade de exportação será implementada em breve.');
-        });
-
-        // Event listeners dos modais
-        modalCloseBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                userDetailsModal.classList.remove('active');
-                userFormModal.classList.remove('active');
-            });
-        });
-
-        [userDetailsModal, userFormModal].forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
-        });
-
-        editUserBtn.addEventListener('click', () => {
-            userDetailsModal.classList.remove('active');
-            // Aqui você implementaria a edição direta do usuário
-            showCustomAlert('info', 'Editar Usuário', 'A edição direta do usuário será implementada em breve.');
-        });
-
-        // Fechar modais com ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                userDetailsModal.classList.remove('active');
-                userFormModal.classList.remove('active');
-            }
-        });
-    }
-
-    // Iniciar aplicação
-    init();
-
-    console.log('✅ Gerenciar Usuários - Admin inicializado com sucesso!');
+  // Inicializar
+  carregarUsuarios();
 });

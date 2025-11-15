@@ -32,11 +32,17 @@
             <div class="cadastro-grid">
                 <!-- Coluna Esquerda -->
                 <div class="cadastro-column">
-            
+
                     <div class="form-group">
-                        <label for="employeeId"><i class="fas fa-id-card"></i> Nº Matrícula</label>
-                        <input type="text" id="employeeId" name="employeeId" required 
-                            placeholder="1234567890123" maxlength="13" pattern="[0-9]{13}">
+                        <label for="employeeId"><i class="fas fa-id-card"></i> Nº Matrícula </label>
+                        <input 
+                            type="text" 
+                            id="employeeId" 
+                            name="employeeId" 
+                            required
+                            placeholder="Digite a matrícula"
+                            maxlength="13"
+                            pattern="([0-9]{5}|[0-9]{13})">
                     </div>
 
                     <div class="form-group">

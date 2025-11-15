@@ -3,13 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     // Inicialização
     // =========================
-    const token = localStorage.getItem("authToken");
-    const user = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (!token || !user || user.role !== 'admin') {
-        window.location.href = "../../login.html";
-        return;
-    }
 
     // =========================
     // Elementos do DOM
@@ -50,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupMenu() {
         menuToggle?.addEventListener('click', toggleSidebar);
         overlay?.addEventListener('click', closeSidebar);
-        
+
         // Fechar sidebar ao clicar em links
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.addEventListener('click', closeSidebar);
@@ -100,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const res = await fetch("/api/admin/dashboard", {
                 headers: { "Authorization": "Bearer " + token }
             });
-            
+
             if (!res.ok) throw new Error("Falha ao carregar dados do dashboard");
 
             const data = await res.json();
@@ -178,11 +172,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const diffMs = now - date;
         const diffMins = Math.floor(diffMs / 60000);
         const diffHours = Math.floor(diffMs / 3600000);
-        
+
         if (diffMins < 1) return 'Agora mesmo';
         if (diffMins < 60) return `Há ${diffMins} min`;
         if (diffHours < 24) return `Há ${diffHours} h`;
-        
+
         return date.toLocaleDateString('pt-BR');
     }
 

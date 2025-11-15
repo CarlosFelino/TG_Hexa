@@ -423,30 +423,30 @@ input:checked + .slider:before {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .photo-upload {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .profile-card {
         padding: 1.5rem;
     }
-    
+
     .form-row {
         flex-direction: column;
         gap: 0;
     }
-    
+
     .form-actions {
         flex-direction: column;
         justify-content: center;
     }
-    
+
     .settings-grid {
         gap: 1rem;
     }
-    
+
     .setting-item {
         flex-direction: column;
         align-items: flex-start;
@@ -458,12 +458,12 @@ input:checked + .slider:before {
     .profile-card {
         padding: 1rem;
     }
-    
+
     .photo-preview {
         width: 100px;
         height: 100px;
     }
-    
+
     .upload-controls {
         min-width: auto;
     }

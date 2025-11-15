@@ -485,7 +485,7 @@
         grid-template-columns: 1fr;
         gap: 2rem;
     }
-    
+
     .cadastro-container {
         margin: 1rem;
         padding: 1.5rem;
@@ -496,16 +496,16 @@
     .form-actions {
         flex-direction: column;
     }
-    
+
     .btn-submit, .btn-cancel {
         width: 100%;
         justify-content: center;
     }
-    
+
     .alert-modal {
         padding: 2rem 1.5rem;
     }
-    
+
     .alert-actions {
         flex-direction: column;
     }

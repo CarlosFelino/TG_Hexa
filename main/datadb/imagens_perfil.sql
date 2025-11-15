@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS imagens_perfil (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL,
+    caminho_arquivo VARCHAR(255) NOT NULL,
+    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (usuario_id) REFERENCES users(id) ON DELETE CASCADE
+);

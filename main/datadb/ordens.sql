@@ -3,7 +3,7 @@
 -- ========================================
 CREATE TABLE IF NOT EXISTS ordens (
     id SERIAL PRIMARY KEY,
-    codigo VARCHAR(20) UNIQUE,  -- será preenchido pelo trigger
+    codigo VARCHAR(20) UNIQUE, 
     criador_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     responsavel_id INT REFERENCES users(id) ON DELETE SET NULL,
     tipo_solicitacao VARCHAR(20) NOT NULL CHECK (tipo_solicitacao IN ('problema', 'instalacao')),
@@ -39,30 +39,4 @@ BEFORE UPDATE ON ordens
 FOR EACH ROW
 EXECUTE FUNCTION atualiza_data_atualizacao();
 
--- ========================================
--- Função para gerar codigo da ordem
--- ========================================
-CREATE OR REPLACE FUNCTION gerar_codigo_ordem()
-RETURNS TRIGGER AS $$
-DECLARE
-    ano TEXT;
-    seq TEXT;
-BEGIN
-    -- Pega o ano de criação
-    ano := TO_CHAR(NEW.data_criacao, 'YYYY');
 
-    -- Número sequencial baseado no ID da ordem, com 3 dígitos
-    seq := LPAD(NEW.id::TEXT, 3, '0');
-
-    -- Monta o código no formato #ORD-AAAA-XXX
-    NEW.codigo := '#ORD-' || ano || '-' || seq;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Trigger para gerar o código antes de inserir
-CREATE TRIGGER trigger_codigo_ordem
-BEFORE INSERT ON ordens
-FOR EACH ROW
-EXECUTE FUNCTION gerar_codigo_ordem();

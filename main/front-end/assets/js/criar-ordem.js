@@ -1,9 +1,12 @@
+// Importa credenciais globais
+import "../../assets/js/globalCred.js";
+
 document.addEventListener("DOMContentLoaded", function() {
     // =========================
     // DADOS DO SISTEMA
     // =========================
-    const salasAula = ["101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "304", "305", "307", "310", "311", "312", "313"];
-    const laboratorios = ["202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "213", "214", "215"];
+    const salasAula = ["101","102","103","104","105","106","107","108","109","110","111","112","113","304","305","307","310","311","312","313"];
+    const laboratorios = ["202","203","204","205","206","207","208","209","210","211","213","214","215"];
 
     const kits = {
         "sala": [
@@ -22,42 +25,42 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     const problemas = {
-        "kit-professor": [
-            { value: "sem-video", label: "Monitor não liga", icon: "fas fa-video-slash" },
-            { value: "sem-internet", label: "Sem Internet", icon: "fas fa-wifi-slash" },
-            { value: "nao-espelha-tv", label: "Não está espelhando na TV", icon: "fas fa-sync-alt" },
-            { value: "gabinete-nao-liga", label: "Gabinete não liga", icon: "fas fa-power-off" },
-            { value: "outro", label: "Outro problema", icon: "fas fa-question-circle" }
+        "kit-professor":[
+            {value:"sem-video", label:"Monitor não liga"},
+            {value:"sem-internet", label:"Sem Internet"},
+            {value:"nao-espelha-tv", label:"Não está espelhando na TV"},
+            {value:"gabinete-nao-liga", label:"Gabinete não liga"},
+            {value:"outro", label:"Outro problema"}
         ],
-        "kit-aluno-desktop": [
-            { value: "sem-video", label: "Monitor não liga", icon: "fas fa-video-slash" },
-            { value: "sem-internet", label: "Sem Internet", icon: "fas fa-wifi-slash" },
-            { value: "gabinete-nao-liga", label: "Gabinete não liga", icon: "fas fa-power-off" },
-            { value: "outro", label: "Outro problema", icon: "fas fa-question-circle" }
+        "kit-aluno-desktop":[
+            {value:"sem-video", label:"Monitor não liga"},
+            {value:"sem-internet", label:"Sem Internet"},
+            {value:"gabinete-nao-liga", label:"Gabinete não liga"},
+            {value:"outro", label:"Outro problema"}
         ],
-        "kit-aluno-notebook": [
-            { value: "sem-internet", label: "Sem Internet", icon: "fas fa-wifi-slash" },
-            { value: "bateria", label: "Problema com Bateria", icon: "fas fa-battery-quarter" },
-            { value: "nao-liga", label: "Notebook não liga", icon: "fas fa-power-off" },
-            { value: "outro", label: "Outro problema", icon: "fas fa-question-circle" }
+        "kit-aluno-notebook":[
+            {value:"sem-internet", label:"Sem Internet"},
+            {value:"bateria", label:"Problema com Bateria"},
+            {value:"nao-liga", label:"Notebook não liga"},
+            {value:"outro", label:"Outro problema"}
         ],
-        "tv": [
-            { value: "nao-liga", label: "TV não liga", icon: "fas fa-power-off" },
-            { value: "sem-sinal", label: "Sem sinal", icon: "fas fa-times-circle" },
-            { value: "outro", label: "Outro problema", icon: "fas fa-question-circle" }
+        "tv":[
+            {value:"nao-liga", label:"TV não liga"},
+            {value:"sem-sinal", label:"Sem sinal"},
+            {value:"outro", label:"Outro problema"}
         ],
-        "perifericos": [
-            { value: "mouse-defeito", label: "Mouse com defeito", icon: "fas fa-mouse" },
-            { value: "teclado-defeito", label: "Teclado com defeito", icon: "fas fa-keyboard" },
-            { value: "outro", label: "Outro problema", icon: "fas fa-question-circle" }
+        "perifericos":[
+            {value:"mouse-defeito", label:"Mouse com defeito"},
+            {value:"teclado-defeito", label:"Teclado com defeito"},
+            {value:"outro", label:"Outro problema"}
         ],
-        "conectividade": [
-            { value: "cabo-rede", label: "Problema com cabo de rede", icon: "fas fa-network-wired" },
-            { value: "keystone", label: "Problema com Keystone", icon: "fas fa-ethernet" },
-            { value: "outro", label: "Outro problema", icon: "fas fa-question-circle" }
+        "conectividade":[
+            {value:"cabo-rede", label:"Problema com cabo de rede"},
+            {value:"keystone", label:"Problema com Keystone"},
+            {value:"outro", label:"Outro problema"}
         ],
-        "default": [
-            { value: "outro", label: "Outro problema", icon: "fas fa-question-circle" }
+        "default":[
+            {value:"outro", label:"Outro problema"}
         ]
     };
 
@@ -73,73 +76,62 @@ document.addEventListener("DOMContentLoaded", function() {
             const opt = document.createElement("option");
             opt.value = o.value || o;
             opt.textContent = o.label || o;
-            if (o.icon) {
-                opt.dataset.icon = o.icon;
-            }
             select.appendChild(opt);
         });
     }
 
-    function updateLocais() {
-        const tipoAmbiente = getElement("tipo-ambiente").value;
-        const selectLocal = getElement("local-detalhe");
-        
-        if (tipoAmbiente === "sala") {
-            populateSelect(selectLocal, salasAula);
-        } else if (tipoAmbiente === "laboratorio") {
-            populateSelect(selectLocal, laboratorios);
-        } else {
-            selectLocal.innerHTML = `<option value="">Selecione...</option>`;
-        }
-        
-        updateKits();
+    function updateLocais(modal) {
+        const tipoSelect = getElement(`tipo-ambiente-${modal}`);
+        const selectLocal = getElement(`local-detalhe-${modal}`);
+        if(!tipoSelect || !selectLocal) return;
+
+        const tipoAmbiente = tipoSelect.value;
+        if(tipoAmbiente==="sala") populateSelect(selectLocal, salasAula);
+        else if(tipoAmbiente==="laboratorio") populateSelect(selectLocal, laboratorios);
+        else selectLocal.innerHTML = `<option value="">Selecione...</option>`;
+
+        updateKits(modal);
     }
 
-    function updateKits() {
-        const tipoAmbiente = getElement("tipo-ambiente").value;
-        const selectKit = getElement("tipo-kit");
-        
-        if (kits[tipoAmbiente]) {
-            populateSelect(selectKit, kits[tipoAmbiente]);
-        } else {
-            populateSelect(selectKit, []);
-        }
-        
-        updateProblemas();
+    function updateKits(modal) {
+        const tipoSelect = getElement(`tipo-ambiente-${modal}`);
+        const selectKit = getElement(`tipo-kit-${modal}`);
+        if(!tipoSelect || !selectKit) return;
+
+        const tipoAmbiente = tipoSelect.value;
+        if(kits[tipoAmbiente]) populateSelect(selectKit, kits[tipoAmbiente]);
+        else populateSelect(selectKit, []);
+
+        updateProblemas(modal);
     }
 
-    function updateProblemas() {
-        const kitSelecionado = getElement("tipo-kit").value;
-        const selectProblema = getElement("tipo-problema");
-        
-        if (problemas[kitSelecionado]) {
-            populateSelect(selectProblema, problemas[kitSelecionado]);
-        } else {
-            populateSelect(selectProblema, problemas.default);
-        }
+    function updateProblemas(modal) {
+        const selectKit = getElement(`tipo-kit-${modal}`);
+        const selectProblema = getElement(`tipo-problema-${modal}`);
+        if(!selectKit || !selectProblema) return;
+
+        const kit = selectKit.value || "default";
+        if(problemas[kit]) populateSelect(selectProblema, problemas[kit]);
+        else populateSelect(selectProblema, problemas.default);
     }
 
-    // =========================
-    // MANIPULAÇÃO DE MODAIS
-    // =========================
     function openModal(modal) {
-        if (!modal) return;
+        if(!modal) return;
         modal.classList.add("active");
         document.body.style.overflow = "hidden";
     }
 
     function closeModal(modal) {
-        if (!modal) return;
+        if(!modal) return;
         modal.classList.remove("active");
         document.body.style.overflow = "";
     }
 
     // =========================
-    // UPLOAD DE ARQUIVOS
+    // MINIATURAS DE ARQUIVOS
     // =========================
     function handleFileUpload(fileInput, fileList) {
         if (!fileInput || !fileList) return;
-
         fileList.innerHTML = "";
         const files = Array.from(fileInput.files);
 
@@ -152,11 +144,29 @@ document.addEventListener("DOMContentLoaded", function() {
         files.forEach((file, i) => {
             const div = document.createElement("div");
             div.className = "file-item";
-            div.innerHTML = `
-                <i class="fas fa-file-alt"></i>
-                <span>${file.name}</span>
-                <span class="remove" data-index="${i}">&times;</span>
-            `;
+
+            if (file.type.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.className = "preview-thumb";
+                img.alt = file.name;
+                div.appendChild(img);
+            } else {
+                const icon = document.createElement("i");
+                icon.className = "fas fa-file-alt";
+                div.appendChild(icon);
+            }
+
+            const name = document.createElement("span");
+            name.textContent = file.name;
+            div.appendChild(name);
+
+            const remove = document.createElement("span");
+            remove.className = "remove";
+            remove.dataset.index = i;
+            remove.innerHTML = "&times;";
+            div.appendChild(remove);
+
             fileList.appendChild(div);
         });
 
@@ -164,94 +174,94 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.addEventListener("click", e => {
                 const index = parseInt(e.target.dataset.index);
                 const newFiles = files.filter((_, i) => i !== index);
-
                 const dt = new DataTransfer();
                 newFiles.forEach(f => dt.items.add(f));
                 fileInput.files = dt.files;
-
                 handleFileUpload(fileInput, fileList);
             });
         });
     }
 
+    // ====== Destaque visual no próprio campo (não na label) ======
+    document.querySelectorAll('select').forEach(select => {
+      select.addEventListener('change', () => {
+        if (select.value.trim() !== "") {
+          select.classList.add("selected");
+        } else {
+          select.classList.remove("selected");
+        }
+      });
+    });
+
+
+
     // =========================
-    // ENVIO DE FORMULÁRIOS
+    // ENVIO DE ORDENS
     // =========================
-    async function enviarOrdem(body, filesInput, ordemTipo, modalElement) {
+    async function enviarOrdem(body, filesInput, tipoOrdem, modalElement){
         const token = localStorage.getItem("authToken");
-        if (!token) {
+        if(!token){
             alert("Sessão expirada. Faça login novamente.");
-            window.location.href = "../../index.html";
+            window.location.href="../../index.html";
             return;
         }
 
-        try {
-            const res = await fetch("/api/ordens", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify(body)
+        try{
+            let bodyToSend;
+            let headers = {Authorization: `Bearer ${token}`};
+
+            if(filesInput && filesInput.files.length>0){
+                bodyToSend = new FormData();
+                for(const[key,value] of Object.entries(body)) bodyToSend.append(key,value);
+                for(const file of filesInput.files) bodyToSend.append("anexos",file);
+            }else{
+                headers["Content-Type"]="application/json";
+                bodyToSend=JSON.stringify(body);
+            }
+
+            const res = await fetch("/api/ordens",{
+                method:"POST",
+                headers,
+                body: bodyToSend
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.erro || "Erro ao criar ordem.");
+            if(!res.ok) throw new Error(data.erro||"Erro ao criar ordem.");
 
-            const ordemId = data.ordem?.id;
-
-            if (ordemId && filesInput && filesInput.files.length > 0) {
-                const formData = new FormData();
-                for (const file of filesInput.files) formData.append("file-upload", file);
-
-                await fetch(`/api/ordens/${ordemId}/anexos`, {
-                    method: "POST",
-                    headers: { Authorization: `Bearer ${token}` },
-                    body: formData
-                });
-            }
-
-            alert(`${ordemTipo === "problema" ? "Problema" : "Instalação"} enviada com sucesso!`);
-
-            if (modalElement) closeModal(modalElement);
-            window.location.href = "minhas-ordens.html";
-        } catch (err) {
+            alert(`${tipoOrdem==="problema"?"Problema":"Instalação"} enviada com sucesso!`);
+            if(modalElement) closeModal(modalElement);
+            window.location.href="minhas-ordens.html";
+        }catch(err){
             console.error(err);
-            alert("Erro ao enviar a ordem. Veja console.");
+            alert("Erro ao enviar a ordem. Veja console para detalhes.");
         }
     }
 
     // =========================
-    // INICIALIZAÇÃO
+    // MODAIS
     // =========================
-    
-    // Elementos dos modais
     const modalProblema = getElement("modal-problema");
     const modalInstalacao = getElement("modal-instalacao");
     const abrirProblema = getElement("abrir-problema");
     const abrirInstalacao = getElement("abrir-instalacao");
 
-    // Eventos para abrir modais
     abrirProblema?.addEventListener("click", () => openModal(modalProblema));
     abrirInstalacao?.addEventListener("click", () => openModal(modalInstalacao));
 
-    // Eventos para fechar modais
     document.querySelectorAll(".close").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const modalId = btn.dataset.close;
-            const modal = getElement(`modal-${modalId}`);
+        btn.addEventListener("click", e => {
+            const target = e.target.dataset.close;
+            const modal = getElement(`modal-${target}`);
             closeModal(modal);
         });
     });
 
-    // Fechar modal ao clicar fora
     [modalProblema, modalInstalacao].forEach(modal => {
         modal?.addEventListener("click", e => {
             if (e.target === modal) closeModal(modal);
         });
     });
 
-    // Fechar com ESC
     document.addEventListener("keydown", e => {
         if (e.key === "Escape") {
             closeModal(modalProblema);
@@ -259,56 +269,81 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Inicializar selects dinâmicos
-    const tipoAmbienteSelect = getElement("tipo-ambiente");
-    const tipoKitSelect = getElement("tipo-kit");
-    
-    if (tipoAmbienteSelect) {
-        tipoAmbienteSelect.addEventListener("change", updateLocais);
-    }
-    
-    if (tipoKitSelect) {
-        tipoKitSelect.addEventListener("change", updateProblemas);
-    }
+    // =========================
+    // POPULAR SELECTS
+    // =========================
+    ["problema","instalacao"].forEach(modal=>{
+        const tipoSelect = getElement(`tipo-ambiente-${modal}`);
+        const kitSelect = getElement(`tipo-kit-${modal}`);
+        tipoSelect?.addEventListener("change", ()=>updateLocais(modal));
+        kitSelect?.addEventListener("change", ()=>updateProblemas(modal));
+        updateLocais(modal);
+    });
 
-    // Inicializar os selects
-    updateLocais();
-
-    // Upload de arquivos
+    // =========================
+    // UPLOAD
+    // =========================
     const uploadProblema = getElement("file-upload-problema");
-    const listProblema = getElement("file-list-problema");
     const uploadInstalacao = getElement("file-upload-instalacao");
+    const listProblema = getElement("file-list-problema");
     const listInstalacao = getElement("file-list-instalacao");
+
+    handleFileUpload(uploadProblema, listProblema);
+    handleFileUpload(uploadInstalacao, listInstalacao);
 
     uploadProblema?.addEventListener("change", () => handleFileUpload(uploadProblema, listProblema));
     uploadInstalacao?.addEventListener("change", () => handleFileUpload(uploadInstalacao, listInstalacao));
 
-    // Submissão dos formulários
-    const formProblema = getElement("form-problema");
-    const formInstalacao = getElement("form-instalacao");
+    // Corrige o botão para abrir o input real
+    const fileUploadBtn = document.getElementById("file-upload-btn");
+    const fileUploadInput = document.getElementById("file-upload-problema");
+    const fileListProblema = document.getElementById("file-list-problema");
 
-    formProblema?.addEventListener("submit", e => {
+    if (fileUploadBtn && fileUploadInput) {
+      fileUploadBtn.addEventListener("click", () => fileUploadInput.click());
+      fileUploadInput.addEventListener("change", () => handleFileUpload(fileUploadInput, fileListProblema));
+    }
+
+
+    // =========================
+    // SUBMIT FORMULÁRIOS
+    // =========================
+    getElement("form-problema")?.addEventListener("submit", e=>{
         e.preventDefault();
         const body = {
-            tipo_solicitacao: "problema",
-            local_tipo: getElement("tipo-ambiente").value,
-            local_detalhe: getElement("local-detalhe").value,
-            equipamento: getElement("tipo-kit").value,
-            tipo_problema: getElement("tipo-problema").value,
+            tipo_solicitacao:"problema",
+            titulo:`${getElement("local-detalhe-problema").value} + ${getElement("tipo-kit-problema").value}`,
+            local_tipo: getElement("tipo-ambiente-problema").value,
+            local_detalhe: getElement("local-detalhe-problema").value,
+            equipamento: getElement("tipo-kit-problema").value,
+            tipo_problema: getElement("tipo-problema-problema").value,
             descricao: getElement("descricao-problema").value
         };
-        enviarOrdem(body, uploadProblema, "problema", modalProblema);
+        enviarOrdem(body, getElement("file-upload-problema"), "problema", modalProblema);
     });
 
-    formInstalacao?.addEventListener("submit", e => {
+    getElement("form-instalacao")?.addEventListener("submit", e=>{
         e.preventDefault();
         const body = {
-            tipo_solicitacao: "instalacao",
+            tipo_solicitacao:"instalacao",
+            titulo:`${getElement("local-detalhe-instalacao").value} + ${getElement("app-name-instalacao").value}`,
             app_nome: getElement("app-name-instalacao").value,
             app_versao: getElement("app-version-instalacao").value,
-            app_link: getElement("app-link-instalacao").value
+            app_link: getElement("app-link-instalacao").value,
+            local_tipo: getElement("tipo-ambiente-instalacao").value, 
+            local_detalhe: getElement("local-detalhe-instalacao").value
         };
         enviarOrdem(body, null, "instalacao", modalInstalacao);
+    });
+
+    // =========================
+    // MENU MOBILE
+    // =========================
+    const menuToggle = document.querySelector(".menu-toggle");
+    const sidebar = document.querySelector(".sidebar");
+
+    menuToggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
     });
 
     console.log("Sistema Support Nexus - Criar Ordem carregado com sucesso!");

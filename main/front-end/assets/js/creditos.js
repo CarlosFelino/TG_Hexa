@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Animação de entrada para os cards de crédito
     const creditoCards = document.querySelectorAll('.credito-card');
-    
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {

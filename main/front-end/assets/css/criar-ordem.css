@@ -1,80 +1,102 @@
     /* =======================
     criar-ordem.css
     ======================= */
-
-    /* =======================
-    Reset Básico
-    ======================= */
-.card-container, .file-list, select, input, textarea, button {
-    box-sizing: border-box;
+:root {
+    --primary-bg: #f7f8fa;
+    --card-bg: #ffffff;
+    --accent: #7a04eb;
+    --text-dark: #1b1f3b;
+    --text-light: #70748c;
+    --border-light: #e1e5eb;
+    --transition: all 0.3s ease;
 }
 
-    /* =======================
-    Cards Principais
-    ======================= */
+/* Container principal */
+.professor-content {
+    padding: 2rem;
+    color: var(--text-dark);
+}
+
+/* Cabeçalho */
+.order-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.order-header h1 {
+    font-size: 2rem;
+    color: var(--text-dark);
+}
+
+.order-header p {
+    color: var(--text-light);
+}
+
+/* Cards */
 .card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
 
 .card {
-    background: linear-gradient(135deg, #1a1f38 0%, #252b4a 100%);
-    border-radius: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
     padding: 2.5rem 2rem;
     text-align: center;
+    transition: var(--transition);
     cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--gradient);
-    transform: scaleX(0);
-    transition: transform 0.3s;
-}
-
-.card:hover::before {
-    transform: scaleX(1);
-}
-
-.card i {
+.card-icon {
     font-size: 3rem;
+    color: var(--accent);
     margin-bottom: 1rem;
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    transition: var(--transition);
 }
 
 .card h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--text-light);
-    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
 }
 
 .card p {
+    color: var(--text-light);
     font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
     line-height: 1.5;
 }
 
+/* Hover cards */
 .card:hover {
-    transform: translateY(-10px) scale(1.02);
-    border-color: var(--secondary);
-    box-shadow: 0 15px 40px rgba(122, 4, 235, 0.3);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(122, 4, 235, 0.1);
 }
 
+.card:hover .card-icon {
+    transform: scale(1.1);
+    color: #8e3efb;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .order-header h1 {
+        font-size: 1.6rem;
+    }
+}
+
+    
+   
     /* =======================
     Modal Overlay
     ======================= */
@@ -405,4 +427,211 @@ form button[type="submit"]:hover {
     .card i {
         font-size: 2.5rem;
     }
+}
+
+/* =======================
+   Preview de imagens no upload
+   ======================= */
+.preview-thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
+}
+
+.preview-thumb:hover {
+    transform: scale(1.05);
+}
+
+
+/* ========== Navbar Responsiva ========== */
+.navbar-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .navbar-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+/* ========== Sidebar Responsiva ========== */
+.sidebar {
+  width: 260px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 968px) {
+  .sidebar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: relative;
+  }
+}
+
+/* ========== Conteúdo Principal Centralizado ========== */
+.professor-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Impede overflow horizontal */
+body {
+  overflow-x: hidden;
+}
+
+
+/* ========= Navbar fixada e responsiva ========= */
+.professor-navbar {
+  background: linear-gradient(135deg, #1a1f38 0%, #252b4a 100%);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: none;
+}
+
+/* Mostrar botão hamburguer em telas pequenas */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 70px);
+        background: #fff;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+        transition: left 0.3s ease;
+        z-index: 999;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .professor-content {
+        margin-left: 0;
+        padding: 1.5rem;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+    .navbar-content {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .logo-container {
+        gap: 0.5rem;
+    }
+
+    .user-profile {
+        align-self: flex-end;
+    }
+}
+
+/* ========= Corrige modal overflow em mobile ========= */
+.modal-content {
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+
+.upload-section {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.upload-label {
+  color: var(--text-light);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.upload-label small {
+  color: #a0a3b1;
+  font-size: 0.85rem;
+}
+
+.file-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #7a04eb, #9b4dff);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.9rem 1.4rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  width: fit-content;
+}
+
+.file-upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(122, 4, 235, 0.3);
+  background: linear-gradient(135deg, #8e3efb, #b97fff);
+}
+
+#file-list-problema {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+label.active {
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(122, 4, 235, 0.6);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Quando o usuário seleciona algo no select */
+select.selected {
+  border-color: var(--accent);
+  background: rgba(122, 4, 235, 0.15);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(122, 4, 235, 0.3);
 }

@@ -424,25 +424,25 @@
     .filters-container {
         flex-direction: column;
     }
-    
+
     .filter-group {
         width: 100%;
     }
-    
+
     .search-box {
         width: 100%;
     }
-    
+
     .date-filter {
         width: 100%;
         justify-content: space-between;
     }
-    
+
     .order-header {
         flex-direction: column;
         gap: 0.5rem;
     }
-    
+
     .order-actions {
         justify-content: center;
     }

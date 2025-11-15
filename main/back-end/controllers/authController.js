@@ -57,7 +57,7 @@ export async function login(req, res) {
     }
 
     const token = jwt.sign(
-      { id: user.id, role: user.role },
+      { id: user.id, role: user.role, nome:user.name },
       "segredo123",
       { expiresIn: "1h" }
     );
@@ -82,10 +82,13 @@ export async function recuperarSenha(req, res) {
 
     const user = result.rows[0];
     const token = crypto.randomBytes(32).toString("hex");
+    const expiraEm = new Date(Date.now() + 60 * 60 * 1000); // expira em 1 hora
+    const usado = false;
 
     await pool.query(
-      "INSERT INTO resetSenha (user_id, token) VALUES ($1, $2)",
-      [user.id, token]
+      `INSERT INTO resetSenha (user_id, token, expira_em, usado)
+       VALUES ($1, $2, $3, $4)`,
+      [user.id, token, expiraEm, usado]   // <-- AGORA TEM 4
     );
 
     await enviarEmailRedefinirSenha(user.nome, user.email, token);

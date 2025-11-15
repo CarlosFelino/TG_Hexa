@@ -586,22 +586,22 @@
     .auth-card {
         padding: 2rem;
     }
-    
+
     .card-header h1 {
         font-size: 2.5rem;
     }
     .alert-modal {
         padding: 2rem 1.5rem;
     }
-    
+
     .alert-title {
         font-size: 1.4rem;
     }
-    
+
     .alert-actions {
         flex-direction: column;
     }
-    
+
     .alert-btn {
         width: 100%;
     }
@@ -629,11 +629,11 @@
     .alert-modal {
         padding: 1.5rem;
     }
-    
+
     .alert-icon {
         font-size: 3rem;
     }
-    
+
     .alert-title {
         font-size: 1.3rem;
     }

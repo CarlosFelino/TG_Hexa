@@ -29,8 +29,8 @@
             <!-- Perfil do Usuário -->
             <div class="user-profile">
                 <div class="profile-info">
-                    <span class="user-name" id="userName">Administrador</span>
-                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
+                    <span class="user-name" id="userName"></span>
+                    <span class="user-email" id="userEmail"></span>
                 </div>
                 <div class="profile-dropdown">
                     <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
@@ -78,16 +78,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="transferir-poder.html">
-                        <i class="fas fa-bolt"></i>
-                        <span>Transferir Poder</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="relatorios.html">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Relatórios</span>
-                    </a>
+                    
                 </li>
             </ul>
         </nav>
@@ -141,77 +132,15 @@
                 <div class="card-badge">Novo</div>
             </a>
 
-            <!-- Card Transferir Poder -->
-            <a href="transferir-poder.html" class="action-card">
-                <div class="card-icon" style="background-color: rgba(255, 184, 0, 0.1);">
-                    <i class="fas fa-bolt" style="color: #ffb800;"></i>
-                </div>
-                <h3>Transferir Poder</h3>
-                <p>Delegue acesso de superusuário temporariamente</p>
-                <div class="card-badge">Admin</div>
-            </a>
-
-            <!-- Card Relatórios -->
-            <a href="relatorios.html" class="action-card">
-                <div class="card-icon" style="background-color: rgba(255, 56, 96, 0.1);">
-                    <i class="fas fa-chart-line" style="color: #ff3860;"></i>
-                </div>
-                <h3>Relatórios</h3>
-                <p>Gere relatórios do sistema em PDF ou CSV</p>
-                <div class="card-badge">+</div>
-            </a>
+           
         </div>
 
         <!-- Seção de Estatísticas Rápidas -->
-        <section class="stats-section">
-            <h2><i class="fas fa-chart-bar"></i> Estatísticas do Sistema</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: rgba(122, 4, 235, 0.1);">
-                        <i class="fas fa-file-invoice" style="color: #7a04eb;"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="totalOrdens">0</h3>
-                        <p>Total de Ordens</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: rgba(255, 0, 226, 0.1);">
-                        <i class="fas fa-users" style="color: #ff00e2;"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="totalUsuarios">0</h3>
-                        <p>Usuários Ativos</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: rgba(9, 195, 114, 0.1);">
-                        <i class="fas fa-check-circle" style="color: #09c372;"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="ordensConcluidas">0</h3>
-                        <p>Ordens Concluídas</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: rgba(255, 184, 0, 0.1);">
-                        <i class="fas fa-clock" style="color: #ffb800;"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="ordensPendentes">0</h3>
-                        <p>Ordens Pendentes</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção de Atividade Recente -->
-        <section class="recent-activity">
-            <h2><i class="fas fa-history"></i> Atividade Recente</h2>
-            <div class="activity-list" id="recentActivity"></div>
-        </section>
+      
+       
     </main>
     <div class="overlay"></div>
     <script src="../../assets/js/admin.js"></script>
+    <script src="../../assets/js/globalCred.js"></script>
 </body>
 </html>

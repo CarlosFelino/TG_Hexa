@@ -136,11 +136,11 @@ p {
     .termos-content {
         padding: 1.5rem;
     }
-    
+
     .termos-title {
         font-size: 2rem;
     }
-    
+
     h2 {
         font-size: 1.3rem;
     }
@@ -150,15 +150,15 @@ p {
     .termos-title {
         font-size: 1.8rem;
     }
-    
+
     .termos-intro {
         font-size: 1rem;
     }
-    
+
     h2 {
         padding-left: 1rem;
     }
-    
+
     h2::before {
         left: -0.5rem;
     }

@@ -136,80 +136,32 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Dados do usuário
-            const user = JSON.parse(localStorage.getItem("currentUser")) || {};
-            document.getElementById("userName").textContent = user.name || "Professor";
-            document.getElementById("userEmail").textContent = user.email || "";
+    <!-- Modal de Avaliação -->
+    <div id="feedback-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Avaliar Atendimento</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body feedback-body">
+          <div class="stars-container">
+            <i class="fa fa-star" data-value="1"></i>
+            <i class="fa fa-star" data-value="2"></i>
+            <i class="fa fa-star" data-value="3"></i>
+            <i class="fa fa-star" data-value="4"></i>
+            <i class="fa fa-star" data-value="5"></i>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="submit-feedback" class="btn btn-primary">Enviar</button>
+          <button class="btn btn-secondary modal-close-btn">Cancelar</button>
+        </div>
+      </div>
+    </div>
 
-            const token = localStorage.getItem("authToken");
 
-            // Função para buscar ordens do backend
-            async function fetchOrders() {
-                try {
-                    const res = await fetch("/api/ordens", {
-                        headers: { "Authorization": `Bearer ${token}` }
-                    });
-                    const data = await res.json();
-                    return data.ordens || [];
-                } catch (err) {
-                    console.error("Erro ao buscar ordens:", err);
-                    return [];
-                }
-            }
-
-            // Função para criar cards dinamicamente
-            function renderOrders(orders) {
-                const ordersList = document.getElementById("orders-list");
-                ordersList.innerHTML = "";
-                let total = orders.length;
-                let pending = 0, inProgress = 0, completed = 0;
-
-                orders.forEach(order => {
-                    const statusClass = order.status.replace(" ", "-").toLowerCase();
-                    if(statusClass === "pending") pending++;
-                    else if(statusClass === "in-progress") inProgress++;
-                    else if(statusClass === "completed") completed++;
-
-                    const card = document.createElement("div");
-                    card.className = `order-card ${statusClass}`;
-                    card.dataset.id = order.id;
-
-                    card.innerHTML = `
-                        <div class="order-header">
-                            <span class="order-id">#${order.id}</span>
-                            <span class="order-date">${new Date(order.created_at).toLocaleDateString()}</span>
-                            <span class="order-status ${statusClass}">
-                                <i class="fas fa-${statusClass === 'pending' ? 'clock' : statusClass === 'in-progress' ? 'spinner' : 'check-circle'}"></i> ${order.status}
-                            </span>
-                        </div>
-                        <div class="order-content">
-                            <h3>${order.local_detalhe} - ${order.equipamento || order.app_nome || ""}</h3>
-                            <p class="order-description">${order.descricao || ""}</p>
-                            <div class="order-meta">
-                                <span><i class="fas fa-tag"></i> ${order.tipo_problema || order.local_tipo}</span>
-                                <span><i class="fas fa-user-cog"></i> Técnico: ${order.tecnico || "Não atribuído"}</span>
-                                ${order.avaliacao ? `<span><i class="fas fa-star"></i> Avaliação: ${order.avaliacao}/5</span>` : ""}
-                            </div>
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn btn-small btn-view"><i class="fas fa-eye"></i> Detalhes</button>
-                            ${statusClass === "completed" ? `<button class="btn btn-small btn-feedback"><i class="fas fa-star"></i> Avaliar</button>` : ""}
-                        </div>
-                    `;
-                    ordersList.appendChild(card);
-                });
-
-                document.getElementById("totalOrders").textContent = total;
-                document.getElementById("pendingOrders").textContent = pending;
-                document.getElementById("inProgressOrders").textContent = inProgress;
-                document.getElementById("completedOrders").textContent = completed;
-            }
-
-            const orders = await fetchOrders();
-            renderOrders(orders);
-        });
-    </script>
+       <script src="../../assets/js/minhas-ordens.js"></script>
+    <script src="../../assets/js/globalProfile.js"></script>
+    <script src="../../assets/js/globalCred.js"></script>
 </body>
 </html>

@@ -1,12 +1,15 @@
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
+console.log("MAILERSEND_API_KEY:", process.env.MAILERSEND_API_KEY);
+
+
 const mailer = new MailerSend({
   apiKey: process.env.MAILERSEND_API_KEY,
 });
 
 const from = new Sender(
-  "naoresponda@test-q3enl6kvmkr42vwr.mlsender.net",
-  "Support Nexus"
+ 
+  "Conclusão Vitória"
 );
 
 export async function enviarEmailRedefinirSenha(nome, email, token) {

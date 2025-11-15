@@ -1,3 +1,4 @@
+
 import jwt from "jsonwebtoken";
 
 export function autenticarJWT(req, res, next) {

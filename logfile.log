@@ -1,0 +1,15 @@
+2025-11-15 11:47:42.080 UTC [2563] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-15 11:47:42.081 UTC [2563] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-15 11:47:42.081 UTC [2563] LOG:  could not bind IPv6 address "::1": Cannot assign requested address
+2025-11-15 11:47:42.090 UTC [2563] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-15 11:47:42.101 UTC [2566] LOG:  database system was shut down at 2025-11-15 11:47:35 UTC
+2025-11-15 11:47:42.142 UTC [2563] LOG:  database system is ready to accept connections
+2025-11-15 11:52:42.201 UTC [2564] LOG:  checkpoint starting: time
+2025-11-15 11:54:24.847 UTC [2564] LOG:  checkpoint complete: wrote 1022 buffers (6.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=102.364 s, sync=0.221 s, total=102.647 s; sync files=363, longest=0.044 s, average=0.001 s; distance=4809 kB, estimate=4809 kB; lsn=0/199F310, redo lsn=0/199F280
+2025-11-15 12:24:46.952 UTC [2563] LOG:  received fast shutdown request
+2025-11-15 12:24:46.981 UTC [2563] LOG:  aborting any active transactions
+2025-11-15 12:24:46.991 UTC [2563] LOG:  background worker "logical replication launcher" (PID 2569) exited with exit code 1
+2025-11-15 12:24:46.991 UTC [2564] LOG:  shutting down
+2025-11-15 12:24:47.003 UTC [2564] LOG:  checkpoint starting: shutdown immediate
+2025-11-15 12:24:47.039 UTC [2564] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.006 s, total=0.048 s; sync files=1, longest=0.006 s, average=0.006 s; distance=0 kB, estimate=4328 kB; lsn=0/199F3C0, redo lsn=0/199F3C0
+2025-11-15 12:24:47.065 UTC [2563] LOG:  database system is shut down

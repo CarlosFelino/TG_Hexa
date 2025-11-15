@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     // 🔗 URL do backend
-    const API_URL = "https://d6cb9ef4-0558-4d9e-ae4b-373ed91db0d4-00-uvpvhwft63sr.spock.replit.dev";
+    const API_URL = "https://40cd6f62-b9ce-40bf-9b67-5082637ff496-00-2goj6eo5b4z6a.riker.replit.dev";
+
 
     // Elementos do DOM
     const registerForm = document.getElementById("registerForm");
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (passwordInput) {
         passwordInput.addEventListener("input", function () {
             const password = this.value;
-            
+
             if (password.length === 0) {
                 // Esconde o medidor quando não há senha
                 passwordStrength.classList.remove("visible");
@@ -121,11 +122,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function checkPasswordStrength(password) {
         const strength = calculatePasswordStrength(password);
-        
+
         // Remove todas as classes anteriores
         strengthBar.className = "strength-bar";
         strengthText.className = "strength-text";
-        
+
         // Aplica as novas classes
         strengthBar.classList.add(strength.level);
         strengthText.classList.add(strength.level);
@@ -207,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((error) => {
             console.error("Erro no cadastro:", error);
-            
+
             // Verifica se é erro de email/matrícula já cadastrado
             if (error.message.includes("já cadastrado") || error.message.includes("já existe")) {
                 showAlert("error", "Cadastro Existente", 
@@ -217,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 showAlert("error", "Erro no Cadastro", 
                     error.message || "Ocorreu um erro no cadastro. Por favor, tente novamente.");
             }
-            
+
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-save"></i> Cadastrar Usuário';
         });
@@ -232,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const alertOverlay = document.createElement('div');
         alertOverlay.className = `alert-overlay alert-${type}`;
-        
+
         const icons = {
             success: 'fa-check-circle',
             error: 'fa-exclamation-circle',
@@ -255,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
 
         document.body.appendChild(alertOverlay);
-        
+
         // Animação de entrada
         setTimeout(() => alertOverlay.classList.add('visible'), 10);
     }
@@ -263,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function showSuccessMessage() {
         const successOverlay = document.createElement('div');
         successOverlay.className = 'success-overlay';
-        
+
         successOverlay.innerHTML = `
             <div class="success-content">
                 <div class="success-icon">
@@ -275,10 +276,10 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
 
         document.body.appendChild(successOverlay);
-        
+
         // Animação de entrada
         setTimeout(() => successOverlay.classList.add('visible'), 10);
-        
+
         // Redirecionamento após 3 segundos
         setTimeout(() => {
             window.location.href = "login.html";

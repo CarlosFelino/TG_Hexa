@@ -325,24 +325,24 @@
     .transfer-card {
         padding: 1.5rem;
     }
-    
+
     .radio-group {
         flex-direction: column;
     }
-    
+
     .transfers-table {
         font-size: 0.85rem;
     }
-    
+
     .transfers-table th,
     .transfers-table td {
         padding: 0.8rem 0.5rem;
     }
-    
+
     .actions-cell {
         flex-direction: column;
     }
-    
+
     .btn-table {
         width: 100%;
     }
@@ -352,7 +352,7 @@
     .history-section {
         padding: 1.5rem;
     }
-    
+
     .btn {
         width: 100%;
         justify-content: center;

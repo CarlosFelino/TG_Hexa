@@ -27,8 +27,8 @@
 
             <div class="user-profile">
                 <div class="profile-info">
-                    <span class="user-name">Prof. Carlos</span>
-                    <span class="user-email">carlos.sousa25@fatec.sp.gov.br</span>
+                    <span class="user-name" id="userName"></span>
+                    <span class="user-email" id="userEmail"></span>
                 </div>
                 <div class="profile-dropdown">
                     <img src="../../assets/images/default-avatar.png" alt="Foto do Professor" class="profile-avatar" id="profile-toggle">
@@ -67,76 +67,88 @@
         </nav>
     </aside>
 
+    <!-- Conteúdo Principal -->
     <main class="professor-content">
         <div class="order-header">
-            <a href="painel-professor.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Voltar
-            </a>
             <h1>Criar Nova Ordem de Serviço</h1>
+            <p>Selecione abaixo o tipo de solicitação que deseja realizar.</p>
         </div>
 
         <div class="card-container">
             <div class="card" id="abrir-problema">
-                <i class="fas fa-tools"></i>
+                <div class="card-icon"><i class="fas fa-tools"></i></div>
                 <h2>Relatar Problema</h2>
                 <p>Informe defeitos em equipamentos ou falta de conectividade.</p>
             </div>
+
             <div class="card" id="abrir-instalacao">
-                <i class="fas fa-download"></i>
+                <div class="card-icon"><i class="fas fa-download"></i></div>
                 <h2>Solicitar Instalação</h2>
-                <p>Peça instalação de aplicativos ou softwares.</p>
+                <p>Peça instalação de aplicativos ou softwares necessários em seu ambiente.</p>
             </div>
         </div>
     </main>
 
-    <!-- Modal RELATAR PROBLEMA -->
+    <!-- Modais -->
     <div class="modal-overlay" id="modal-problema">
         <div class="modal-content">
             <span class="close" data-close="problema">&times;</span>
             <h2><i class="fas fa-tools"></i> Relatar Problema</h2>
-
             <form id="form-problema">
-                <!-- Seleção do Tipo de Ambiente -->
-                <label for="tipo-ambiente"><i class="fas fa-door-open"></i> Tipo de Ambiente</label>
-                <select id="tipo-ambiente" required>
+                <label for="tipo-ambiente-problema"><i class="fas fa-door-open"></i> Tipo de Ambiente</label>
+                <select id="tipo-ambiente-problema" required>
                     <option value="">Selecione...</option>
                     <option value="sala">Sala de Aula</option>
                     <option value="laboratorio">Laboratório</option>
                 </select>
 
-                <!-- Seleção da Sala (dinâmico) -->
-                <label for="local-detalhe"><i class="fas fa-map-marker-alt"></i> Local</label>
-                <select id="local-detalhe" required></select>
+                <label for="local-detalhe-problema"><i class="fas fa-map-marker-alt"></i> Local</label>
+                <select id="local-detalhe-problema" required></select>
 
-                <!-- Seleção do Kit (dinâmico) -->
-                <label for="tipo-kit"><i class="fas fa-desktop"></i> Equipamento</label>
-                <select id="tipo-kit" required></select>
+                <label for="tipo-kit-problema"><i class="fas fa-desktop"></i> Equipamento</label>
+                <select id="tipo-kit-problema" required></select>
 
-                <!-- Seleção do Problema (dinâmico) -->
-                <label for="tipo-problema"><i class="fas fa-exclamation-triangle"></i> Tipo de Problema</label>
-                <select id="tipo-problema" required></select>
+                <label for="tipo-problema-problema"><i class="fas fa-exclamation-triangle"></i> Tipo de Problema</label>
+                <select id="tipo-problema-problema" required></select>
 
-                <!-- Descrição do Problema -->
                 <label for="descricao-problema"><i class="fas fa-file-alt"></i> Descrição Detalhada</label>
                 <textarea id="descricao-problema" placeholder="Descreva o problema com mais detalhes..."></textarea>
 
-                <!-- Anexos -->
-                <label for="file-upload-problema"><i class="fas fa-paperclip"></i> Anexos (máx. 3)</label>
-                <input type="file" id="file-upload-problema" multiple>
-                <div id="file-list-problema"></div>
+                <div class="file-upload-section">
+                  <label for="file-upload-problema" class="file-label">
+                    <i class="fas fa-paperclip"></i>
+                    Anexos <span class="file-limit">(máx. 3)</span>
+                  </label>
+
+                  <button type="button" id="file-upload-btn" class="file-upload-btn">
+                    <i class="fas fa-upload"></i> Escolher arquivos
+                  </button>
+
+                  <input type="file" id="file-upload-problema" multiple hidden accept="image/*,.pdf,.doc,.docx,.txt">
+                  <div id="file-list-problema"></div>
+                </div>
+
 
                 <button type="submit"><i class="fas fa-paper-plane"></i> Enviar Problema</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal SOLICITAR INSTALAÇÃO -->
     <div class="modal-overlay" id="modal-instalacao">
         <div class="modal-content">
             <span class="close" data-close="instalacao">&times;</span>
             <h2><i class="fas fa-download"></i> Solicitar Instalação</h2>
-
             <form id="form-instalacao">
+                <label for="tipo-ambiente-instalacao"><i class="fas fa-door-open"></i> Tipo de Ambiente</label>
+                <select id="tipo-ambiente-instalacao" required>
+                    <option value="">Selecione...</option>
+                    <option value="sala">Sala de Aula</option>
+                    <option value="laboratorio">Laboratório</option>
+                </select>
+
+                <label for="local-detalhe-instalacao"><i class="fas fa-map-marker-alt"></i> Local</label>
+                <select id="local-detalhe-instalacao" required></select>
+
                 <label for="app-name-instalacao"><i class="fas fa-cube"></i> Nome do Aplicativo</label>
                 <input type="text" id="app-name-instalacao" required placeholder="Ex: Google Chrome, Visual Studio Code...">
 
@@ -151,6 +163,9 @@
         </div>
     </div>
 
-    <script src="../../assets/js/criar-ordem.js"></script>
+    <script src="../../assets/js/globalCred.js"></script>
+<script type="module" src="../../assets/js/criar-ordem.js"></script>
+    <script src="../../assets/js/globalProfile.js"></script>
+    
 </body>
 </html>

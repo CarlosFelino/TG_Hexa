@@ -9,11 +9,11 @@ import {
 
 const router = express.Router();
 
-// ---------------------
-// Rotas existentes
-// ---------------------
+/* ============================
+      CRUD de Usuários
+============================ */
 
-// Listar todos os usuários
+// 🔹 Listar todos os usuários
 router.get("/usuarios", async (req, res) => {
   try {
     const result = await pool.query(
@@ -21,12 +21,12 @@ router.get("/usuarios", async (req, res) => {
     );
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao buscar usuários:", err);
     res.status(500).json({ message: "Erro ao buscar usuários" });
   }
 });
 
-// Excluir usuário
+// 🔹 Excluir usuário
 router.delete("/usuarios/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -34,29 +34,55 @@ router.delete("/usuarios/:id", async (req, res) => {
       "DELETE FROM users WHERE id = $1 RETURNING id",
       [id]
     );
-    if (result.rowCount === 0)
+
+    if (result.rowCount === 0) {
       return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
     res.json({ message: "Usuário excluído com sucesso" });
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao excluir usuário:", err);
     res.status(500).json({ message: "Erro ao excluir usuário" });
   }
 });
 
-// ---------------------
-// Rotas novas (transferência de admin)
-// ---------------------
+// 🔹 Atualizar usuário
+router.put("/usuarios/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nome, email, role } = req.body;
 
-// Listar usuários do suporte
+  try {
+    const result = await pool.query(
+      `
+      UPDATE users 
+      SET nome = $1, email = $2, role = $3 
+      WHERE id = $4 
+      RETURNING id, nome, email, role
+      `,
+      [nome, email, role, id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    res.json({
+      message: "Usuário atualizado com sucesso!",
+      user: result.rows[0]
+    });
+  } catch (err) {
+    console.error("Erro ao atualizar usuário:", err);
+    res.status(500).json({ message: "Erro ao atualizar usuário" });
+  }
+});
+
+/* ============================================
+    Rotas de Transferências de Admin / Suporte
+============================================ */
+
 router.get("/users/suporte", listarSuporte);
-
-// Doação permanente
 router.post("/roles/donate", doarAdmin);
-
-// Promoção temporária
 router.post("/roles/temporary", promoverTemporario);
-
-// Listar todas as transferências
 router.get("/roles/transfers", listarTransferencias);
 
 export default router;

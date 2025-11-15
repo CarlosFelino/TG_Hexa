@@ -446,7 +446,7 @@
             "navbar navbar"
             "content content";
     }
-    
+
     .sidebar {
         position: fixed;
         top: 70px;
@@ -456,11 +456,11 @@
         z-index: 90;
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .sidebar.active {
         left: 0;
     }
-    
+
     .menu-toggle {
         display: block;
     }
@@ -470,15 +470,15 @@
     .admin-content {
         padding: 1.5rem;
     }
-    
+
     .welcome-banner h1 {
         font-size: 1.8rem;
     }
-    
+
     .quick-actions {
         grid-template-columns: 1fr;
     }
-    
+
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -488,19 +488,19 @@
     .admin-navbar {
         padding: 0 1rem;
     }
-    
+
     .logo-text {
         display: none;
     }
-    
+
     .profile-info {
         display: none;
     }
-    
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .quick-actions {
         grid-template-columns: 1fr;
     }

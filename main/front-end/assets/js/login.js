@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showLoginError('Por favor, use seu email institucional (@fatec.sp.gov.br) ou o email especial autorizado');
                 return;
             }
-            
+
             if (password.length < 6) {
                 showLoginError('A senha deve ter pelo menos 6 caracteres');
                 return;
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             newPasswordInput.addEventListener('input', function() {
                 const password = this.value;
-                
+
                 if (password.length === 0) {
                     passwordStrength.classList.remove('visible');
                 } else {
@@ -274,10 +274,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkPasswordStrength(password, strengthBar, strengthText) {
         const strength = calculatePasswordStrength(password);
-        
+
         strengthBar.className = "strength-bar";
         strengthText.className = "strength-text";
-        
+
         strengthBar.classList.add(strength.level);
         strengthText.classList.add(strength.level);
         strengthText.textContent = strength.text.charAt(0).toUpperCase() + strength.text.slice(1);
@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showCustomAlert(type, title, message) {
         const alertOverlay = document.createElement('div');
         alertOverlay.className = `alert-overlay alert-${type}`;
-        
+
         const icons = {
             success: 'fa-check-circle',
             error: 'fa-exclamation-circle',
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         document.body.appendChild(alertOverlay);
-        
+
         setTimeout(() => alertOverlay.classList.add('visible'), 10);
     }
 
@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resetFeedback.style.display = 'none';
         recoveryForm.reset();
         resetForm.reset();
-        
+
         // Remove o token da URL se estiver presente
         if (window.location.search.includes('token')) {
             window.history.replaceState({}, document.title, window.location.pathname);
@@ -481,7 +481,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function redirectUser(role) {
         const routes = {
             'professor': 'pages/professor/painel-professor.html',
-            'suporte': 'pages/suporte/painel-suporte.html'
+            'suporte': 'pages/suporte/painel-suporte.html',
+             'admin': 'pages/admin/painel-admin.html'
         };
         if (!routes[role]) {
             showCustomAlert('error', 'Erro de Redirecionamento', 'Tipo de usuário não reconhecido.');
