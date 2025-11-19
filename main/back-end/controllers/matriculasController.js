@@ -1,54 +1,92 @@
-import pool from "../config/db.js";
+import fs from "fs";
+import csv from "csv-parser";
+import * as XLSX from "xlsx";
+import db from "../config/db.js";
 
-// Listar matrículas autorizadas
 export const listarMatriculas = async (req, res) => {
-  try {
-    const [rows] = await pool.query(
-      "SELECT id, matricula, role, status, nome_pre_cadastrado FROM matriculas_autorizadas ORDER BY id DESC"
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error("Erro listarMatriculas:", err);
-    res.status(500).json({ error: "Erro ao listar matrículas." });
-  }
+    try {
+        const result = await db.query("SELECT * FROM matriculas_autorizadas ORDER BY id ASC");
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ erro: "Erro ao listar matrículas" });
+    }
 };
 
-// Criar nova matrícula autorizada
-export const criarMatricula = async (req, res) => {
-  const { matricula, role, nome_pre_cadastrado } = req.body;
-
-  if (!matricula || !role) {
-    return res.status(400).json({
-      error: "Campos obrigatórios: matricula e role."
-    });
-  }
-
-  try {
-    const sql = `
-      INSERT INTO matriculas_autorizadas
-        (matricula, role, status, nome_pre_cadastrado)
-      VALUES ($1, $2, 'ativa', $3)
-      RETURNING *;
-    `;
-
-    const values = [
-      matricula,
-      role,
-      nome_pre_cadastrado || null
-    ];
-
-    await pool.query(sql, values);
-
-    res.json({ message: "Matrícula autorizada criada com sucesso!" });
-
-  } catch (err) {
-    console.error("Erro criarMatricula:", err);
-
-    if (err.code === "23505") {
-      return res.status(400).json({ error: "Esta matrícula já existe." });
+export const importarMatriculas = async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ erro: "Nenhum arquivo enviado" });
     }
 
-    res.status(500).json({ error: "Erro ao criar nova matrícula autorizada." });
-  }
-};
+    const filePath = req.file.path;
+    const fileExt = req.file.originalname.split(".").pop().toLowerCase();
 
+    try {
+        let rows = [];
+
+        // ===================================
+        // 📌 LER CSV
+        // ===================================
+        if (fileExt === "csv") {
+            rows = await new Promise((resolve, reject) => {
+                const results = [];
+                fs.createReadStream(filePath)
+                    .pipe(csv())
+                    .on("data", (row) => results.push(row))
+                    .on("end", () => resolve(results))
+                    .on("error", (err) => reject(err));
+            });
+        }
+
+        // ===================================
+        // 📌 LER XLSX
+        // ===================================
+        else if (fileExt === "xlsx") {
+            const workbook = XLSX.readFile(filePath);
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            rows = XLSX.utils.sheet_to_json(sheet);
+        } else {
+            return res.status(400).json({ erro: "Formato não suportado. Envie CSV ou XLSX." });
+        }
+
+        // ===================================
+        // 📌 PROCESSAR LINHAS
+        // Espera colunas: matricula, role, status, nome
+        // ===================================
+        let inseridos = 0;
+
+        for (const item of rows) {
+            const matricula = String(item.matricula).trim();
+            const role = (item.role || "suporte").toLowerCase();
+            const status = (item.status || "ativa").toLowerCase();
+            const nome = item.nome || item.nome_pre_cadastrado || null;
+
+            if (!matricula || matricula.length < 4) continue;
+
+            await db.query(
+                `
+                INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+                VALUES ($1, $2, $3, $4)
+                ON CONFLICT (matricula) 
+                DO UPDATE SET role = EXCLUDED.role, status = EXCLUDED.status, nome_pre_cadastrado = EXCLUDED.nome_pre_cadastrado;
+                `,
+                [matricula, role, status, nome]
+            );
+
+            inseridos++;
+        }
+
+        // Remover arquivo temporário
+        fs.unlinkSync(filePath);
+
+        return res.json({
+            sucesso: true,
+            mensagem: "Importação concluída",
+            registros: inseridos
+        });
+
+    } catch (error) {
+        console.error("Erro ao importar:", error);
+        return res.status(500).json({ erro: "Erro ao processar arquivo" });
+    }
+};

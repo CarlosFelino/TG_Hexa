@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const today = new Date();
         const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
         dateStart.value = firstDay.toISOString().split('T')[0];
-        
+
         // Data fim = hoje
         dateEnd.value = today.toISOString().split('T')[0];
     }
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Adicionar ao histórico
             addToReportsHistory(reportType, format);
-            
+
             showCustomAlert('success', 'Relatório Gerado', 
                 `Relatório ${getReportName(reportType)} gerado com sucesso em formato ${format.toUpperCase()}.`);
 
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Simular download
             const reportName = getReportName(reportType);
             const fileName = `${reportName}_${new Date().toISOString().split('T')[0]}.${format}`;
-            
+
             // Criar conteúdo mock (em produção viria do backend)
             let content = '';
             if (format === 'csv') {
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     function addToReportsHistory(reportType, format) {
         const history = JSON.parse(localStorage.getItem('reportsHistory') || '[]');
-        
+
         const newReport = {
             id: Date.now(),
             nome: getReportName(reportType),
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadReportsHistory() {
         const history = JSON.parse(localStorage.getItem('reportsHistory') || '[]');
-        
+
         if (history.length === 0) {
             reportsHistoryBody.innerHTML = `
                 <tr>
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showCustomAlert(type, title, message, buttons = []) {
         const alertOverlay = document.createElement('div');
         alertOverlay.className = `alert-overlay alert-${type}`;
-        
+
         const icons = {
             success: 'fa-check-circle',
             error: 'fa-exclamation-circle',
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         document.body.appendChild(alertOverlay);
-        
+
         // Event listeners para botões
         alertOverlay.querySelectorAll('.alert-btn').forEach(btn => {
             btn.addEventListener('click', function() {

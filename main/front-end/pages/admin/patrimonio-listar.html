@@ -99,18 +99,18 @@
                 <div class="filter-group">
                     <select id="filter-status">
                         <option value="">Todos os status</option>
-                        <option value="active">Em Uso</option>
-                        <option value="available">Disponível</option>
-                        <option value="maintenance">Em Manutenção</option>
-                        <option value="inactive">Inativo</option>
+                        <option value="Disponível">Disponível</option>
+                        <option value="Em Uso">Em Uso</option>
+                        <option value="Em Manutenção">Em Manutenção</option>
+                        <option value="Inativo">Inativo</option>
                     </select>
-                    <select id="filter-category">
+                    <!-- <select id="filter-category">
                         <option value="">Todas as categorias</option>
                         <option value="computador">Computador</option>
                         <option value="periferico">Periférico</option>
                         <option value="projetor">Projetor</option>
                         <option value="mobilia">Mobília</option>
-                    </select>
+                    </select> -->
                 </div>
                 <div class="filter-group">
                     <button class="btn btn-secondary" id="reset-filters">
@@ -181,10 +181,10 @@
                             <th>ID</th>
                             <th>Nº Patrimônio</th>
                             <th>Descrição</th>
-                            <th>Categoria</th>
+                          
                             <th>Local</th>
                             <th>Status</th>
-                            <th>Data Aquisição</th>
+                      
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -224,7 +224,8 @@
     <div class="overlay"></div>
 
     <script src="../../assets/js/admin.js"></script>
-    <script src="../../assets/js/patrimonio-listar.js"></script>
+    <script src="../../assets/js/patrimonio.js"></script>
+     <script src="../../assets/js/patrimonio-listar.js"></script>
     <script src="../../assets/js/globalCred.js"></script>
 </body>
 </html>

@@ -447,3 +447,105 @@
         justify-content: center;
     }
 }
+
+
+
+
+/* add novo */
+.stars-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 2rem;
+  margin: 1rem 0;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.stars-container .fa-star.hovered,
+.stars-container .fa-star.selected {
+  color: #FFD700;
+  transform: scale(1.1);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* ====== Modal refinado ====== */
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  animation: modalFade 0.25s ease;
+}
+
+@keyframes modalFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-header h3 {
+  font-size: 1.4rem;
+  color: var(--primary-dark);
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: #555;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+/* ====== Botões refinados ====== */
+.btn {
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, var(--secondary), #8e2de2);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #8e2de2, var(--secondary));
+}
+
+.btn-secondary {
+  background: #eee;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #ddd;
+}

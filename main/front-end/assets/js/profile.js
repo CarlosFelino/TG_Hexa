@@ -1,5 +1,5 @@
 // ===============================
-// profile.js (versão final revisada)
+// profile.js (versão final revisada e corrigida)
 // ===============================
 
 // 1️⃣ Inicialização e validação
@@ -11,40 +11,38 @@ if (!token || !user) {
   window.location.href = "../../login.html";
 }
 
-// Debug opcional
 console.log("🔑 Token JWT:", token);
 console.log("👤 Usuário atual:", user);
 
 document.addEventListener("DOMContentLoaded", () => {
   carregarFotoPerfil();
 
-  // ===============================
-  // 📸  Pré-visualização e upload da foto
-  // ===============================
   const photoInput = document.getElementById("photo-input");
   const profilePreview = document.getElementById("profile-preview");
   const removePhotoBtn = document.getElementById("remove-photo");
 
+  // ===============================
+  // 📸 Upload da foto
+  // ===============================
   if (photoInput && profilePreview) {
     photoInput.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
-      // Verifica tamanho (máx. 2MB)
       if (file.size > 2 * 1024 * 1024) {
         alert("A imagem deve ter no máximo 2MB.");
         photoInput.value = "";
         return;
       }
 
-      // Mostra preview local
+      // Preview local imediato
       const reader = new FileReader();
       reader.onload = (event) => {
         profilePreview.src = event.target.result;
       };
       reader.readAsDataURL(file);
 
-      // Envia pro servidor
+      // Envia ao servidor
       const formData = new FormData();
       formData.append("foto", file);
 
@@ -60,26 +58,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (data.success) {
           alert("✅ Foto de perfil atualizada com sucesso!");
+
           const novaUrl = data.fotoUrl.startsWith("http")
             ? data.fotoUrl
             : `${window.location.origin}${data.fotoUrl}`;
 
-          // Atualiza preview e navbar
-          profilePreview.src = novaUrl;
-          const navbarAvatar = document.querySelector(".profile-avatar");
-          if (navbarAvatar) navbarAvatar.src = novaUrl;
+          // 🔹 Espera a imagem carregar antes de atualizar
+          const img = new Image();
+          img.onload = () => {
+            const finalUrl = `${novaUrl}?t=${Date.now()}`;
+            profilePreview.src = finalUrl;
+
+            const navbarAvatar = document.querySelector(".profile-avatar");
+            if (navbarAvatar) navbarAvatar.src = finalUrl;
+          };
+          img.onerror = () => {
+            console.error("Erro ao carregar imagem do servidor.");
+          };
+          img.src = novaUrl;
+
         } else {
           alert("❌ Falha ao atualizar foto: " + data.message);
         }
-      } catch (error) {
-        console.error("Erro ao enviar foto:", error);
+
+      } catch (err) {
+        console.error("Erro ao enviar foto:", err);
         alert("Erro ao enviar a foto de perfil.");
       }
     });
   }
 
   // ===============================
-  // 🗑️ Remover foto (no servidor e no front)
+  // 🗑️ Remover foto
   // ===============================
   if (removePhotoBtn) {
     removePhotoBtn.addEventListener("click", async () => {
@@ -96,16 +106,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok && data.success) {
           alert("✅ Foto removida com sucesso!");
 
-          // volta pra imagem padrão
           const defaultAvatar = "../../assets/images/default-avatar.png";
           profilePreview.src = defaultAvatar;
 
-          // atualiza a navbar também
           const navbarAvatar = document.querySelector(".profile-avatar");
           if (navbarAvatar) navbarAvatar.src = defaultAvatar;
+
         } else {
           alert("❌ Falha ao remover foto: " + (data.message || "Erro desconhecido"));
         }
+
       } catch (err) {
         console.error("Erro ao remover foto:", err);
         alert("Erro ao remover a foto de perfil.");
@@ -113,9 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-
   // ===============================
-  // 👁️ Mostrar / Ocultar senha
+  // 👁️ Mostrar / ocultar senha
   // ===============================
   const toggleBtns = document.querySelectorAll(".toggle-password");
   toggleBtns.forEach((btn) => {
@@ -134,9 +143,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ===============================
-  // 🔐 Alterar senha (funcional agora)
+  // 🔐 Alterar senha
   // ===============================
   const passwordForm = document.getElementById("password-form");
+
   if (passwordForm) {
     passwordForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -176,34 +186,34 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           alert("❌ " + (data.message || "Erro ao alterar senha."));
         }
-      } catch (error) {
-        console.error("Erro ao alterar senha:", error);
+      } catch (err) {
+        console.error("Erro ao alterar senha:", err);
         alert("Erro ao tentar alterar a senha.");
       }
     });
   }
 
+  // ===============================
+  // 🧠 Carregar foto atual
+  // ===============================
+  async function carregarFotoPerfil() {
+    try {
+      const response = await fetch("/api/perfil/foto", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-// ===============================
-// 🧠 Buscar e exibir foto atual do usuário
-// ===============================
-async function carregarFotoPerfil() {
-  try { 
-    const response = await fetch("/api/perfil/foto", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+      if (!response.ok) throw new Error("Erro ao buscar foto");
 
-    if (!response.ok) throw new Error("Erro ao buscar foto");
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
 
-    // o servidor responde com a imagem diretamente (não JSON)
-    const blob = await response.blob();
-    const imageUrl = URL.createObjectURL(blob);
+      profilePreview.src = imageUrl;
 
-    document.getElementById("profile-preview").src = imageUrl;
-    const navbarAvatar = document.querySelector(".profile-avatar");
-    if (navbarAvatar) navbarAvatar.src = imageUrl;
-  } catch (err) {
-    console.error("Erro ao carregar foto:", err);
+      const navbarAvatar = document.querySelector(".profile-avatar");
+      if (navbarAvatar) navbarAvatar.src = imageUrl;
+
+    } catch (err) {
+      console.error("Erro ao carregar foto:", err);
+    }
   }
-}
-  });
+});

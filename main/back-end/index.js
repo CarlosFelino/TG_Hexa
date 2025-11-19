@@ -13,6 +13,8 @@ import adminRoutes from "./routes/adminRoutes.js";
 import patrimonioRoutes from "./routes/patrimonioRoutes.js";
 import matriculasRoutes from "./routes/matriculasRoutes.js";
 import usuariosRoutes from "./routes/usuariosRoutes.js";
+import gerenciarRoutes from "./routes/gerenciarRoutes.js";
+import adminDashboardRoutes from "./routes/adminDashboardRoutes.js";
 
 
 
@@ -43,9 +45,14 @@ app.use("/api/perfil", perfilRoutes);
 
 
 app.use("/api/admin", adminRoutes);
-app.use("/patrimonios", patrimonioRoutes);
-app.use("/api/admin/matriculas", matriculasRoutes);
+app.use("/api/patrimonios", patrimonioRoutes);
+app.use("/api/matriculas", matriculasRoutes);
 app.use("/api/admin/usuarios", usuariosRoutes);
+app.use("/api/admin/usuarios", gerenciarRoutes);
+
+
+app.use("/api/admin", adminDashboardRoutes);
+
 
 
 const PORT = 3000;

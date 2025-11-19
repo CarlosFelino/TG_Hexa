@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===================================
     // 🛑 CORREÇÃO ESSENCIAL: DEFINIÇÃO DE VARIÁVEIS
     // ===================================
-    const API_URL = "https://96e9dfbc-81aa-46d0-9c89-9164b10a82e2-00-1xz4p58ji81id.riker.replit.dev";
+    const API_URL = "https://40cd6f62-b9ce-40bf-9b67-5082637ff496-00-2goj6eo5b4z6a.riker.replit.dev/";
     const token = localStorage.getItem("authToken");
 
     function loadUserProfile() {

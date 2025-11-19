@@ -13,3 +13,134 @@
 2025-11-15 12:24:47.003 UTC [2564] LOG:  checkpoint starting: shutdown immediate
 2025-11-15 12:24:47.039 UTC [2564] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.006 s, total=0.048 s; sync files=1, longest=0.006 s, average=0.006 s; distance=0 kB, estimate=4328 kB; lsn=0/199F3C0, redo lsn=0/199F3C0
 2025-11-15 12:24:47.065 UTC [2563] LOG:  database system is shut down
+2025-11-18 21:51:57.660 UTC [267] FATAL:  lock file "postmaster.pid" already exists
+2025-11-18 21:51:57.660 UTC [267] HINT:  Is another postmaster (PID 240) running in data directory "/home/runner/workspace/database"?
+2025-11-18 21:52:35.396 UTC [407] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-18 21:52:35.397 UTC [407] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-18 21:52:35.398 UTC [407] LOG:  could not bind IPv6 address "::1": Cannot assign requested address
+2025-11-18 21:52:35.405 UTC [407] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-18 21:52:35.419 UTC [410] LOG:  database system was shut down at 2025-11-18 21:52:24 UTC
+2025-11-18 21:52:35.437 UTC [407] LOG:  database system is ready to accept connections
+2025-11-18 21:52:37.510 UTC [416] ERROR:  database "meu_banco" already exists
+2025-11-18 21:52:37.510 UTC [416] STATEMENT:  CREATE DATABASE meu_banco;
+2025-11-18 21:52:37.534 UTC [418] ERROR:  role "meu_usuario" already exists
+2025-11-18 21:52:37.534 UTC [418] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-11-18 21:52:37.571 UTC [422] ERROR:  relation "matriculas_autorizadas" already exists
+2025-11-18 21:52:37.571 UTC [422] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-18 21:52:37.573 UTC [422] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-18 21:52:37.573 UTC [422] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-18 21:52:37.573 UTC [422] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
+	('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
+	('00002', 'professor', 'inativa', 'Marcos Lima'),
+	('00003', 'professor', 'ativa', 'Luciana Martins'),
+	('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
+	('00004', 'professor', 'ativa', 'Fernanda Souza'),
+	('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
+	('00005', 'professor', 'ativa', 'Bruna Oliveira'),
+	('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
+	('00006', 'professor', 'ativa', 'Juliana Santos'),
+	('00007', 'professor', 'inativa', 'Carlos Daniel'),
+	('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
+	('00008', 'professor', 'ativa', 'Ricardo Mendes'),
+	('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-11-18 21:52:37.595 UTC [424] ERROR:  relation "users" already exists
+2025-11-18 21:52:37.595 UTC [424] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-18 21:52:37.618 UTC [426] ERROR:  relation "resetsenha" already exists
+2025-11-18 21:52:37.618 UTC [426] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-11-18 21:52:37.667 UTC [428] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-11-18 21:52:37.667 UTC [428] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-11-18 21:52:37.684 UTC [430] ERROR:  relation "ordens_problemas" already exists
+2025-11-18 21:52:37.684 UTC [430] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-18 21:52:37.699 UTC [432] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-18 21:52:37.699 UTC [432] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-18 21:52:37.718 UTC [434] ERROR:  relation "ordens_anexos" already exists
+2025-11-18 21:52:37.718 UTC [434] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-18 21:52:37.735 UTC [436] ERROR:  relation "ordens_alertas" already exists
+2025-11-18 21:52:37.735 UTC [436] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-11-18 21:53:36.159 UTC [496] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:53:36.159 UTC [496] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:53:41.799 UTC [498] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:53:41.799 UTC [498] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:53:44.808 UTC [499] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:53:44.808 UTC [499] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:53:55.944 UTC [500] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:53:55.944 UTC [500] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:53:57.383 UTC [501] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:53:57.383 UTC [501] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:53:58.464 UTC [502] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:53:58.464 UTC [502] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:53:59.585 UTC [503] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:53:59.585 UTC [503] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:54:00.703 UTC [504] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:54:00.703 UTC [504] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:54:02.533 UTC [505] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 21:54:02.533 UTC [505] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 21:57:35.518 UTC [408] LOG:  checkpoint starting: time
+2025-11-18 21:57:40.934 UTC [408] LOG:  checkpoint complete: wrote 55 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.256 s, sync=0.127 s, total=5.416 s; sync files=47, longest=0.005 s, average=0.003 s; distance=234 kB, estimate=234 kB; lsn=0/1A2D340, redo lsn=0/1A2D2E8
+2025-11-18 23:34:00.200 UTC [832] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 23:34:00.200 UTC [832] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 23:34:04.353 UTC [833] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 23:34:04.353 UTC [833] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 23:34:05.667 UTC [834] ERROR:  syntax error at or near "7" at character 64
+2025-11-18 23:34:05.667 UTC [834] STATEMENT:  SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL 7 DAY
+2025-11-18 23:40:36.689 UTC [407] LOG:  received fast shutdown request
+2025-11-18 23:40:36.705 UTC [407] LOG:  aborting any active transactions
+2025-11-18 23:40:36.710 UTC [407] LOG:  background worker "logical replication launcher" (PID 413) exited with exit code 1
+2025-11-18 23:40:36.713 UTC [408] LOG:  shutting down
+2025-11-18 23:40:36.722 UTC [408] LOG:  checkpoint starting: shutdown immediate
+2025-11-18 23:40:36.757 UTC [408] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.045 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=211 kB; lsn=0/1A2D3F0, redo lsn=0/1A2D3F0
+2025-11-18 23:40:36.764 UTC [407] LOG:  database system is shut down

@@ -400,37 +400,37 @@
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .filter-group {
         width: 100%;
     }
-    
+
     .form-group select,
     .form-group input[type="date"] {
         min-width: auto;
     }
-    
+
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .reports-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .report-card {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .report-actions {
         align-self: center;
     }
-    
+
     .reports-history-table {
         font-size: 0.85rem;
     }
-    
+
     .reports-history-table th,
     .reports-history-table td {
         padding: 0.8rem 0.5rem;
@@ -441,15 +441,15 @@
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .actions-cell {
         flex-direction: column;
     }
-    
+
     .btn-table {
         width: 100%;
     }
-    
+
     .btn {
         width: 100%;
         justify-content: center;

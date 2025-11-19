@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patrimônio | Support Nexus</title>
+    <title>Importar Matrículas | Support Nexus</title>
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/admin.css">
-    <link rel="stylesheet" href="../../assets/css/patrimonio-listar.css">
+    <link rel="stylesheet" href="../../assets/css/importar-matriculas.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
 </head>
@@ -27,8 +27,8 @@
 
             <div class="user-profile">
                 <div class="profile-info">
-                  <span class="user-name" id="userName"></span>
-                  <span class="user-email" id="userEmail"></span>
+                    <span class="user-name" id="userName">Administrador</span>
+                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
                 </div>
                 <div class="profile-dropdown">
                     <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
@@ -64,21 +64,29 @@
                     </a>
                 </li>
                 <li>
-                    <a href="importar-matriculas.html">
-                        
+                    <a href="patrimonio-listar.html">
                         <i class="fas fa-briefcase"></i>
                         <span>Patrimônio</span>
                     </a>
                 </li>
-                
                 <li>
-                    <a href="patrimonio-listar.html" class="active">
+                    <a href="importar-matriculas.html" class="active">
                         <i class="fas fa-file-arrow-up"></i>
                         <span>Importar Matrículas</span>
                     </a>
                 </li>
-              
-                
+                <li>
+                    <a href="transferir-poder.html">
+                        <i class="fas fa-bolt"></i>
+                        <span>Transferir Poder</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
@@ -87,104 +95,138 @@
     <main class="admin-content">
         <div class="page-header">
             <h1><i class="fas fa-file-arrow-up"></i> Importar Matrículas</h1>
-            <p>insira as matriculas aqui </p>
+            <p>Atualize a planilha de matrículas autorizadas para acesso ao sistema</p>
         </div>
 
-        <!-- Filtros e Estatísticas -->
-        <div class="filters-section">
-            <div class="filters-container">
-                <div class="filter-group">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search-patrimonio" placeholder="Buscar por descrição, número de patrimônio, local...">
+        <!-- Área de Upload -->
+        <div class="upload-section">
+            <div class="upload-card">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Upload de Arquivo</h3>
+                <p>Selecione um arquivo CSV com as matrículas autorizadas</p>
+
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-file-excel"></i>
+                    <p>Arraste o arquivo aqui ou clique para selecionar</p>
+                    <span class="file-types">Formato suportado: .csv.</span>
+                    <input type="file" id="fileUpload" accept=".csv" hidden>
+                </div>
+
+                <div class="upload-info">
+                    <div class="info-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>O arquivo deve conter as colunas: matricula, role, status, nome</span>
+                    </div>
+                   
+                </div>
+
+                <button class="btn btn-primary" id="importBtn" disabled>
+                    <i class="fas fa-upload"></i> Importar Matrículas
+                </button>
+            </div>
+
+            <!-- Status do Upload -->
+            <div class="upload-status" id="uploadStatus" style="display: none;">
+                <div class="status-header">
+                    <h4><i class="fas fa-sync-alt fa-spin"></i> Processando Importação</h4>
+                </div>
+                <div class="status-content">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="status-details" id="statusDetails">
+                        Preparando para importar...
                     </div>
                 </div>
-                <div class="filter-group">
-                    <select id="filter-status">
-                        <option value="">Todos os status</option>
-                        <option value="active">Ativo</option>
-                        <option value="available">Disponível</option>
-                        <option value="maintenance">Em Manutenção</option>
-                        <option value="inactive">Inativo</option>
-                    </select>
-                    <select id="filter-category">
-                        <option value="">Todas as categorias</option>
-                        <option value="computador">Computador</option>
-                        <option value="periferico">Periférico</option>
-                        <option value="projetor">Projetor</option>
-                        <option value="mobilia">Mobília</option>
-                    </select>
+            </div>
+        </div>
+
+        <!-- Tabela de Visualização -->
+        <div class="preview-section" id="previewSection" style="display: none;">
+            <div class="section-header">
+                <h3><i class="fas fa-eye"></i> Pré-visualização dos Dados</h3>
+                <p>Confira os dados antes de confirmar a importação</p>
+            </div>
+
+            <div class="preview-stats">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="previewTotal">0</h3>
+                        <p>Total de Registros</p>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <button class="btn btn-secondary" id="reset-filters">
-                        <i class="fas fa-refresh"></i> Limpar Filtros
-                    </button>
-                    <button class="btn btn-primary" id="add-item-btn">
-                        <i class="fas fa-plus"></i> Novo Item
-                    </button>
+                <div class="stat-card">
+                    <div class="stat-icon valid">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="previewValid">0</h3>
+                        <p>Válidos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon invalid">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="previewInvalid">0</h3>
+                        <p>Com Erros</p>
+                    </div>
                 </div>
             </div>
 
-         
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Dados para Importação</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-secondary" id="cancelImport">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button class="btn btn-primary" id="confirmImport">
+                            <i class="fas fa-check"></i> Confirmar Importação
+                        </button>
+                    </div>
+                </div>
 
-        <!-- Lista de Patrimônio -->
-        <div class="patrimonio-container">
-            <div class="table-header">
-                <h3>Lista de Itens do Patrimônio</h3>
-                <div class="table-actions">
-                    <button class="btn btn-secondary" id="export-patrimonio">
-                        <i class="fas fa-download"></i> Exportar
-                    </button>
+                <div class="table-responsive">
+                    <table class="preview-table">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="previewTableBody">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
 
-            <div class="table-responsive">
-                <table class="patrimonio-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>nome</th>
-                            <th>matricula</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="patrimonio-table-body">
-                        <!-- Preenchido via JavaScript -->
-                    </tbody>
-                </table>
+        <!-- Histórico de Importações -->
+        <div class="history-section">
+            <div class="section-header">
+                <h3><i class="fas fa-history"></i> Histórico de Importações da sessão</h3>
             </div>
 
-            <!-- Paginação -->
-            <div class="pagination" id="pagination">
+            <div class="history-list" id="historyList">
                 <!-- Preenchido via JavaScript -->
             </div>
         </div>
     </main>
 
-    <!-- Modal de Detalhes do Item -->
-    <div id="item-details-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Detalhes do Item</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body" id="modal-item-details">
-                <!-- Preenchido via JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary modal-close-btn">Fechar</button>
-                <button class="btn btn-primary" id="edit-item-btn">
-                    <i class="fas fa-edit"></i> Editar Item
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Overlay para menu mobile -->
     <div class="overlay"></div>
 
     <script src="../../assets/js/admin.js"></script>
-    <script src="../../assets/js/patrimonio-listar.js"></script>
-    <script src="../../assets/js/globalCred.js"></script>
+    <script src="../../assets/js/importar-matriculas.js"></script>
 </body>
 </html>
