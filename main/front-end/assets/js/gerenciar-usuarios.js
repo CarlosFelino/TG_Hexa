@@ -176,6 +176,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adicionar event listeners aos botões
         addTableEventListeners();
         renderPagination(filteredUsers.length);
+        optimizeTableForMobile();
+        window.addEventListener('resize', optimizeTableForMobile);
     }
 
     // =========================
@@ -627,6 +629,41 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // =========================
+    // Otimização para Mobile
+    // =========================
+
+    function optimizeTableForMobile() {
+        const table = document.querySelector('.users-table');
+        const tableContainer = document.querySelector('.table-responsive');
+        
+        if (!table || !tableContainer) return;
+
+        // Adiciona indicador visual de scroll horizontal apenas em mobile
+        if (window.innerWidth <= 576) {
+            tableContainer.style.position = 'relative';
+            
+            // Remove indicador existente se houver
+            const existingIndicator = tableContainer.querySelector('.scroll-indicator');
+            if (existingIndicator) existingIndicator.remove();
+            
+            // Adiciona novo indicador
+            const indicator = document.createElement('div');
+            indicator.className = 'scroll-indicator';
+            indicator.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            tableContainer.appendChild(indicator);
+            
+            // Remove o indicador após primeiro scroll
+            const scrollHandler = function() {
+                indicator.style.display = 'none';
+                tableContainer.removeEventListener('scroll', scrollHandler);
+            };
+            
+            tableContainer.addEventListener('scroll', scrollHandler, { once: true });
+        }
+    }
+
 
     // =========================
     // Utilitários

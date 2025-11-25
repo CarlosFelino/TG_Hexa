@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adicionar event listeners aos botões
         addTableEventListeners();
         renderPagination(filteredOrders.length);
+        optimizeTableForMobile();
     }
 
     // =========================
@@ -618,6 +619,75 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // =========================
+    // Otimização de tabelas no mobile
+    // =========================
+
+    function optimizeTableForMobile() {
+        const table = document.querySelector('.orders-table');
+        const tableContainer = document.querySelector('.table-responsive');
+        
+        if (!table || !tableContainer) return;
+
+        // Adiciona indicador visual de scroll horizontal
+        if (window.innerWidth <= 576) {
+            tableContainer.style.position = 'relative';
+            
+            // Adiciona sombra indicadora de scroll
+            if (!tableContainer.querySelector('.scroll-indicator')) {
+                const indicator = document.createElement('div');
+                indicator.className = 'scroll-indicator';
+                indicator.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                indicator.style.cssText = `
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: var(--secondary);
+                    color: white;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.8rem;
+                    opacity: 0.7;
+                    animation: bounce 2s infinite;
+                    z-index: 2;
+                `;
+                tableContainer.style.position = 'relative';
+                tableContainer.appendChild(indicator);
+                
+                // Remove o indicador após primeiro scroll
+                tableContainer.addEventListener('scroll', function() {
+                    indicator.style.display = 'none';
+                }, { once: true });
+            }
+        }
+    }
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(-50%) translateX(0); }
+            40% { transform: translateY(-50%) translateX(-5px); }
+            60% { transform: translateY(-50%) translateX(-3px); }
+        }
+        
+        .scroll-indicator {
+            pointer-events: none;
+        }
+        
+        @media (max-width: 576px) {
+            .table-responsive {
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
 
     // =========================
     // Utilitários

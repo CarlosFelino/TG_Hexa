@@ -143,9 +143,15 @@ body {
 .profile-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
     cursor: pointer;
     border: 2px solid var(--secondary);
+    border-radius: 50% !important;
+}
+
+.user-profile img,
+.profile-dropdown img {
+    border-radius: 50% !important;
+    object-fit: cover !important;
 }
 
 .profile-dropdown {
@@ -378,5 +384,21 @@ a:focus, button:focus {
     .logo-container:hover {
         transform: translateX(0);
         gap: 0;
+    }
+        .logo-text {
+        display: block !important; /* Garante que o texto aparece */
+    }
+    
+    .logo-container:hover {
+        transform: none; /* Remove transform em mobile */
+        gap: 8px; /* Mantém gap consistente */
+    }
+    
+    /* Garante que o body tenha scroll quando necessário */
+    html, body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
     }
 }

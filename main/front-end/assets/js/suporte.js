@@ -5,11 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (!token || !user) {
-        window.location.href = "../../login.html";
-        return;
-    }
-
     // =========================
     // ELEMENTOS DOM
     // =========================

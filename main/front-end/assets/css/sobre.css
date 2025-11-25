@@ -1,56 +1,19 @@
 /* =======================
-   Estilos da Página Sobre
+   Estilos da Página Sobre - OTIMIZADO
    ======================= */
 
-/* alterado por vitoria */
-.gradient-box{
-  height: 400px;
-  background: var(--gradient);
-  border-radius: 20px;
-  transform: rotate(5deg);          /* se quiser o tilt do cartão */
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  overflow: hidden;                 /* fundamental para não vazar */
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* imagem dentro da box */
-.gradient-box img{
-  width: 70%;           /* ajusta conforme desejar */
-  max-width: 320px;
-  height: auto;
-  object-fit: contain;  /* ou cover se preferir preencher */
-  display: block;
-  position: relative;
-  z-index: 1;
-  transform: rotate(-5deg); /* cancela a rotação do container para deixar o logo reto.
-                              Remova essa linha se quiser que o logo também fique inclinado */
-}
-
-/* opcional: overlay de gradiente *por cima* da imagem */
-.gradient-box::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  background: linear-gradient(to bottom, rgba(16,23,40,0.2), rgba(16,23,40,0.6));
-  z-index: 2;
-  pointer-events: none;
-}
-
-
-/* Hero Section */
+/* Hero Section - RESPONSIVO */
 .hero-section {
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-    height: 50vh;
+    min-height: 40vh; /* Alterado para min-height */
+    max-height: 500px; /* Limite máximo */
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     position: relative;
     overflow: hidden;
+    padding: 2rem 1rem;
 }
 
 .hero-section::before {
@@ -69,46 +32,56 @@
     position: relative;
     z-index: 2;
     max-width: 800px;
-    padding: 0 2rem;
+    padding: 0 1rem;
+    width: 100%;
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 6vw, 3.5rem); /* Responsivo */
     margin-bottom: 1rem;
     background: var(--gradient);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    line-height: 1.2;
 }
 
 .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 3vw, 1.5rem); /* Responsivo */
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
 }
 
-/* About System */
+/* About System - RESPONSIVO */
 .about-system {
-    padding: 5rem 0;
+    padding: clamp(3rem, 8vw, 5rem) 0; /* Padding responsivo */
     background-color: var(--primary);
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 clamp(1rem, 4vw, 2rem); /* Padding responsivo */
 }
 
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     align-items: center;
 }
 
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+    }
+}
+
 .text-content h2 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem); /* Responsivo */
+    margin-bottom: 1.5rem;
     color: var(--text-light);
     position: relative;
 }
@@ -125,15 +98,16 @@
 
 .feature-list {
     list-style: none;
-    margin: 2rem 0;
+    margin: 1.5rem 0;
 }
 
 .feature-list li {
     position: relative;
     padding-left: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.875rem;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.6;
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .feature-list li::before {
@@ -142,31 +116,56 @@
     left: 0;
     color: var(--accent);
     font-weight: bold;
+    font-size: 1.1rem;
 }
 
-.image-content {
-    position: relative;
-    height: 100%;
-}
-
+/* Gradient Box - RESPONSIVO */
 .gradient-box {
-    height: 400px;
+    height: clamp(250px, 50vw, 400px); /* Altura responsiva */
     background: var(--gradient);
     border-radius: 20px;
-    transform: rotate(5deg);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: rotate(3deg); /* Reduzido para mobile */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 100%;
 }
 
-/* Team Section */
+.gradient-box img {
+    width: 70%;
+    max-width: 280px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    position: relative;
+    z-index: 1;
+    transform: rotate(-3deg); /* Compensa a rotação */
+}
+
+.gradient-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(to bottom, rgba(16,23,40,0.2), rgba(16,23,40,0.6));
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Team Section - RESPONSIVO */
 .team-section {
-    padding: 5rem 0;
+    padding: clamp(3rem, 8vw, 5rem) 0;
     background-color: var(--primary-dark);
 }
 
 .section-title {
     text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 2rem;
     color: var(--text-light);
     position: relative;
 }
@@ -174,18 +173,25 @@
 .section-title::after {
     content: '';
     position: absolute;
-    bottom: -15px;
+    bottom: -12px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
+    width: 80px;
     height: 4px;
     background: var(--gradient);
 }
 
 .team-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
 }
 
 .team-card {
@@ -193,9 +199,10 @@
     backdrop-filter: blur(10px);
     border-radius: 15px;
     overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.3s ease;
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
+    max-width: 100%;
 }
 
 .team-card.visible {
@@ -204,12 +211,12 @@
 }
 
 .team-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
 }
 
 .card-image {
-    height: 250px;
+    height: 220px;
     position: relative;
     overflow: hidden;
 }
@@ -218,11 +225,24 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s;
+    transition: transform 0.5s ease;
+}
+
+/* Fallback para imagens que não carregam */
+.card-image img:before {
+    content: "Imagem não disponível";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-light);
+    font-size: 0.9rem;
+    text-align: center;
 }
 
 .team-card:hover .card-image img {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .image-overlay {
@@ -235,42 +255,46 @@
 }
 
 .card-content {
-    padding: 1.5rem;
+    padding: 1.25rem;
     text-align: center;
 }
 
 .card-content h3 {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     margin-bottom: 0.5rem;
     color: var(--text-light);
+    line-height: 1.3;
 }
 
 .team-role {
     color: var(--accent);
     font-weight: 600;
     margin-bottom: 0.5rem;
+    font-size: 0.95rem;
 }
 
 .team-ra, .team-email {
     display: block;
     color: rgba(255, 255, 255, 0.7);
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 .team-email {
     color: var(--accent);
     text-decoration: none;
     transition: color 0.3s;
+    word-break: break-word;
 }
 
 .team-email:hover {
     color: var(--text-light);
 }
 
-/* Advisor Section */
+/* Advisor Section - RESPONSIVO */
 .advisor-section {
-    padding: 5rem 0;
+    padding: clamp(3rem, 8vw, 5rem) 0;
     background-color: var(--primary);
 }
 
@@ -278,15 +302,23 @@
     max-width: 800px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 3rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     align-items: center;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    padding: 2rem;
-    opacity: 1;
-    transition: opacity 0.6s;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+@media (min-width: 768px) {
+    .advisor-card {
+        grid-template-columns: 200px 1fr;
+        gap: 2.5rem;
+        padding: 2rem;
+    }
 }
 
 .advisor-card.visible {
@@ -296,7 +328,9 @@
 .advisor-image {
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    max-width: 200px;
+    margin: 0 auto;
 }
 
 .advisor-image img {
@@ -305,8 +339,18 @@
     display: block;
 }
 
+.advisor-content {
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .advisor-content {
+        text-align: left;
+    }
+}
+
 .advisor-content h3 {
-    font-size: 1.8rem;
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
     margin-bottom: 0.5rem;
     color: var(--text-light);
 }
@@ -315,6 +359,7 @@
     color: var(--accent);
     font-weight: 600;
     margin-bottom: 1rem;
+    font-size: 1rem;
 }
 
 .advisor-email {
@@ -323,6 +368,7 @@
     text-decoration: none;
     margin-bottom: 1rem;
     transition: color 0.3s;
+    word-break: break-word;
 }
 
 .advisor-email:hover {
@@ -332,73 +378,97 @@
 .advisor-description {
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
+    font-size: 0.95rem;
 }
 
-/* Animations */
+/* Animations - OTIMIZADAS */
 .fade-in {
     opacity: 0;
-    transition: opacity 0.6s ease-in;
+    transition: opacity 0.8s ease-in;
 }
 
 .fade-in.visible {
     opacity: 1;
 }
 
-/* Responsividade */
-@media (max-width: 992px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .gradient-box {
-        height: 300px;
-        max-width: 80%;
-        margin: 0 auto;
-    }
-    
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.2rem;
-    }
+.slide-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease-out;
 }
 
-@media (max-width: 768px) {
-    .advisor-card {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    
-    .advisor-image {
-        max-width: 250px;
-        margin: 0 auto;
-    }
-    
+.slide-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =======================
+   Responsividade Avançada
+   ======================= */
+@media (max-width: 480px) {
     .hero-section {
-        height: 40vh;
-    }
-    
-    .hero-title {
-        font-size: 2rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .hero-title {
-        font-size: 1.8rem;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-    }
-    
-    .text-content h2 {
-        font-size: 1.8rem;
+        min-height: 35vh;
+        padding: 1.5rem 1rem;
     }
     
     .team-grid {
         grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+    
+    .card-image {
+        height: 200px;
+    }
+    
+    .gradient-box {
+        transform: rotate(2deg);
+        height: 220px;
+    }
+    
+    .gradient-box img {
+        transform: rotate(-2deg);
+        width: 60%;
+    }
+    
+    .card-content {
+        padding: 1rem;
+    }
+    
+    .feature-list li {
+        padding-left: 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .hero-title {
+        font-size: 1.6rem;
+    }
+    
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    .gradient-box {
+        height: 200px;
+    }
+}
+
+/* Melhorias de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+    .team-card,
+    .fade-in,
+    .slide-in,
+    .advisor-card {
+        transition: none;
+        transform: none;
+    }
+    
+    .team-card:hover {
+        transform: none;
     }
 }

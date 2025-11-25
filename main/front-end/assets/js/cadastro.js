@@ -181,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function submitForm() {
         submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cadastrando...';
 
         const formData = {
@@ -208,6 +209,10 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((error) => {
             console.error("Erro no cadastro:", error);
+            
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Cadastrar Usuário';
 
             // Verifica se é erro de email/matrícula já cadastrado
             if (error.message.includes("já cadastrado") || error.message.includes("já existe")) {

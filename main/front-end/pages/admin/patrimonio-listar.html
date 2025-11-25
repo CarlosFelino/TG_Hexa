@@ -180,24 +180,45 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="patrimonio-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nº Patrimônio</th>
-                            <th>Descrição</th>
-                          
-                            <th>Local</th>
-                            <th>Status</th>
-                      
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="patrimonio-table-body">
-                        <!-- Preenchido via JavaScript -->
-                    </tbody>
-                </table>
+            <div id="modal-form" class="modal">
+                <div class="modal-content form-modal">
+                    <h2><i class="fas fa-plus"></i> Novo Patrimônio</h2>
+                    
+                    <div class="form-group">
+                        <label class="required-field">Número do Patrimônio</label>
+                        <input type="text" id="form-patrimonio" required>
+                        <div class="field-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required-field">Descrição</label>
+                        <input type="text" id="form-descricao" required>
+                        <div class="field-error"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required-field">Local</label>
+                            <input type="text" id="form-local" required>
+                            <div class="field-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="form-status">
+                                <option value="Disponível">Disponível</option>
+                                <option value="Em Uso">Em Uso</option>
+                                <option value="Em Manutenção">Em Manutenção</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="form-cancel">Cancelar</button>
+                        <button class="btn btn-primary" id="form-submit">Salvar</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Paginação -->

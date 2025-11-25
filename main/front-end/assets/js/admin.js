@@ -47,6 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupMenu() {
+        if (window.innerWidth <= 992) {
+        setupMobileMenu();
+        }
         menuToggle?.addEventListener('click', toggleSidebar);
         overlay?.addEventListener('click', closeSidebar);
 
@@ -54,6 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.addEventListener('click', closeSidebar);
         });
+
+        setupProfileDropdown();
     }
 
     function setupProfileDropdown() {
@@ -72,6 +77,54 @@ document.addEventListener('DOMContentLoaded', function() {
             if (dropdownVisible) {
                 dropdown.style.display = 'none';
                 dropdownVisible = false;
+            }
+        });
+    }
+    function setupMobileMenu() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.overlay');
+        
+        if (!menuToggle || !sidebar) return;
+
+        function toggleMenu() {
+            sidebar.classList.toggle('active');
+            overlay?.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+            
+            // Anima o ícone do hambúrguer
+            const icon = menuToggle.querySelector('i');
+            if (sidebar.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('active');
+            overlay?.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            const icon = menuToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        overlay?.addEventListener('click', closeMenu);
+
+        // Fechar menu ao clicar em links (mobile)
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Fechar menu ao redimensionar para desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 992) {
+                closeMenu();
             }
         });
     }
