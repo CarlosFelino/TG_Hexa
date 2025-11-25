@@ -4,35 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Ordens | Support Nexus</title>
+    
     <link rel="stylesheet" href="../../../assets/css/global.css">
-    <link rel="stylesheet" href="../../../assets/css/professor.css">
-    <link rel="stylesheet" href="../../../assets/css/minhas-ordens.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../assets/css/suporte.css">
+    <link rel="stylesheet" href="../../../assets/css/minhas-ordens.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="../../../assets/images/logo.png" type="image/x-icon">
 </head>
-<body class="professor-dashboard">
 
-    <!-- Navbar Superior -->
-    <header class="professor-navbar">
+<body class="suporte-dashboard">
+    <header class="suporte-navbar">
         <div class="navbar-content">
             <button class="menu-toggle" aria-label="Abrir menu">
                 <i class="fas fa-bars"></i>
             </button>
+
             <a href="../painel-suporte.html" class="logo-link">
                 <div class="logo-container">
                     <img src="../../../assets/images/logo.png" alt="Support Nexus" class="logo">
                     <span class="logo-text">Support Nexus</span>
                 </div>
             </a>
+
             <div class="user-profile">
                 <div class="profile-info">
-                    <span class="user-name" id="userName"></span>
-                    <span class="user-email" id="userEmail"></span>
+                    <span class="user-name" id="userName">Suporte</span>
+                    <span class="user-email" id="userEmail">suporte@fatec.sp.gov.br</span>
                 </div>
                 <div class="profile-dropdown">
-                    <img src="../../../assets/images/default-avatar.png" alt="Foto do Professor" class="profile-avatar">
+                    <img src="../../../assets/images/default-avatar.png" alt="Foto do Suporte" class="profile-avatar" id="userAvatar">
                     <div class="dropdown-content">
-                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="../perfil-suporte.html"><i class="fas fa-user"></i> Meu Perfil</a>
                         <a href="../../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
                     </div>
                 </div>
@@ -40,10 +41,21 @@
         </div>
     </header>
 
-    <!-- Menu Lateral -->
     <aside class="sidebar">
         <nav class="sidebar-nav">
             <ul>
+                <li>
+                    <a href="../painel-suporte.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listar-ordens.html">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Listar Ordens</span>
+                    </a>
+                </li>
                 <li>
                     <a href="criar-ordem.html">
                         <i class="fas fa-plus-circle"></i>
@@ -52,24 +64,18 @@
                 </li>
                 <li>
                     <a href="minhas-ordens.html" class="active">
-                        <i class="fas fa-list-ul"></i>
+                        <i class="fas fa-user-cog"></i>
                         <span>Minhas Ordens</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="minhas-ordens.html#andamento">
-                        <i class="fas fa-tasks"></i>
-                        <span>Acompanhamento</span>
                     </a>
                 </li>
             </ul>
         </nav>
     </aside>
 
-    <!-- Conteúdo Principal -->
-    <main class="professor-content">
+    <main class="suporte-content">
         <div class="orders-header">
             <h1><i class="fas fa-clipboard-list"></i> Minhas Ordens de Serviço</h1>
+            
             <div class="filters-container">
                 <div class="filter-group">
                     <button class="filter-btn active" data-status="all"><i class="fas fa-list"></i> Todas</button>
@@ -83,7 +89,7 @@
                         <input type="text" id="search-orders" placeholder="Buscar por sala, equipamento...">
                     </div>
                     <div class="date-filter">
-                        <label for="date-from"><i class="fas fa-calendar-alt"></i> De:</label>
+                        <label for="date-from">De:</label>
                         <input type="date" id="date-from">
                         <label for="date-to">Até:</label>
                         <input type="date" id="date-to">
@@ -93,7 +99,6 @@
             </div>
         </div>
 
-        <!-- Resumo Estatístico -->
         <div class="stats-summary">
             <div class="stat-card">
                 <div class="stat-value" id="totalOrders">0</div>
@@ -113,35 +118,32 @@
             </div>
         </div>
 
-        <!-- Lista de Ordens -->
         <div class="orders-list" id="orders-list">
-            <!-- Cards preenchidos via JavaScript -->
+            <div class="no-orders">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Carregando suas ordens...</p>
+            </div>
         </div>
 
-        <!-- Paginação -->
         <div class="pagination" id="pagination"></div>
     </main>
 
-    <!-- Modal de Detalhes -->
-    <div id="order-details-modal" class="modal">
+    <div id="modal-order-details" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Detalhes da Ordem</h3>
-                <button class="modal-close">&times;</button>
+                <span class="modal-close">&times;</span>
             </div>
-            <div class="modal-body" id="modal-order-details"></div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary modal-close-btn">Fechar</button>
-            </div>
+            <div class="modal-body" id="modal-order-details">
+                </div>
         </div>
     </div>
 
-    <!-- Modal de Avaliação -->
     <div id="feedback-modal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
           <h3>Avaliar Atendimento</h3>
-          <button class="modal-close">&times;</button>
+          <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body feedback-body">
           <div class="stars-container">
@@ -152,15 +154,16 @@
             <i class="fa fa-star" data-value="5"></i>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="margin-top: 20px; text-align: right;">
           <button id="submit-feedback" class="btn btn-primary">Enviar</button>
-          <button class="btn btn-secondary modal-close-btn">Cancelar</button>
         </div>
       </div>
     </div>
 
+    <div class="overlay"></div>
 
-       <script src="../../../assets/js/minhas-ordens.js"></script>
+    <script src="../../../assets/js/globalCred.js"></script>
+    <script src="../../../assets/js/minhas-ordens.js"></script>
     <script src="../../../assets/js/globalProfile.js"></script>
-</body>
+    <script src="../../../assets/js/suporte.js"></script> </body>
 </html>

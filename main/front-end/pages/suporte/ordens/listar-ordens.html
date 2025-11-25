@@ -12,24 +12,29 @@
 </head>
 
 <body class="suporte-dashboard">
-    <!-- Navbar -->
+    <!-- Navbar Superior -->
     <header class="suporte-navbar">
         <div class="navbar-content">
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <a href="../painel-suporte.html" class="logo-link">
                 <div class="logo-container">
                     <img src="../../../assets/images/logo.png" alt="Support Nexus" class="logo">
                     <span class="logo-text">Support Nexus</span>
                 </div>
             </a>
+
             <div class="user-profile">
                 <div class="profile-info">
-                    <span id="userName"></span>
-                    <span id="userEmail"></span>
+                    <span class="user-name" id="userName"></span>
+                    <span class="user-email" id="userEmail"></span>
                 </div>
                 <div class="profile-dropdown">
-                    <img src="../../../assets/images/default-avatar.png" alt="Avatar" class="profile-avatar">
+                    <img src="../../../assets/images/default-avatar.png" alt="Foto do Suporte" class="profile-avatar" id="userAvatar">
                     <div class="dropdown-content">
-                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Perfil</a>
+                        <a href="perfil-suporte.html"><i class="fas fa-user"></i> Meu Perfil</a>
                         <a href="../../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
                     </div>
                 </div>
@@ -37,24 +42,31 @@
         </div>
     </header>
 
+
     <!-- Menu Lateral -->
     <aside class="sidebar">
         <nav class="sidebar-nav">
             <ul>
                 <li>
-                    <a href="ordens/listar-ordens.html" class="active">
+                    <a href="../painel-suporte.html">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listar-ordens.html" class="active">
                         <i class="fas fa-list-ul"></i>
                         <span>Listar Ordens</span>
                     </a>
                 </li>
                 <li>
-                    <a href="ordens/criar-ordem.html">
+                    <a href="criar-ordem.html">
                         <i class="fas fa-plus-circle"></i>
                         <span>Criar Ordem</span>
                     </a>
                 </li>
                 <li>
-                    <a href="ordens/minhas-ordens.html">
+                    <a href="minhas-ordens.html">
                         <i class="fas fa-user-cog"></i>
                         <span>Minhas Ordens</span>
                     </a>
@@ -113,6 +125,7 @@
       </div>
     </div>
     <script src="../../../assets/js/globalCred.js"></script>
+    <script src="../../../assets/js/suporte.js"></script>
     <script src="../../../assets/js/lista-ordens.js"></script>
     <script src="../../../assets/js/globalProfile.js"></script>
 </body>

@@ -1,637 +1,365 @@
-    /* =======================
-    criar-ordem.css
-    ======================= */
+/* =======================
+   CRIAR ORDEM - SUPORTE
+   criar-ordem.css
+   ======================= */
+
+/* =======================
+   Variáveis Globais (Garantia)
+   ======================= */
 :root {
-    --primary-bg: #f7f8fa;
-    --card-bg: #ffffff;
-    --accent: #7a04eb;
-    --text-dark: #1b1f3b;
-    --text-light: #70748c;
+    --primary-bg: #ffffff;
+    --secondary-bg: #f5f7fa;
+    --text-dark: #101728;
+    --text-medium: #555;
+    --text-light: #999;
     --border-light: #e1e5eb;
-    --transition: all 0.3s ease;
+    --card-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    --accent: #7a04eb;
+    --secondary: #555;
+    --success: #4CAF50;
+    --danger: #F44336;
 }
 
-/* Container principal */
-.professor-content {
+/* =======================
+   Layout da Página
+   ======================= */
+.suporte-content {
     padding: 2rem;
-    color: var(--text-dark);
+    background: var(--secondary-bg);
+    min-height: calc(100vh - 70px);
 }
 
-/* Cabeçalho */
 .order-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
 }
 
 .order-header h1 {
     font-size: 2rem;
     color: var(--text-dark);
+    margin-bottom: 0.5rem;
 }
 
 .order-header p {
-    color: var(--text-light);
+    color: var(--text-medium);
+    font-size: 1.1rem;
 }
 
-/* Cards */
+/* =======================
+   Cards de Seleção
+   ======================= */
 .card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin-top: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-light);
-    border-radius: 20px;
-    padding: 2.5rem 2rem;
+    background: #fff;
+    border-radius: 16px;
+    padding: 3rem 2rem;
     text-align: center;
-    transition: var(--transition);
+    box-shadow: var(--card-shadow);
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
 }
 
-.card-icon {
-    font-size: 3rem;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    transition: var(--transition);
-}
-
-.card h2 {
-    font-size: 1.4rem;
-    color: var(--text-dark);
-    margin-bottom: 0.75rem;
-}
-
-.card p {
-    color: var(--text-light);
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* Hover cards */
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(122, 4, 235, 0.1);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(122, 4, 235, 0.15);
+    border-color: var(--accent);
+}
+
+/* Ícone do Card */
+.card-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(122, 4, 235, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    color: var(--accent);
+    transition: all 0.3s ease;
 }
 
 .card:hover .card-icon {
+    background: var(--accent);
+    color: #fff;
     transform: scale(1.1);
-    color: #8e3efb;
 }
 
-/* Responsividade */
+.card h2 {
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.card p {
+    color: var(--text-medium);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* =======================
+   MODAIS (Formulários)
+   ======================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(16, 23, 40, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: none; /* Controlado por JS */
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    padding: 2.5rem;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-content h2 {
+    font-size: 1.6rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.modal-content h2 i { color: var(--accent); }
+
+.close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.8rem;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.close:hover { color: var(--danger); }
+
+/* =======================
+   Estilo dos Formulários
+   ======================= */
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+form label i {
+    color: var(--accent);
+    margin-right: 5px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Inputs e Selects */
+input, select, textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+    background: #fcfcfc;
+    font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(122, 4, 235, 0.1);
+}
+
+/* Select com valor selecionado (Feedback Visual) */
+select.selected {
+    border-color: var(--accent);
+    background: rgba(122, 4, 235, 0.05);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Botão de Enviar */
+button[type="submit"] {
+    background: var(--accent);
+    color: #fff;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+button[type="submit"]:hover {
+    background: #6003b0; /* Tom mais escuro */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(122, 4, 235, 0.3);
+}
+
+/* =======================
+   Upload de Arquivos
+   ======================= */
+.file-upload-section {
+    background: #f9f9f9;
+    border: 1px dashed var(--border-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.file-label {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--text-medium);
+}
+
+.file-limit {
+    font-size: 0.8rem;
+    color: #999;
+    font-weight: normal;
+}
+
+.file-upload-btn {
+    background: #fff;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-upload-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* Lista de Arquivos (Preview) */
+#file-list-problema {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+.file-item {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.preview-thumb {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.file-item .remove {
+    color: var(--danger);
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 5px;
+    padding: 0 5px;
+}
+
+.file-item .remove:hover {
+    background: #ffebee;
+    border-radius: 50%;
+}
+
+/* =======================
+   RESPONSIVIDADE
+   ======================= */
 @media (max-width: 768px) {
-    .card-container {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+    .suporte-content {
+        padding: 1.5rem 1rem;
     }
 
     .order-header h1 {
         font-size: 1.6rem;
     }
-}
 
-    
-   
-    /* =======================
-    Modal Overlay
-    ======================= */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(10, 16, 31, 0.95);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.modal-overlay.active {
-    display: flex;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-    /* =======================
-    Conteúdo do Modal
-    ======================= */
-.modal-content {
-    background: linear-gradient(135deg, #1a1f38 0%, #252b4a 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 85vh;
-    overflow-y: auto;
-    position: relative;
-    border: 1px solid rgba(122, 4, 235, 0.3);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.modal-content h2 {
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
-    color: var(--text-light);
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-}
-
-.modal-content h2 i {
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.modal-content .close {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.6);
-    transition: all 0.3s;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.modal-content .close:hover {
-    color: var(--accent);
-    background: rgba(255, 0, 226, 0.1);
-}
-
-    /* =======================
-    Formulários
-    ======================= */
-form label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-    font-weight: 500;
-    color: var(--text-light);
-    font-size: 1rem;
-}
-
-form label i {
-    width: 16px;
-    color: var(--secondary);
-}
-
-form label[for]::after {
-    content: " *";
-    color: #e74c3c;
-}
-
-input[type="text"], input[type="url"], select, textarea {
-    width: 100%;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
-    border-radius: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    font-size: 1rem;
-    transition: all 0.3s;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-light);
-}
-
-input:focus, select:focus, textarea:focus {
-    border-color: var(--secondary);
-    box-shadow: 0 0 0 3px rgba(122, 4, 235, 0.2);
-    outline: none;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-select option {
-    background: var(--primary-dark);
-    color: var(--text-light);
-    padding: 1rem;
-}
-
-textarea {
-    min-height: 120px;
-    resize: vertical;
-    font-family: inherit;
-}
-    /* =======================
-    Botões
-    ======================= */
-button {
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-form button[type="submit"] {
-    background: var(--secondary);
-    color: #fff;
-    width: 100%;
-    font-size: 1rem;
-}
-
-form button[type="submit"]:hover {
-    background: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(122,4,235,0.3);
-}
-
-    /* =======================
-    Upload de arquivos
-    ======================= */
-form button[type="submit"] {
-    background: var(--gradient);
-    color: #fff;
-    width: 100%;
-    font-size: 1.1rem;
-    padding: 1.2rem;
-    border-radius: 10px;
-    font-weight: 600;
-    margin-top: 1rem;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-form button[type="submit"]::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-}
-
-form button[type="submit"]:hover::before {
-    left: 100%;
-}
-
-form button[type="submit"]:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(122, 4, 235, 0.4);
-}
-
-    /* =======================
-    Upload de arquivos
-    ======================= */
-.file-upload-container {
-    margin-bottom: 1.5rem;
-}
-
-.file-upload-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.file-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1rem;
-}
-
-.file-item {
-    display: flex;
-    align-items: center;
-    background: rgba(122, 4, 235, 0.1);
-    border: 1px solid var(--secondary);
-    border-radius: 20px;
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-    color: var(--text-light);
-    transition: all 0.3s;
-}
-
-.file-item:hover {
-    background: rgba(122, 4, 235, 0.2);
-    transform: translateY(-2px);
-}
-
-.file-item i {
-    margin-right: 0.5rem;
-    color: var(--secondary);
-}
-
-.file-item .remove {
-    margin-left: 0.75rem;
-    color: var(--accent);
-    cursor: pointer;
-    font-weight: bold;
-    padding: 0.2rem;
-    border-radius: 50%;
-    transition: all 0.3s;
-}
-
-.file-item .remove:hover {
-    background: var(--accent);
-    color: var(--text-light);
-}
-
-
-    /* =======================
-    Responsividade
-    ======================= */
-@media (max-width: 968px) {
-    .sidebar {
-        width: 200px;
-    }
-    
-    .professor-content {
-        margin-left: 200px;
-    }
-}
-
-@media (max-width: 768px) {
-    .professor-dashboard {
-        flex-direction: column;
-    }
-    
-    .sidebar {
-        position: static;
-        width: 100%;
-        top: auto;
-    }
-    
-    .professor-content {
-        margin-left: 0;
-        margin-top: 0;
-    }
-    
     .card-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Cards empilhados no mobile */
+        gap: 1.5rem;
     }
-    
-    .modal-content {
-        padding: 2rem 1.5rem;
-        margin: 1rem;
-    }
-    
-    .navbar-content {
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
-    .profile-info {
-        display: none;
-    }
-}
 
-@media (max-width: 480px) {
-    .professor-content {
-        padding: 1.5rem 1rem;
-    }
-    
-    .order-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .order-header h1 {
-        font-size: 1.5rem;
-    }
-    
-    .modal-content h2 {
-        font-size: 1.4rem;
-    }
-    
     .card {
         padding: 2rem 1.5rem;
     }
-    
-    .card i {
-        font-size: 2.5rem;
-    }
-}
 
-/* =======================
-   Preview de imagens no upload
-   ======================= */
-.preview-thumb {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 6px rgba(0,0,0,0.3);
-    transition: transform 0.2s ease;
-}
-
-.preview-thumb:hover {
-    transform: scale(1.05);
-}
-
-
-/* ========== Navbar Responsiva ========== */
-.navbar-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-@media (max-width: 768px) {
-  .navbar-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-}
-
-/* ========== Sidebar Responsiva ========== */
-.sidebar {
-  width: 260px;
-  transition: all 0.3s ease;
-}
-
-@media (max-width: 968px) {
-  .sidebar {
-    width: 200px;
-  }
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    position: relative;
-  }
-}
-
-/* ========== Conteúdo Principal Centralizado ========== */
-.professor-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  box-sizing: border-box;
-}
-
-/* Impede overflow horizontal */
-body {
-  overflow-x: hidden;
-}
-
-
-/* ========= Navbar fixada e responsiva ========= */
-.professor-navbar {
-  background: linear-gradient(135deg, #1a1f38 0%, #252b4a 100%);
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-
-.menu-toggle {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-dark);
-    cursor: pointer;
-    display: none;
-}
-
-/* Mostrar botão hamburguer em telas pequenas */
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-    }
-
-    .sidebar {
-        position: fixed;
-        top: 70px;
-        left: -100%;
-        width: 80%;
-        height: calc(100vh - 70px);
-        background: #fff;
-        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
-        transition: left 0.3s ease;
-        z-index: 999;
-    }
-
-    .sidebar.active {
-        left: 0;
-    }
-
-    .professor-content {
-        margin-left: 0;
+    .modal-content {
         padding: 1.5rem;
-    }
-}
-
-/* Ajustes para telas muito pequenas */
-@media (max-width: 480px) {
-    .navbar-content {
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: flex-start;
+        width: 95%;
+        margin: 1rem;
     }
 
-    .logo-container {
-        gap: 0.5rem;
+    .modal-content h2 {
+        font-size: 1.4rem;
     }
-
-    .user-profile {
-        align-self: flex-end;
-    }
-}
-
-/* ========= Corrige modal overflow em mobile ========= */
-.modal-content {
-    max-height: 85vh;
-    overflow-y: auto;
-}
-
-
-.upload-section {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.upload-label {
-  color: var(--text-light);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.95rem;
-}
-
-.upload-label small {
-  color: #a0a3b1;
-  font-size: 0.85rem;
-}
-
-.file-upload-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, #7a04eb, #9b4dff);
-  color: #fff;
-  font-weight: 600;
-  padding: 0.9rem 1.4rem;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  width: fit-content;
-}
-
-.file-upload-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(122, 4, 235, 0.3);
-  background: linear-gradient(135deg, #8e3efb, #b97fff);
-}
-
-#file-list-problema {
-  margin-top: 0.8rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-}
-
-label.active {
-  color: #ffffff;
-  font-weight: 600;
-  text-shadow: 0 0 8px rgba(122, 4, 235, 0.6);
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-/* Quando o usuário seleciona algo no select */
-select.selected {
-  border-color: var(--accent);
-  background: rgba(122, 4, 235, 0.15);
-  color: #fff;
-  box-shadow: 0 0 8px rgba(122, 4, 235, 0.3);
 }

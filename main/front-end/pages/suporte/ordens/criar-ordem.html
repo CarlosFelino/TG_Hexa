@@ -18,7 +18,7 @@
                 <i class="fas fa-bars"></i>
             </button>
 
-            <a href="../painel-suporte.html" class="logo-link">
+            <a href="painel-suporte.html" class="logo-link">
                 <div class="logo-container">
                     <img src="../../../assets/images/logo.png" alt="Support Nexus" class="logo">
                     <span class="logo-text">Support Nexus</span>
@@ -31,8 +31,8 @@
                     <span class="user-email" id="userEmail"></span>
                 </div>
                 <div class="profile-dropdown">
-                    <img src="../../../assets/images/default-avatar.png" alt="Foto do suporte" class="profile-avatar" id="profile-toggle">
-                    <div class="dropdown-content" id="profile-dropdown">
+                    <img src="../../../assets/images/default-avatar.png" alt="Foto do Suporte" class="profile-avatar" id="userAvatar">
+                    <div class="dropdown-content">
                         <a href="perfil-suporte.html"><i class="fas fa-user"></i> Meu Perfil</a>
                         <a href="../../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
                     </div>
@@ -46,6 +46,18 @@
         <nav class="sidebar-nav">
             <ul>
                 <li>
+                    <a href="../painel-suporte.html">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listar-ordens.html">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Listar Ordens</span>
+                    </a>
+                </li>
+                <li>
                     <a href="criar-ordem.html" class="active">
                         <i class="fas fa-plus-circle"></i>
                         <span>Criar Ordem</span>
@@ -53,14 +65,8 @@
                 </li>
                 <li>
                     <a href="minhas-ordens.html">
-                        <i class="fas fa-list-ul"></i>
+                        <i class="fas fa-user-cog"></i>
                         <span>Minhas Ordens</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="perfil-suporte.html">
-                        <i class="fas fa-tasks"></i>
-                        <span>Perfil</span>
                     </a>
                 </li>
             </ul>
@@ -115,17 +121,18 @@
                 <textarea id="descricao-problema" placeholder="Descreva o problema com mais detalhes..."></textarea>
 
                 <div class="file-upload-section">
-                  <label for="file-upload-problema" class="file-label">
-                    <i class="fas fa-paperclip"></i>
-                    Anexos <span class="file-limit">(máx. 3)</span>
-                  </label>
+                    <label class="file-label">
+                        <i class="fas fa-paperclip"></i>
+                        Anexos <span class="file-limit">(máx. 3)</span>
+                    </label>
 
-                  <button type="button" id="file-upload-btn" class="file-upload-btn">
-                    <i class="fas fa-upload"></i> Escolher arquivos
-                  </button>
+                    <button type="button" id="file-upload-btn" class="file-upload-btn">
+                        <i class="fas fa-cloud-upload-alt"></i> Escolher arquivos
+                    </button>
 
-                  <input type="file" id="file-upload-problema" multiple hidden accept="image/*,.pdf,.doc,.docx,.txt">
-                  <div id="file-list-problema"></div>
+                    <input type="file" id="file-upload-problema" multiple hidden accept="image/*,.pdf,.doc,.docx,.txt">
+                    
+                    <div id="file-list-problema"></div>
                 </div>
 
 
@@ -163,9 +170,10 @@
         </div>
     </div>
 
-    <script src="../../../assets/js/globalCred.js"></script>
-<script type="module" src="../../../assets/js/criar-ordem.js"></script>
-       <script src="../../../assets/js/globalProfile.js"></script>
+<script src="../../../assets/js/globalCred.js"></script>
+<script src="../../../assets/js/criar-ordem.js"></script>
+<script src="../../../assets/js/globalProfile.js"></script>
+<script src="../../../assets/js/suporte.js"></script>
 
 </body>
 </html>
