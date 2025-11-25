@@ -6,7 +6,8 @@ import {
   listarOrdensDetalhadas,
   avaliarOrdem,
   assumirOrdem,
-  listarAlertasOrdensPendentes
+  listarAlertasOrdensPendentes,
+  buscarAnexosOrdem  // ← ADICIONE ESTA IMPORTAÇÃO
 } from "../controllers/ordemController.js";
 import { autenticarJWT } from "../middlewares/authMiddleware.js";
 import { upload } from "../utils/upload.js";
@@ -32,6 +33,9 @@ router.get("/ordens-detalhadas", autenticarJWT, listarOrdensDetalhadas);
 /* ===========================================================
    Ações sobre ordens existentes
 =========================================================== */
+
+// Buscar anexos de uma ordem específica ← NOVA ROTA
+router.get("/ordens/:ordemId/anexos", autenticarJWT, buscarAnexosOrdem);
 
 // Concluir uma ordem
 router.post("/ordens/:ordemId/concluir", autenticarJWT, concluirOrdem);

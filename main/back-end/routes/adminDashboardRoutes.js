@@ -17,7 +17,7 @@ router.get("/dashboard", async (req, res) => {
         );
 
         // PATRIMÔNIO
-        const equipamentosCadastrados = await pool.query("SELECT COUNT(*) FROM patrimonio");
+        const equipamentosCadastrados = await pool.query("SELECT COUNT(*) FROM patrimonios");
 
         res.json({
             totalOrdens: totalOrdens.rows[0].count,

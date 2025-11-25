@@ -9,8 +9,8 @@ dayjs.extend(isBetween);
 /* ===========================================================
     Função auxiliar: atualizar status, prioridade e alertas
 =========================================================== */
-    export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
-        const hoje = dataReferencia; // usa a data simulada se for passada
+export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
+    const hoje = dataReferencia; // usa a data simulada se for passada
 
     for (let ordem of ordens) {
         if (!ordem.data_limite) {
@@ -80,8 +80,6 @@ dayjs.extend(isBetween);
                 [ordem.id]
               );
             }
-
-            
 
         } catch (error) {
             console.error(`Erro ao atualizar Ordem ID ${ordem.id}:`, error);
@@ -190,6 +188,7 @@ export async function criarOrdem(req, res) {
 
 /* ===========================================================
     Listar ordens (professor/suporte)
+    ✅ MODIFICADO: Inclui contagem de anexos
 =========================================================== */
 export async function listarOrdens(req, res) {
     try {
@@ -207,7 +206,8 @@ export async function listarOrdens(req, res) {
                 o.responsavel_id, o.data_limite, 
                 p.equipamento, p.tipo_problema,
                 i.app_nome, i.app_versao, i.app_link,
-                u.nome AS tecnico_nome
+                u.nome AS tecnico_nome,
+                (SELECT COUNT(*) FROM ordens_anexos WHERE ordem_id = o.id) as total_anexos
             FROM ordens o
             LEFT JOIN ordens_problemas p ON p.ordem_id = o.id
             LEFT JOIN ordens_instalacoes i ON i.ordem_id = o.id
@@ -233,6 +233,7 @@ export async function listarOrdens(req, res) {
 
 /* ===========================================================
     Listar ordens detalhadas (somente suporte/admin)
+    ✅ MODIFICADO: Inclui contagem de anexos
 =========================================================== */
 export async function listarOrdensDetalhadas(req, res) {
     try {
@@ -265,8 +266,9 @@ export async function listarOrdensDetalhadas(req, res) {
                 i.app_nome, 
                 i.app_versao, 
                 i.app_link,
-                uc.nome AS criador_nome,           -- Nome do professor que abriu
-                ur.nome AS responsavel_nome        -- Nome do técnico responsável
+                uc.nome AS criador_nome,
+                ur.nome AS responsavel_nome,
+                (SELECT COUNT(*) FROM ordens_anexos WHERE ordem_id = o.id) as total_anexos
             FROM ordens o
             LEFT JOIN ordens_problemas p ON p.ordem_id = o.id
             LEFT JOIN ordens_instalacoes i ON i.ordem_id = o.id
@@ -284,6 +286,60 @@ export async function listarOrdensDetalhadas(req, res) {
     } catch (err) {
         console.error("Erro ao listar ordens detalhadas:", err);
         res.status(500).json({ erro: "Erro ao listar ordens detalhadas" });
+    }
+}
+
+/* ===========================================================
+    ✅ NOVA FUNÇÃO: Buscar anexos de uma ordem específica
+=========================================================== */
+export async function buscarAnexosOrdem(req, res) {
+    try {
+        const { ordemId } = req.params;
+        const userId = req.user?.id;
+        const userRole = req.user?.role;
+
+        if (!userId) {
+            return res.status(401).json({ erro: "Usuário não autenticado" });
+        }
+
+        // Verificar se o usuário tem permissão (é suporte ou é o criador da ordem)
+        const ordemResult = await pool.query(
+            "SELECT criador_id FROM ordens WHERE id = $1",
+            [ordemId]
+        );
+
+        if (ordemResult.rowCount === 0) {
+            return res.status(404).json({ erro: "Ordem não encontrada" });
+        }
+
+        const ordem = ordemResult.rows[0];
+
+        // Permitir acesso se for suporte/admin ou se for o criador
+        if (userRole !== "suporte" && userRole !== "admin" && ordem.criador_id !== userId) {
+            return res.status(403).json({ erro: "Acesso negado" });
+        }
+
+        // Buscar anexos
+        const anexosResult = await pool.query(
+            `SELECT id, arquivo_nome, arquivo_url, criado_em 
+             FROM ordens_anexos 
+             WHERE ordem_id = $1 
+             ORDER BY criado_em ASC`,
+            [ordemId]
+        );
+
+        const anexos = anexosResult.rows.map(anexo => ({
+            id: anexo.id,
+            nome: anexo.arquivo_nome,
+            // Criar URL relativa para o frontend acessar
+            url: `/uploads/${ordemId}/${anexo.arquivo_nome}`,
+            criado_em: anexo.criado_em
+        }));
+
+        res.json(anexos);
+    } catch (err) {
+        console.error("Erro ao buscar anexos da ordem:", err);
+        res.status(500).json({ erro: "Erro ao buscar anexos" });
     }
 }
 
@@ -336,9 +392,9 @@ export async function concluirOrdem(req, res) {
     }
 }
 
-// ================================
-// AVALIAR ORDEM
-// ================================
+/* ===========================================================
+    Avaliar ordem
+=========================================================== */
 export async function avaliarOrdem(req, res) {
     try {
         const userId = req.user.id;
@@ -379,8 +435,6 @@ export async function avaliarOrdem(req, res) {
         res.status(500).json({ erro: "Erro interno ao registrar avaliação." });
     }
 }
-
-
 
 /* ===========================================================
     Assumir ordem
@@ -448,4 +502,3 @@ export async function listarAlertasOrdensPendentes(req, res) {
         res.status(500).json({ erro: "Erro ao listar alertas" });
     }
 }
-

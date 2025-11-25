@@ -549,3 +549,97 @@
 .btn-secondary:hover {
   background: #ddd;
 }
+/* =======================
+   minhas-ordens.css
+   (ADICIONE ESTAS CLASSES AO FINAL DO SEU CSS EXISTENTE)
+   ======================= */
+
+/* ====================================
+   ESTILOS PARA ANEXOS NO MODAL
+   ==================================== */
+
+.anexos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.anexo-item {
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 0.8rem;
+    background: #f9f9f9;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.anexo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.anexo-imagem {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.anexo-imagem:hover {
+    transform: scale(1.05);
+}
+
+.anexo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.anexo-link:hover {
+    background: rgba(122, 4, 235, 0.1);
+}
+
+.anexo-link i {
+    font-size: 0.9rem;
+}
+
+/* Badge de anexos no card */
+.order-meta span i.fa-paperclip {
+    color: #2196F3;
+}
+
+/* Garantir que o modal suporte conteúdo maior */
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Estilo para linhas full-width no modal */
+.detail-row.full-width {
+    grid-column: 1 / -1;
+}
+
+.detail-row.full-width .detail-value {
+    margin-top: 0.5rem;
+}
+
+/* Responsividade para anexos */
+@media (max-width: 768px) {
+    .anexos-container {
+        grid-template-columns: 1fr;
+    }
+
+    .anexo-imagem {
+        height: 200px;
+    }
+}

@@ -144,3 +144,730 @@
 2025-11-18 23:40:36.722 UTC [408] LOG:  checkpoint starting: shutdown immediate
 2025-11-18 23:40:36.757 UTC [408] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.045 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=211 kB; lsn=0/1A2D3F0, redo lsn=0/1A2D3F0
 2025-11-18 23:40:36.764 UTC [407] LOG:  database system is shut down
+2025-11-20 22:20:43.585 UTC [341] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-20 22:20:43.594 UTC [341] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-20 22:20:43.595 UTC [341] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-20 22:20:43.604 UTC [341] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-20 22:20:43.624 UTC [345] LOG:  database system was shut down at 2025-11-20 01:55:04 UTC
+2025-11-20 22:20:43.648 UTC [341] LOG:  database system is ready to accept connections
+2025-11-20 22:20:46.147 UTC [353] ERROR:  database "meu_banco" already exists
+2025-11-20 22:20:46.147 UTC [353] STATEMENT:  CREATE DATABASE meu_banco;
+2025-11-20 22:20:46.531 UTC [355] ERROR:  role "meu_usuario" already exists
+2025-11-20 22:20:46.531 UTC [355] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-11-20 22:20:46.846 UTC [359] ERROR:  relation "matriculas_autorizadas" already exists
+2025-11-20 22:20:46.846 UTC [359] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-20 22:20:46.895 UTC [359] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-20 22:20:46.895 UTC [359] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-20 22:20:46.895 UTC [359] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
+	('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
+	('00002', 'professor', 'inativa', 'Marcos Lima'),
+	('00003', 'professor', 'ativa', 'Luciana Martins'),
+	('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
+	('00004', 'professor', 'ativa', 'Fernanda Souza'),
+	('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
+	('00005', 'professor', 'ativa', 'Bruna Oliveira'),
+	('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
+	('00006', 'professor', 'ativa', 'Juliana Santos'),
+	('00007', 'professor', 'inativa', 'Carlos Daniel'),
+	('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
+	('00008', 'professor', 'ativa', 'Ricardo Mendes'),
+	('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-11-20 22:20:46.916 UTC [361] ERROR:  relation "users" already exists
+2025-11-20 22:20:46.916 UTC [361] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-20 22:20:46.952 UTC [363] ERROR:  relation "resetsenha" already exists
+2025-11-20 22:20:46.952 UTC [363] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-11-20 22:20:47.028 UTC [365] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-11-20 22:20:47.028 UTC [365] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-11-20 22:20:47.054 UTC [367] ERROR:  relation "ordens_problemas" already exists
+2025-11-20 22:20:47.054 UTC [367] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-20 22:20:47.074 UTC [369] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-20 22:20:47.074 UTC [369] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-20 22:20:47.094 UTC [371] ERROR:  relation "ordens_anexos" already exists
+2025-11-20 22:20:47.094 UTC [371] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-20 22:20:47.114 UTC [373] ERROR:  relation "ordens_alertas" already exists
+2025-11-20 22:20:47.114 UTC [373] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-11-20 22:25:43.723 UTC [343] LOG:  checkpoint starting: time
+2025-11-20 22:25:49.022 UTC [343] LOG:  checkpoint complete: wrote 53 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.071 s, sync=0.180 s, total=5.300 s; sync files=47, longest=0.009 s, average=0.004 s; distance=233 kB, estimate=233 kB; lsn=0/1A71A00, redo lsn=0/1A71970
+2025-11-20 22:35:43.221 UTC [343] LOG:  checkpoint starting: time
+2025-11-20 22:35:44.316 UTC [343] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.903 s, sync=0.132 s, total=1.096 s; sync files=10, longest=0.121 s, average=0.014 s; distance=28 kB, estimate=212 kB; lsn=0/1A78BB0, redo lsn=0/1A78B58
+2025-11-20 22:37:30.638 UTC [341] LOG:  received fast shutdown request
+2025-11-20 22:37:30.667 UTC [341] LOG:  aborting any active transactions
+2025-11-20 22:37:30.672 UTC [341] LOG:  background worker "logical replication launcher" (PID 348) exited with exit code 1
+2025-11-20 22:37:30.674 UTC [343] LOG:  shutting down
+2025-11-20 22:37:30.690 UTC [343] LOG:  checkpoint starting: shutdown immediate
+2025-11-20 22:37:30.736 UTC [343] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.062 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=191 kB; lsn=0/1A78C60, redo lsn=0/1A78C60
+2025-11-20 22:37:30.748 UTC [341] LOG:  database system is shut down
+2025-11-21 01:01:26.460 UTC [237] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-21 01:01:26.468 UTC [237] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-21 01:01:26.469 UTC [237] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-21 01:01:26.479 UTC [237] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-21 01:01:26.493 UTC [240] LOG:  database system was shut down at 2025-11-20 22:37:30 UTC
+2025-11-21 01:01:26.515 UTC [237] LOG:  database system is ready to accept connections
+2025-11-21 01:01:28.904 UTC [247] ERROR:  database "meu_banco" already exists
+2025-11-21 01:01:28.904 UTC [247] STATEMENT:  CREATE DATABASE meu_banco;
+2025-11-21 01:01:29.105 UTC [249] ERROR:  role "meu_usuario" already exists
+2025-11-21 01:01:29.105 UTC [249] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-11-21 01:01:29.149 UTC [253] ERROR:  relation "matriculas_autorizadas" already exists
+2025-11-21 01:01:29.149 UTC [253] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-21 01:01:29.170 UTC [253] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-21 01:01:29.170 UTC [253] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-21 01:01:29.170 UTC [253] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
+	('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
+	('00002', 'professor', 'inativa', 'Marcos Lima'),
+	('00003', 'professor', 'ativa', 'Luciana Martins'),
+	('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
+	('00004', 'professor', 'ativa', 'Fernanda Souza'),
+	('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
+	('00005', 'professor', 'ativa', 'Bruna Oliveira'),
+	('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
+	('00006', 'professor', 'ativa', 'Juliana Santos'),
+	('00007', 'professor', 'inativa', 'Carlos Daniel'),
+	('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
+	('00008', 'professor', 'ativa', 'Ricardo Mendes'),
+	('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-11-21 01:01:29.196 UTC [255] ERROR:  relation "users" already exists
+2025-11-21 01:01:29.196 UTC [255] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-21 01:01:29.230 UTC [257] ERROR:  relation "resetsenha" already exists
+2025-11-21 01:01:29.230 UTC [257] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-11-21 01:01:29.296 UTC [259] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-11-21 01:01:29.296 UTC [259] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-11-21 01:01:29.313 UTC [261] ERROR:  relation "ordens_problemas" already exists
+2025-11-21 01:01:29.313 UTC [261] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-21 01:01:29.332 UTC [263] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-21 01:01:29.332 UTC [263] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-21 01:01:29.358 UTC [265] ERROR:  relation "ordens_anexos" already exists
+2025-11-21 01:01:29.358 UTC [265] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-21 01:01:29.382 UTC [267] ERROR:  relation "ordens_alertas" already exists
+2025-11-21 01:01:29.382 UTC [267] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-11-21 01:06:26.593 UTC [238] LOG:  checkpoint starting: time
+2025-11-21 01:06:32.465 UTC [238] LOG:  checkpoint complete: wrote 59 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.649 s, sync=0.187 s, total=5.873 s; sync files=51, longest=0.008 s, average=0.004 s; distance=256 kB, estimate=256 kB; lsn=0/1AB8D20, redo lsn=0/1AB8CC8
+2025-11-21 02:02:19.340 UTC [237] LOG:  received fast shutdown request
+2025-11-21 02:02:19.363 UTC [237] LOG:  aborting any active transactions
+2025-11-21 02:02:19.363 UTC [409] FATAL:  terminating connection due to administrator command
+2025-11-21 02:02:19.366 UTC [237] LOG:  background worker "logical replication launcher" (PID 243) exited with exit code 1
+2025-11-21 02:02:19.367 UTC [238] LOG:  shutting down
+2025-11-21 02:02:19.379 UTC [238] LOG:  checkpoint starting: shutdown immediate
+2025-11-21 02:02:19.414 UTC [238] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.047 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=230 kB; lsn=0/1AB8DD0, redo lsn=0/1AB8DD0
+2025-11-21 02:02:19.422 UTC [237] LOG:  database system is shut down
+2025-11-24 22:45:15.057 UTC [1108] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-24 22:45:15.061 UTC [1108] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-24 22:45:15.063 UTC [1108] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-24 22:45:15.070 UTC [1108] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-24 22:45:15.084 UTC [1111] LOG:  database system was interrupted; last known up at 2025-11-24 00:14:42 UTC
+2025-11-24 22:45:15.115 UTC [1111] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-11-24 22:45:15.125 UTC [1111] LOG:  redo starts at 0/1B11A68
+2025-11-24 22:45:15.125 UTC [1111] LOG:  invalid record length at 0/1B11B70: expected at least 24, got 0
+2025-11-24 22:45:15.125 UTC [1111] LOG:  redo done at 0/1B11B38 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-11-24 22:45:15.132 UTC [1109] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-11-24 22:45:15.162 UTC [1109] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.011 s, total=0.034 s; sync files=2, longest=0.007 s, average=0.006 s; distance=0 kB, estimate=0 kB; lsn=0/1B11B70, redo lsn=0/1B11B70
+2025-11-24 22:45:15.213 UTC [1108] LOG:  database system is ready to accept connections
+2025-11-24 22:45:17.672 UTC [1118] ERROR:  database "meu_banco" already exists
+2025-11-24 22:45:17.672 UTC [1118] STATEMENT:  CREATE DATABASE meu_banco;
+2025-11-24 22:45:17.932 UTC [1120] ERROR:  role "meu_usuario" already exists
+2025-11-24 22:45:17.932 UTC [1120] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-11-24 22:45:17.994 UTC [1124] ERROR:  relation "matriculas_autorizadas" already exists
+2025-11-24 22:45:17.994 UTC [1124] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-24 22:45:18.008 UTC [1124] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-24 22:45:18.008 UTC [1124] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-24 22:45:18.008 UTC [1124] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
+	('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
+	('00002', 'professor', 'inativa', 'Marcos Lima'),
+	('00003', 'professor', 'ativa', 'Luciana Martins'),
+	('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
+	('00004', 'professor', 'ativa', 'Fernanda Souza'),
+	('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
+	('00005', 'professor', 'ativa', 'Bruna Oliveira'),
+	('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
+	('00006', 'professor', 'ativa', 'Juliana Santos'),
+	('00007', 'professor', 'inativa', 'Carlos Daniel'),
+	('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
+	('00008', 'professor', 'ativa', 'Ricardo Mendes'),
+	('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-11-24 22:45:18.043 UTC [1126] ERROR:  relation "users" already exists
+2025-11-24 22:45:18.043 UTC [1126] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-24 22:45:18.128 UTC [1128] ERROR:  relation "resetsenha" already exists
+2025-11-24 22:45:18.128 UTC [1128] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-11-24 22:45:18.214 UTC [1130] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-11-24 22:45:18.214 UTC [1130] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-11-24 22:45:18.246 UTC [1132] ERROR:  relation "ordens_problemas" already exists
+2025-11-24 22:45:18.246 UTC [1132] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-24 22:45:18.286 UTC [1134] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-24 22:45:18.286 UTC [1134] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-24 22:45:18.363 UTC [1136] ERROR:  relation "ordens_anexos" already exists
+2025-11-24 22:45:18.363 UTC [1136] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-24 22:45:18.401 UTC [1138] ERROR:  relation "ordens_alertas" already exists
+2025-11-24 22:45:18.401 UTC [1138] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-11-24 22:46:52.182 UTC [1108] LOG:  received fast shutdown request
+2025-11-24 22:46:52.199 UTC [1108] LOG:  aborting any active transactions
+2025-11-24 22:46:52.199 UTC [1275] FATAL:  terminating connection due to administrator command
+2025-11-24 22:46:52.202 UTC [1108] LOG:  background worker "logical replication launcher" (PID 1114) exited with exit code 1
+2025-11-24 22:46:52.203 UTC [1109] LOG:  shutting down
+2025-11-24 22:46:52.208 UTC [1109] LOG:  checkpoint starting: shutdown immediate
+2025-11-24 22:46:52.314 UTC [1109] LOG:  checkpoint complete: wrote 59 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.023 s, sync=0.074 s, total=0.112 s; sync files=51, longest=0.014 s, average=0.002 s; distance=256 kB, estimate=256 kB; lsn=0/1B51B78, redo lsn=0/1B51B78
+2025-11-24 22:46:52.320 UTC [1108] LOG:  database system is shut down
+2025-11-24 22:47:07.511 UTC [1585] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-24 22:47:07.515 UTC [1585] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-24 22:47:07.517 UTC [1585] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-24 22:47:07.527 UTC [1585] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-24 22:47:07.613 UTC [1597] LOG:  database system was shut down at 2025-11-24 22:46:52 UTC
+2025-11-24 22:47:07.626 UTC [1585] LOG:  database system is ready to accept connections
+2025-11-24 22:47:09.732 UTC [1607] ERROR:  database "meu_banco" already exists
+2025-11-24 22:47:09.732 UTC [1607] STATEMENT:  CREATE DATABASE meu_banco;
+2025-11-24 22:47:09.915 UTC [1609] ERROR:  role "meu_usuario" already exists
+2025-11-24 22:47:09.915 UTC [1609] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-11-24 22:47:10.136 UTC [1613] ERROR:  relation "matriculas_autorizadas" already exists
+2025-11-24 22:47:10.136 UTC [1613] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-24 22:47:10.139 UTC [1613] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-24 22:47:10.139 UTC [1613] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-24 22:47:10.139 UTC [1613] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
+	('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
+	('00002', 'professor', 'inativa', 'Marcos Lima'),
+	('00003', 'professor', 'ativa', 'Luciana Martins'),
+	('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
+	('00004', 'professor', 'ativa', 'Fernanda Souza'),
+	('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
+	('00005', 'professor', 'ativa', 'Bruna Oliveira'),
+	('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
+	('00006', 'professor', 'ativa', 'Juliana Santos'),
+	('00007', 'professor', 'inativa', 'Carlos Daniel'),
+	('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
+	('00008', 'professor', 'ativa', 'Ricardo Mendes'),
+	('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-11-24 22:47:10.229 UTC [1615] ERROR:  relation "users" already exists
+2025-11-24 22:47:10.229 UTC [1615] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-24 22:47:10.327 UTC [1617] ERROR:  relation "resetsenha" already exists
+2025-11-24 22:47:10.327 UTC [1617] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-11-24 22:47:10.516 UTC [1619] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-11-24 22:47:10.516 UTC [1619] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-11-24 22:47:10.609 UTC [1621] ERROR:  relation "ordens_problemas" already exists
+2025-11-24 22:47:10.609 UTC [1621] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-24 22:47:10.639 UTC [1623] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-24 22:47:10.639 UTC [1623] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-24 22:47:10.811 UTC [1627] ERROR:  relation "ordens_anexos" already exists
+2025-11-24 22:47:10.811 UTC [1627] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-24 22:47:10.914 UTC [1634] ERROR:  relation "ordens_alertas" already exists
+2025-11-24 22:47:10.914 UTC [1634] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-11-24 22:48:47.993 UTC [1585] LOG:  received fast shutdown request
+2025-11-24 22:48:48.012 UTC [1585] LOG:  aborting any active transactions
+2025-11-24 22:48:48.012 UTC [1761] FATAL:  terminating connection due to administrator command
+2025-11-24 22:48:48.016 UTC [1585] LOG:  background worker "logical replication launcher" (PID 1600) exited with exit code 1
+2025-11-24 22:48:48.030 UTC [1595] LOG:  shutting down
+2025-11-24 22:48:48.046 UTC [1595] LOG:  checkpoint starting: shutdown immediate
+2025-11-24 22:48:48.343 UTC [1595] LOG:  checkpoint complete: wrote 58 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.064 s, sync=0.221 s, total=0.313 s; sync files=52, longest=0.071 s, average=0.005 s; distance=245 kB, estimate=245 kB; lsn=0/1B8F080, redo lsn=0/1B8F080
+2025-11-24 22:48:48.353 UTC [1585] LOG:  database system is shut down
+2025-11-24 23:16:49.367 UTC [2620] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-24 23:16:49.368 UTC [2620] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-24 23:16:49.369 UTC [2620] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-24 23:16:49.373 UTC [2620] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-24 23:16:49.381 UTC [2623] LOG:  database system was shut down at 2025-11-24 23:04:26 UTC
+2025-11-24 23:16:49.391 UTC [2620] LOG:  database system is ready to accept connections
+2025-11-24 23:16:51.443 UTC [2630] ERROR:  database "meu_banco" already exists
+2025-11-24 23:16:51.443 UTC [2630] STATEMENT:  CREATE DATABASE meu_banco;
+2025-11-24 23:16:51.471 UTC [2632] ERROR:  role "meu_usuario" already exists
+2025-11-24 23:16:51.471 UTC [2632] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-11-24 23:16:51.521 UTC [2636] ERROR:  relation "matriculas_autorizadas" already exists
+2025-11-24 23:16:51.521 UTC [2636] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-24 23:16:51.524 UTC [2636] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-24 23:16:51.524 UTC [2636] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-24 23:16:51.524 UTC [2636] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
+	('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
+	('00002', 'professor', 'inativa', 'Marcos Lima'),
+	('00003', 'professor', 'ativa', 'Luciana Martins'),
+	('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
+	('00004', 'professor', 'ativa', 'Fernanda Souza'),
+	('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
+	('00005', 'professor', 'ativa', 'Bruna Oliveira'),
+	('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
+	('00006', 'professor', 'ativa', 'Juliana Santos'),
+	('00007', 'professor', 'inativa', 'Carlos Daniel'),
+	('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
+	('00008', 'professor', 'ativa', 'Ricardo Mendes'),
+	('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-11-24 23:16:51.545 UTC [2638] ERROR:  relation "users" already exists
+2025-11-24 23:16:51.545 UTC [2638] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-24 23:16:51.566 UTC [2640] ERROR:  relation "resetsenha" already exists
+2025-11-24 23:16:51.566 UTC [2640] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-11-24 23:16:51.635 UTC [2642] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-11-24 23:16:51.635 UTC [2642] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-11-24 23:16:51.668 UTC [2644] ERROR:  relation "ordens_problemas" already exists
+2025-11-24 23:16:51.668 UTC [2644] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-24 23:16:51.715 UTC [2646] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-24 23:16:51.715 UTC [2646] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-24 23:16:51.737 UTC [2648] ERROR:  relation "ordens_anexos" already exists
+2025-11-24 23:16:51.737 UTC [2648] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-24 23:16:51.756 UTC [2650] ERROR:  relation "ordens_alertas" already exists
+2025-11-24 23:16:51.756 UTC [2650] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-11-24 23:21:49.478 UTC [2621] LOG:  checkpoint starting: time
+2025-11-24 23:21:55.206 UTC [2621] LOG:  checkpoint complete: wrote 59 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.626 s, sync=0.074 s, total=5.728 s; sync files=52, longest=0.004 s, average=0.002 s; distance=252 kB, estimate=252 kB; lsn=0/1BD0D68, redo lsn=0/1BD0D10
+2025-11-24 23:26:49.306 UTC [2621] LOG:  checkpoint starting: time
+2025-11-24 23:26:49.653 UTC [2621] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.011 s, total=0.348 s; sync files=4, longest=0.005 s, average=0.003 s; distance=0 kB, estimate=227 kB; lsn=0/1BD1120, redo lsn=0/1BD10C8
+2025-11-24 23:28:06.830 UTC [2813] ERROR:  update or delete on table "matriculas_autorizadas" violates foreign key constraint "fk_matricula" on table "users"
+2025-11-24 23:28:06.830 UTC [2813] DETAIL:  Key (matricula)=(00006) is still referenced from table "users".
+2025-11-24 23:28:06.830 UTC [2813] STATEMENT:  DELETE FROM matriculas_autorizadas WHERE matricula = $1
+2025-11-24 23:28:21.668 UTC [2815] ERROR:  update or delete on table "matriculas_autorizadas" violates foreign key constraint "fk_matricula" on table "users"
+2025-11-24 23:28:21.668 UTC [2815] DETAIL:  Key (matricula)=(00444) is still referenced from table "users".
+2025-11-24 23:28:21.668 UTC [2815] STATEMENT:  DELETE FROM matriculas_autorizadas WHERE matricula = $1
+2025-11-24 23:31:49.753 UTC [2621] LOG:  checkpoint starting: time
+2025-11-24 23:31:51.933 UTC [2621] LOG:  checkpoint complete: wrote 22 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.106 s, sync=0.047 s, total=2.181 s; sync files=22, longest=0.030 s, average=0.003 s; distance=14 kB, estimate=205 kB; lsn=0/1BD4998, redo lsn=0/1BD4940
+2025-11-24 23:36:50.033 UTC [2621] LOG:  checkpoint starting: time
+2025-11-24 23:36:51.720 UTC [2621] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.638 s, sync=0.025 s, total=1.687 s; sync files=14, longest=0.003 s, average=0.002 s; distance=58 kB, estimate=191 kB; lsn=0/1BE3548, redo lsn=0/1BE34F0
+2025-11-24 23:56:51.111 UTC [2621] LOG:  checkpoint starting: time
+2025-11-24 23:56:51.655 UTC [2621] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.012 s, total=0.544 s; sync files=5, longest=0.005 s, average=0.003 s; distance=19 kB, estimate=174 kB; lsn=0/1BE8440, redo lsn=0/1BE83E8
+2025-11-25 00:33:32.742 UTC [2620] LOG:  received fast shutdown request
+2025-11-25 00:33:32.761 UTC [2620] LOG:  aborting any active transactions
+2025-11-25 00:33:32.763 UTC [2620] LOG:  background worker "logical replication launcher" (PID 2626) exited with exit code 1
+2025-11-25 00:33:32.793 UTC [2621] LOG:  shutting down
+2025-11-25 00:33:32.799 UTC [2621] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 00:33:32.836 UTC [2621] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.043 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=156 kB; lsn=0/1BE84F0, redo lsn=0/1BE84F0
+2025-11-25 00:33:32.846 UTC [2620] LOG:  database system is shut down
+2025-11-25 03:09:56.035 UTC [5760] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-25 03:09:56.036 UTC [5760] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-25 03:09:56.037 UTC [5760] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-25 03:09:56.042 UTC [5760] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-25 03:09:56.048 UTC [5763] LOG:  database system was shut down at 2025-11-25 00:49:12 UTC
+2025-11-25 03:09:56.058 UTC [5760] LOG:  database system is ready to accept connections
+2025-11-25 03:09:58.126 UTC [5770] ERROR:  database "meu_banco" already exists
+2025-11-25 03:09:58.126 UTC [5770] STATEMENT:  CREATE DATABASE meu_banco;
+2025-11-25 03:09:58.150 UTC [5772] ERROR:  role "meu_usuario" already exists
+2025-11-25 03:09:58.150 UTC [5772] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-11-25 03:09:58.217 UTC [5776] ERROR:  relation "matriculas_autorizadas" already exists
+2025-11-25 03:09:58.217 UTC [5776] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-25 03:09:58.219 UTC [5776] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-25 03:09:58.219 UTC [5776] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-25 03:09:58.219 UTC [5776] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
+	('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
+	('00002', 'professor', 'inativa', 'Marcos Lima'),
+	('00003', 'professor', 'ativa', 'Luciana Martins'),
+	('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
+	('00004', 'professor', 'ativa', 'Fernanda Souza'),
+	('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
+	('00005', 'professor', 'ativa', 'Bruna Oliveira'),
+	('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
+	('00006', 'professor', 'ativa', 'Juliana Santos'),
+	('00007', 'professor', 'inativa', 'Carlos Daniel'),
+	('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
+	('00008', 'professor', 'ativa', 'Ricardo Mendes'),
+	('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-11-25 03:09:58.236 UTC [5778] ERROR:  relation "users" already exists
+2025-11-25 03:09:58.236 UTC [5778] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-25 03:09:58.253 UTC [5780] ERROR:  relation "resetsenha" already exists
+2025-11-25 03:09:58.253 UTC [5780] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-11-25 03:09:58.348 UTC [5782] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-11-25 03:09:58.348 UTC [5782] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-11-25 03:09:58.378 UTC [5784] ERROR:  relation "ordens_problemas" already exists
+2025-11-25 03:09:58.378 UTC [5784] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-25 03:09:58.417 UTC [5786] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-25 03:09:58.417 UTC [5786] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-25 03:09:58.436 UTC [5788] ERROR:  relation "ordens_anexos" already exists
+2025-11-25 03:09:58.436 UTC [5788] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-25 03:09:58.512 UTC [5790] ERROR:  relation "ordens_alertas" already exists
+2025-11-25 03:09:58.512 UTC [5790] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-11-25 03:10:35.162 UTC [5831] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:10:35.162 UTC [5831] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:10:37.957 UTC [5833] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:10:37.957 UTC [5833] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:10:40.245 UTC [5834] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:10:40.245 UTC [5834] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:10:43.936 UTC [5835] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:10:43.936 UTC [5835] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:10:46.338 UTC [5836] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:10:46.338 UTC [5836] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:10:48.599 UTC [5837] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:10:48.599 UTC [5837] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:11:51.622 UTC [5841] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:11:51.622 UTC [5841] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:11:57.448 UTC [5894] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:11:57.448 UTC [5894] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:12:52.838 UTC [5896] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:12:52.838 UTC [5896] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:14:12.012 UTC [5925] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:14:12.012 UTC [5925] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:14:56.147 UTC [5761] LOG:  checkpoint starting: time
+2025-11-25 03:15:02.716 UTC [5761] LOG:  checkpoint complete: wrote 66 buffers (0.4%); 1 WAL file(s) added, 0 removed, 0 recycled; write=6.334 s, sync=0.033 s, total=6.569 s; sync files=62, longest=0.028 s, average=0.001 s; distance=264 kB, estimate=264 kB; lsn=0/1C3D7C8, redo lsn=0/1C3D770
+2025-11-25 03:15:30.463 UTC [5981] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:15:30.463 UTC [5981] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:15:40.652 UTC [5982] ERROR:  column "criado_em" does not exist at character 39
+2025-11-25 03:15:40.652 UTC [5982] STATEMENT:  SELECT id, arquivo_nome, arquivo_url, criado_em 
+	             FROM ordens_anexos 
+	             WHERE ordem_id = $1 
+	             ORDER BY criado_em ASC
+2025-11-25 03:25:11.567 UTC [6135] ERROR:  relation "ordens_anexos" already exists
+2025-11-25 03:25:11.567 UTC [6135] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-11-25 03:29:57.013 UTC [5761] LOG:  checkpoint starting: time
+2025-11-25 03:29:59.578 UTC [5761] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.515 s, sync=0.038 s, total=2.565 s; sync files=24, longest=0.004 s, average=0.002 s; distance=124 kB, estimate=250 kB; lsn=0/1C5C838, redo lsn=0/1C5C7A8
+2025-11-25 03:34:57.678 UTC [5761] LOG:  checkpoint starting: time
+2025-11-25 03:34:58.319 UTC [5761] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.602 s, sync=0.016 s, total=0.641 s; sync files=7, longest=0.006 s, average=0.003 s; distance=29 kB, estimate=228 kB; lsn=0/1C63C30, redo lsn=0/1C63BD8
+2025-11-25 03:39:57.418 UTC [5761] LOG:  checkpoint starting: time
+2025-11-25 03:39:57.858 UTC [5761] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.015 s, total=0.440 s; sync files=5, longest=0.009 s, average=0.003 s; distance=19 kB, estimate=207 kB; lsn=0/1C68858, redo lsn=0/1C68800
+2025-11-25 03:49:58.057 UTC [5761] LOG:  checkpoint starting: time
+2025-11-25 03:49:58.488 UTC [5761] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.012 s, total=0.432 s; sync files=5, longest=0.006 s, average=0.003 s; distance=19 kB, estimate=188 kB; lsn=0/1C6D7D8, redo lsn=0/1C6D780
+2025-11-25 03:53:36.308 UTC [5760] LOG:  received fast shutdown request
+2025-11-25 03:53:36.325 UTC [5760] LOG:  aborting any active transactions
+2025-11-25 03:53:36.327 UTC [5760] LOG:  background worker "logical replication launcher" (PID 5766) exited with exit code 1
+2025-11-25 03:53:36.334 UTC [5761] LOG:  shutting down
+2025-11-25 03:53:36.342 UTC [5761] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 03:53:36.357 UTC [5761] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.020 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=169 kB; lsn=0/1C6D888, redo lsn=0/1C6D888
+2025-11-25 03:53:36.376 UTC [5760] LOG:  database system is shut down

@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const user = JSON.parse(localStorage.getItem("currentUser")) || {};
     const token = localStorage.getItem("authToken");
+    const API_URL = window.location.origin; // URL base da aplicação
 
     // Atualiza cabeçalho
-    document.getElementById("userName").textContent = user.name || "João Luis Souza";
+    document.getElementById("userName").textContent = user.nome || user.name || "João Luis Souza";
     document.getElementById("userEmail").textContent = user.email || "user@example.com";
 
     // ============================
@@ -21,6 +22,29 @@ document.addEventListener("DOMContentLoaded", async () => {
             return Array.isArray(data) ? data : (data.ordens || []);
         } catch (err) {
             console.error("Erro ao buscar ordens:", err);
+            return [];
+        }
+    }
+
+    // ✅ NOVA FUNÇÃO: Buscar anexos de uma ordem
+    async function buscarAnexosOrdem(ordemId) {
+        try {
+            const res = await fetch(`${API_URL}/api/ordens/${ordemId}/anexos`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) {
+                console.error("Erro ao buscar anexos:", res.status);
+                return [];
+            }
+
+            const anexos = await res.json();
+            return anexos;
+        } catch (err) {
+            console.error("Erro ao buscar anexos:", err);
             return [];
         }
     }
@@ -117,7 +141,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <td>${tipo}</td>
                 <td>${local}</td>
                 <td><span class="status ${statusClass}">${order.status}</span></td>
-               
                 <td>${responsavel}</td>
                 <td class="actions">${actionsHTML}</td>
             `;
@@ -126,11 +149,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ============================
-    // Modal de detalhes
+    // Modal de detalhes (✅ ATUALIZADO COM IMAGENS)
     // ============================
-    function openDetails(order) {
+    async function openDetails(order) {
         const modal = document.getElementById("order-details-modal");
         const body = document.getElementById("modal-order-details");
+
+        // Buscar anexos
+        const anexos = await buscarAnexosOrdem(order.id);
+        let anexosHTML = '';
+
+        if (anexos && anexos.length > 0) {
+            anexosHTML = `
+                <div class="detail-section">
+                    <strong>Anexos:</strong>
+                    <div class="anexos-container">
+                        ${anexos.map(anexo => {
+                            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(anexo.nome);
+                            const fullUrl = `${API_URL}${anexo.url}`;
+
+                            if (isImage) {
+                                return `
+                                    <div class="anexo-item">
+                                        <img src="${fullUrl}" 
+                                             alt="${anexo.nome}" 
+                                             class="anexo-imagem" />
+                                        <a href="${fullUrl}" target="_blank" class="anexo-link">
+                                            <i class="fas fa-download"></i> ${anexo.nome}
+                                        </a>
+                                    </div>
+                                `;
+                            } else {
+                                return `
+                                    <div class="anexo-item">
+                                        <a href="${fullUrl}" target="_blank" class="anexo-link">
+                                            <i class="fas fa-file"></i> ${anexo.nome}
+                                        </a>
+                                    </div>
+                                `;
+                            }
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
 
         body.innerHTML = `
             <p><strong>Código:</strong> ${order.codigo || `#${order.id}`}</p>
@@ -143,6 +205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ${order.solucao ? `<p><strong>Solução:</strong> ${order.solucao}</p>` : ""}
             ${order.observacoes ? `<p><strong>Observações:</strong> ${order.observacoes}</p>` : ""}
             ${order.avaliacao ? `<p><strong>Avaliação:</strong> ${order.avaliacao}/5</p>` : ""}
+            ${anexosHTML}
         `;
 
         modal.style.display = "flex";
@@ -168,8 +231,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ordemEncerrando = id;
             document.getElementById("popup-encerrar").classList.remove("hidden");
         }
-        else if (action === "view") openDetails(order);
-
+        else if (action === "view") await openDetails(order);
     });
 
     // ============================
@@ -237,7 +299,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
     });
-
 
     loadOrders();
 });

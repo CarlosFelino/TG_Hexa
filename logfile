@@ -424,3 +424,339 @@
 2025-11-18 21:52:24.985 UTC [240] LOG:  database system is shut down
 2025-11-18 21:52:46.640 UTC [457] FATAL:  lock file "postmaster.pid" already exists
 2025-11-18 21:52:46.640 UTC [457] HINT:  Is another postmaster (PID 407) running in data directory "/home/runner/workspace/database"?
+2025-11-20 00:41:11.959 UTC [694] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-20 00:41:11.963 UTC [694] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-20 00:41:11.964 UTC [694] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-20 00:41:11.975 UTC [694] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-20 00:41:11.989 UTC [698] LOG:  database system was shut down at 2025-11-18 23:40:36 UTC
+2025-11-20 00:41:12.132 UTC [694] LOG:  database system is ready to accept connections
+2025-11-20 00:41:42.649 UTC [741] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:41:42.649 UTC [741] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:41:49.470 UTC [743] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:41:49.470 UTC [743] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:42:00.494 UTC [745] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:42:00.494 UTC [745] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:45:15.527 UTC [816] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:45:15.527 UTC [816] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:46:12.087 UTC [696] LOG:  checkpoint starting: time
+2025-11-20 00:46:12.771 UTC [696] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.602 s, sync=0.044 s, total=0.684 s; sync files=7, longest=0.012 s, average=0.007 s; distance=3 kB, estimate=3 kB; lsn=0/1A2E150, redo lsn=0/1A2E0F8
+2025-11-20 00:49:13.039 UTC [1037] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:49:13.039 UTC [1037] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:49:16.234 UTC [1039] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:49:16.234 UTC [1039] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:49:18.174 UTC [1040] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:49:18.174 UTC [1040] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:51:12.871 UTC [696] LOG:  checkpoint starting: time
+2025-11-20 00:51:13.348 UTC [696] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.029 s, total=0.478 s; sync files=5, longest=0.013 s, average=0.006 s; distance=3 kB, estimate=3 kB; lsn=0/1A2F070, redo lsn=0/1A2F018
+2025-11-20 00:51:19.530 UTC [694] LOG:  received fast shutdown request
+2025-11-20 00:51:19.536 UTC [694] LOG:  aborting any active transactions
+2025-11-20 00:51:19.542 UTC [694] LOG:  background worker "logical replication launcher" (PID 701) exited with exit code 1
+2025-11-20 00:51:19.543 UTC [696] LOG:  shutting down
+2025-11-20 00:51:19.550 UTC [696] LOG:  checkpoint starting: shutdown immediate
+2025-11-20 00:51:19.575 UTC [696] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.032 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=3 kB; lsn=0/1A2F120, redo lsn=0/1A2F120
+2025-11-20 00:51:19.581 UTC [694] LOG:  database system is shut down
+2025-11-20 00:53:47.238 UTC [1278] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-20 00:53:47.239 UTC [1278] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-20 00:53:47.240 UTC [1278] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-20 00:53:47.250 UTC [1278] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-20 00:53:47.261 UTC [1281] LOG:  database system was shut down at 2025-11-20 00:51:19 UTC
+2025-11-20 00:53:47.276 UTC [1278] LOG:  database system is ready to accept connections
+2025-11-20 00:54:13.576 UTC [1322] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:54:13.576 UTC [1322] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:54:20.554 UTC [1324] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:54:20.554 UTC [1324] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:54:31.990 UTC [1326] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 00:54:31.990 UTC [1326] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 00:58:47.361 UTC [1279] LOG:  checkpoint starting: time
+2025-11-20 00:58:47.833 UTC [1279] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.032 s, total=0.473 s; sync files=6, longest=0.010 s, average=0.006 s; distance=4 kB, estimate=4 kB; lsn=0/1A301B8, redo lsn=0/1A30160
+2025-11-20 01:00:24.920 UTC [1433] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 01:00:24.920 UTC [1433] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 01:01:03.162 UTC [1436] ERROR:  relation "patrimonio" does not exist at character 22
+2025-11-20 01:01:03.162 UTC [1436] STATEMENT:  SELECT COUNT(*) FROM patrimonio
+2025-11-20 01:14:26.634 UTC [1760] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-20 01:14:26.635 UTC [1760] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-20 01:14:26.636 UTC [1760] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-20 01:14:26.660 UTC [1760] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-20 01:14:26.672 UTC [1763] LOG:  database system was interrupted; last known up at 2025-11-20 00:58:47 UTC
+2025-11-20 01:14:26.758 UTC [1763] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-11-20 01:14:26.774 UTC [1763] LOG:  redo starts at 0/1A30160
+2025-11-20 01:14:26.774 UTC [1763] LOG:  invalid record length at 0/1A30268: expected at least 24, got 0
+2025-11-20 01:14:26.774 UTC [1763] LOG:  redo done at 0/1A30230 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-11-20 01:14:26.794 UTC [1761] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-11-20 01:14:26.851 UTC [1761] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.032 s, total=0.066 s; sync files=2, longest=0.018 s, average=0.016 s; distance=0 kB, estimate=0 kB; lsn=0/1A30268, redo lsn=0/1A30268
+2025-11-20 01:14:26.864 UTC [1760] LOG:  database system is ready to accept connections
+2025-11-20 01:19:26.950 UTC [1761] LOG:  checkpoint starting: time
+2025-11-20 01:19:27.412 UTC [1761] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.026 s, total=0.463 s; sync files=5, longest=0.011 s, average=0.006 s; distance=4 kB, estimate=4 kB; lsn=0/1A31470, redo lsn=0/1A31418
+2025-11-20 01:39:26.806 UTC [1761] LOG:  checkpoint starting: time
+2025-11-20 01:39:27.290 UTC [1761] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.029 s, total=0.485 s; sync files=5, longest=0.012 s, average=0.006 s; distance=7 kB, estimate=7 kB; lsn=0/1A33410, redo lsn=0/1A333B8
+2025-11-20 01:45:21.030 UTC [1760] LOG:  received fast shutdown request
+2025-11-20 01:45:21.048 UTC [1760] LOG:  aborting any active transactions
+2025-11-20 01:45:21.051 UTC [1760] LOG:  background worker "logical replication launcher" (PID 1766) exited with exit code 1
+2025-11-20 01:45:21.051 UTC [1761] LOG:  shutting down
+2025-11-20 01:45:21.060 UTC [1761] LOG:  checkpoint starting: shutdown immediate
+2025-11-20 01:45:21.092 UTC [1761] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.041 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=7 kB; lsn=0/1A334C0, redo lsn=0/1A334C0
+2025-11-20 01:45:21.098 UTC [1760] LOG:  database system is shut down
+2025-11-20 01:46:04.629 UTC [2454] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-20 01:46:04.630 UTC [2454] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-20 01:46:04.631 UTC [2454] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-20 01:46:04.642 UTC [2454] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-20 01:46:04.660 UTC [2457] LOG:  database system was shut down at 2025-11-20 01:45:21 UTC
+2025-11-20 01:46:04.675 UTC [2454] LOG:  database system is ready to accept connections
+2025-11-20 01:51:04.759 UTC [2455] LOG:  checkpoint starting: time
+2025-11-20 01:51:06.302 UTC [2455] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.404 s, sync=0.110 s, total=1.544 s; sync files=16, longest=0.089 s, average=0.007 s; distance=15 kB, estimate=15 kB; lsn=0/1A37400, redo lsn=0/1A373A8
+2025-11-20 01:55:04.363 UTC [2454] LOG:  received fast shutdown request
+2025-11-20 01:55:04.383 UTC [2454] LOG:  aborting any active transactions
+2025-11-20 01:55:04.384 UTC [2454] LOG:  background worker "logical replication launcher" (PID 2460) exited with exit code 1
+2025-11-20 01:55:04.385 UTC [2455] LOG:  shutting down
+2025-11-20 01:55:04.393 UTC [2455] LOG:  checkpoint starting: shutdown immediate
+2025-11-20 01:55:04.423 UTC [2455] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.039 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=14 kB; lsn=0/1A374B0, redo lsn=0/1A374B0
+2025-11-20 01:55:04.431 UTC [2454] LOG:  database system is shut down
+2025-11-20 22:22:09.465 UTC [396] FATAL:  lock file "postmaster.pid" already exists
+2025-11-20 22:22:09.465 UTC [396] HINT:  Is another postmaster (PID 341) running in data directory "/home/runner/workspace/database"?
+2025-11-21 01:02:09.615 UTC [291] FATAL:  lock file "postmaster.pid" already exists
+2025-11-21 01:02:09.615 UTC [291] HINT:  Is another postmaster (PID 237) running in data directory "/home/runner/workspace/database"?
+2025-11-23 18:51:29.443 UTC [756] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-23 18:51:29.449 UTC [756] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-23 18:51:29.450 UTC [756] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-23 18:51:29.455 UTC [756] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-23 18:51:29.464 UTC [759] LOG:  database system was shut down at 2025-11-21 02:02:19 UTC
+2025-11-23 18:51:29.478 UTC [756] LOG:  database system is ready to accept connections
+2025-11-23 18:56:29.563 UTC [757] LOG:  checkpoint starting: time
+2025-11-23 18:56:30.167 UTC [757] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.032 s, total=0.605 s; sync files=7, longest=0.027 s, average=0.005 s; distance=11 kB, estimate=11 kB; lsn=0/1ABBA88, redo lsn=0/1ABBA30
+2025-11-23 19:01:29.267 UTC [757] LOG:  checkpoint starting: time
+2025-11-23 19:01:29.698 UTC [757] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.011 s, total=0.432 s; sync files=5, longest=0.005 s, average=0.003 s; distance=13 kB, estimate=13 kB; lsn=0/1ABEEB8, redo lsn=0/1ABEE60
+2025-11-23 19:18:09.759 UTC [1375] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-23 19:18:09.764 UTC [1375] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-23 19:18:09.766 UTC [1375] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-23 19:18:09.778 UTC [1375] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-23 19:18:09.786 UTC [1378] LOG:  database system was interrupted; last known up at 2025-11-23 19:01:29 UTC
+2025-11-23 19:18:09.836 UTC [1378] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-11-23 19:18:09.844 UTC [1378] LOG:  redo starts at 0/1ABEE60
+2025-11-23 19:18:09.844 UTC [1378] LOG:  invalid record length at 0/1ABEF68: expected at least 24, got 0
+2025-11-23 19:18:09.844 UTC [1378] LOG:  redo done at 0/1ABEF30 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-11-23 19:18:09.855 UTC [1376] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-11-23 19:18:09.876 UTC [1376] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.009 s, total=0.025 s; sync files=2, longest=0.006 s, average=0.005 s; distance=0 kB, estimate=0 kB; lsn=0/1ABEF68, redo lsn=0/1ABEF68
+2025-11-23 19:18:09.916 UTC [1375] LOG:  database system is ready to accept connections
+2025-11-23 19:23:09.976 UTC [1376] LOG:  checkpoint starting: time
+2025-11-23 19:23:10.524 UTC [1376] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.012 s, total=0.548 s; sync files=5, longest=0.006 s, average=0.003 s; distance=12 kB, estimate=12 kB; lsn=0/1AC20E0, redo lsn=0/1AC2088
+2025-11-23 19:28:09.623 UTC [1376] LOG:  checkpoint starting: time
+2025-11-23 19:28:10.566 UTC [1376] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.908 s, sync=0.017 s, total=0.944 s; sync files=10, longest=0.003 s, average=0.002 s; distance=7 kB, estimate=11 kB; lsn=0/1AC4018, redo lsn=0/1AC3FA8
+2025-11-23 19:38:09.763 UTC [1376] LOG:  checkpoint starting: time
+2025-11-23 19:38:10.212 UTC [1376] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.025 s, total=0.450 s; sync files=5, longest=0.019 s, average=0.005 s; distance=15 kB, estimate=15 kB; lsn=0/1AC7EF8, redo lsn=0/1AC7EA0
+2025-11-23 19:43:09.311 UTC [1376] LOG:  checkpoint starting: time
+2025-11-23 19:43:09.750 UTC [1376] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.015 s, total=0.439 s; sync files=5, longest=0.004 s, average=0.003 s; distance=5 kB, estimate=14 kB; lsn=0/1AC94C0, redo lsn=0/1AC9468
+2025-11-23 19:58:10.049 UTC [1376] LOG:  checkpoint starting: time
+2025-11-23 19:58:10.593 UTC [1376] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.012 s, total=0.545 s; sync files=6, longest=0.007 s, average=0.002 s; distance=14 kB, estimate=14 kB; lsn=0/1ACCCE8, redo lsn=0/1ACCC90
+2025-11-23 20:08:10.792 UTC [1376] LOG:  checkpoint starting: time
+2025-11-23 20:08:12.142 UTC [1376] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.312 s, sync=0.022 s, total=1.351 s; sync files=14, longest=0.003 s, average=0.002 s; distance=14 kB, estimate=14 kB; lsn=0/1AD0568, redo lsn=0/1AD0510
+2025-11-23 20:56:59.603 UTC [391] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-23 20:56:59.610 UTC [391] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-23 20:56:59.611 UTC [391] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-23 20:56:59.617 UTC [391] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-23 20:56:59.626 UTC [394] LOG:  database system was interrupted; last known up at 2025-11-23 20:08:12 UTC
+2025-11-23 20:56:59.669 UTC [394] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-11-23 20:56:59.680 UTC [394] LOG:  redo starts at 0/1AD0510
+2025-11-23 20:56:59.681 UTC [394] LOG:  invalid record length at 0/1AD0618: expected at least 24, got 0
+2025-11-23 20:56:59.681 UTC [394] LOG:  redo done at 0/1AD05E0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-11-23 20:56:59.688 UTC [392] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-11-23 20:56:59.719 UTC [392] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.009 s, total=0.034 s; sync files=2, longest=0.006 s, average=0.004 s; distance=0 kB, estimate=0 kB; lsn=0/1AD0618, redo lsn=0/1AD0618
+2025-11-23 20:56:59.729 UTC [391] LOG:  database system is ready to accept connections
+2025-11-23 20:57:49.420 UTC [437] ERROR:  update or delete on table "matriculas_autorizadas" violates foreign key constraint "fk_matricula" on table "users"
+2025-11-23 20:57:49.420 UTC [437] DETAIL:  Key (matricula)=(00444) is still referenced from table "users".
+2025-11-23 20:57:49.420 UTC [437] STATEMENT:  DELETE FROM matriculas_autorizadas WHERE matricula = $1
+2025-11-23 20:58:17.864 UTC [439] ERROR:  update or delete on table "matriculas_autorizadas" violates foreign key constraint "fk_matricula" on table "users"
+2025-11-23 20:58:17.864 UTC [439] DETAIL:  Key (matricula)=(00444) is still referenced from table "users".
+2025-11-23 20:58:17.864 UTC [439] STATEMENT:  DELETE FROM matriculas_autorizadas WHERE matricula = $1
+2025-11-23 21:01:59.819 UTC [392] LOG:  checkpoint starting: time
+2025-11-23 21:02:00.456 UTC [392] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.602 s, sync=0.015 s, total=0.637 s; sync files=7, longest=0.006 s, average=0.003 s; distance=11 kB, estimate=11 kB; lsn=0/1AD34C8, redo lsn=0/1AD3470
+2025-11-23 23:24:04.995 UTC [242] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-23 23:24:05.000 UTC [242] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-23 23:24:05.001 UTC [242] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-23 23:24:05.005 UTC [242] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-23 23:24:05.015 UTC [245] LOG:  database system was interrupted; last known up at 2025-11-23 21:02:00 UTC
+2025-11-23 23:24:05.063 UTC [245] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-11-23 23:24:05.080 UTC [245] LOG:  redo starts at 0/1AD3470
+2025-11-23 23:24:05.080 UTC [245] LOG:  invalid record length at 0/1AD3578: expected at least 24, got 0
+2025-11-23 23:24:05.080 UTC [245] LOG:  redo done at 0/1AD3540 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-11-23 23:24:05.087 UTC [243] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-11-23 23:24:05.110 UTC [243] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.010 s, total=0.027 s; sync files=2, longest=0.007 s, average=0.005 s; distance=0 kB, estimate=0 kB; lsn=0/1AD3578, redo lsn=0/1AD3578
+2025-11-23 23:24:05.118 UTC [242] LOG:  database system is ready to accept connections
+2025-11-23 23:29:05.210 UTC [243] LOG:  checkpoint starting: time
+2025-11-23 23:29:05.644 UTC [243] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.012 s, total=0.434 s; sync files=5, longest=0.007 s, average=0.003 s; distance=7 kB, estimate=7 kB; lsn=0/1AD5228, redo lsn=0/1AD51D0
+2025-11-23 23:42:35.751 UTC [242] LOG:  received fast shutdown request
+2025-11-23 23:42:35.761 UTC [242] LOG:  aborting any active transactions
+2025-11-23 23:42:35.764 UTC [242] LOG:  background worker "logical replication launcher" (PID 248) exited with exit code 1
+2025-11-23 23:42:35.766 UTC [243] LOG:  shutting down
+2025-11-23 23:42:35.771 UTC [243] LOG:  checkpoint starting: shutdown immediate
+2025-11-23 23:42:35.787 UTC [243] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.021 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=6 kB; lsn=0/1AD52D8, redo lsn=0/1AD52D8
+2025-11-23 23:42:35.792 UTC [242] LOG:  database system is shut down
+2025-11-24 00:04:41.795 UTC [796] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-24 00:04:41.796 UTC [796] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-24 00:04:41.797 UTC [796] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-24 00:04:41.801 UTC [796] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-24 00:04:41.808 UTC [799] LOG:  database system was shut down at 2025-11-23 23:42:35 UTC
+2025-11-24 00:04:41.816 UTC [796] LOG:  database system is ready to accept connections
+2025-11-24 00:09:41.909 UTC [797] LOG:  checkpoint starting: time
+2025-11-24 00:09:46.620 UTC [797] LOG:  checkpoint complete: wrote 49 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.626 s, sync=0.059 s, total=4.711 s; sync files=42, longest=0.004 s, average=0.002 s; distance=214 kB, estimate=214 kB; lsn=0/1B0AE80, redo lsn=0/1B0AE28
+2025-11-24 00:14:41.720 UTC [797] LOG:  checkpoint starting: time
+2025-11-24 00:14:42.368 UTC [797] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.017 s, total=0.648 s; sync files=6, longest=0.009 s, average=0.003 s; distance=27 kB, estimate=196 kB; lsn=0/1B11AC0, redo lsn=0/1B11A68
+2025-11-24 22:45:25.824 UTC [1160] FATAL:  lock file "postmaster.pid" already exists
+2025-11-24 22:45:25.824 UTC [1160] HINT:  Is another postmaster (PID 1108) running in data directory "/home/runner/workspace/database"?
+2025-11-24 22:47:14.830 UTC [1672] FATAL:  lock file "postmaster.pid" already exists
+2025-11-24 22:47:14.830 UTC [1672] HINT:  Is another postmaster (PID 1585) running in data directory "/home/runner/workspace/database"?
+2025-11-24 22:50:02.775 UTC [2129] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-24 22:50:02.776 UTC [2129] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-24 22:50:02.777 UTC [2129] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-24 22:50:02.781 UTC [2129] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-24 22:50:02.788 UTC [2132] LOG:  database system was shut down at 2025-11-24 22:48:48 UTC
+2025-11-24 22:50:02.800 UTC [2129] LOG:  database system is ready to accept connections
+2025-11-24 22:55:02.886 UTC [2130] LOG:  checkpoint starting: time
+2025-11-24 22:55:03.428 UTC [2130] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.018 s, total=0.542 s; sync files=7, longest=0.006 s, average=0.003 s; distance=10 kB, estimate=10 kB; lsn=0/1B91AA8, redo lsn=0/1B91A50
+2025-11-24 23:04:26.249 UTC [2129] LOG:  received fast shutdown request
+2025-11-24 23:04:26.259 UTC [2129] LOG:  aborting any active transactions
+2025-11-24 23:04:26.279 UTC [2129] LOG:  background worker "logical replication launcher" (PID 2135) exited with exit code 1
+2025-11-24 23:04:26.279 UTC [2130] LOG:  shutting down
+2025-11-24 23:04:26.284 UTC [2130] LOG:  checkpoint starting: shutdown immediate
+2025-11-24 23:04:26.312 UTC [2130] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.034 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=9 kB; lsn=0/1B91B58, redo lsn=0/1B91B58
+2025-11-24 23:04:26.322 UTC [2129] LOG:  database system is shut down
+2025-11-24 23:17:03.600 UTC [2672] FATAL:  lock file "postmaster.pid" already exists
+2025-11-24 23:17:03.600 UTC [2672] HINT:  Is another postmaster (PID 2620) running in data directory "/home/runner/workspace/database"?
+2025-11-25 00:35:44.076 UTC [3986] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-25 00:35:44.077 UTC [3986] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-25 00:35:44.079 UTC [3986] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-25 00:35:44.083 UTC [3986] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-25 00:35:44.089 UTC [3989] LOG:  database system was shut down at 2025-11-25 00:33:32 UTC
+2025-11-25 00:35:44.107 UTC [3986] LOG:  database system is ready to accept connections
+2025-11-25 00:36:27.040 UTC [4032] ERROR:  null value in column "usuario_id" of relation "relatorios_historico" violates not-null constraint
+2025-11-25 00:36:27.040 UTC [4032] DETAIL:  Failing row contains (1, null, Ordens de Serviço, ordens, PDF, 2025-11-25 00:36:27.037162, 2.81, ordens_1764030986997.pdf).
+2025-11-25 00:36:27.040 UTC [4032] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-11-25 00:37:19.811 UTC [4036] ERROR:  null value in column "usuario_id" of relation "relatorios_historico" violates not-null constraint
+2025-11-25 00:37:19.811 UTC [4036] DETAIL:  Failing row contains (2, null, Usuários do Sistema, usuarios, PDF, 2025-11-25 00:37:19.809454, 2.82, usuarios_1764031039793.pdf).
+2025-11-25 00:37:19.811 UTC [4036] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-11-25 00:37:45.594 UTC [4039] ERROR:  null value in column "usuario_id" of relation "relatorios_historico" violates not-null constraint
+2025-11-25 00:37:45.594 UTC [4039] DETAIL:  Failing row contains (3, null, Desempenho da Equipe, desempenho, PDF, 2025-11-25 00:37:45.593828, 3.25, desempenho_1764031065587.pdf).
+2025-11-25 00:37:45.594 UTC [4039] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-11-25 00:40:44.188 UTC [3987] LOG:  checkpoint starting: time
+2025-11-25 00:40:45.682 UTC [3987] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.170 s, total=1.494 s; sync files=12, longest=0.163 s, average=0.015 s; distance=75 kB, estimate=75 kB; lsn=0/1BFB318, redo lsn=0/1BFB2C0
+2025-11-25 00:41:48.564 UTC [4049] ERROR:  null value in column "usuario_id" of relation "relatorios_historico" violates not-null constraint
+2025-11-25 00:41:48.564 UTC [4049] DETAIL:  Failing row contains (4, null, Ordens de Serviço, ordens, PDF, 2025-11-25 00:41:48.563721, 2.80, ordens_1764031308541.pdf).
+2025-11-25 00:41:48.564 UTC [4049] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-11-25 00:42:06.599 UTC [4050] ERROR:  null value in column "usuario_id" of relation "relatorios_historico" violates not-null constraint
+2025-11-25 00:42:06.599 UTC [4050] DETAIL:  Failing row contains (5, null, Patrimônio, patrimonio, PDF, 2025-11-25 00:42:06.598658, 2.28, patrimonio_1764031326595.pdf).
+2025-11-25 00:42:06.599 UTC [4050] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-11-25 00:42:14.559 UTC [4052] ERROR:  null value in column "usuario_id" of relation "relatorios_historico" violates not-null constraint
+2025-11-25 00:42:14.559 UTC [4052] DETAIL:  Failing row contains (6, null, Matrículas Autorizadas, matriculas, PDF, 2025-11-25 00:42:14.558468, 3.28, matriculas_1764031334545.pdf).
+2025-11-25 00:42:14.559 UTC [4052] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-11-25 00:43:06.315 UTC [4054] ERROR:  null value in column "usuario_id" of relation "relatorios_historico" violates not-null constraint
+2025-11-25 00:43:06.315 UTC [4054] DETAIL:  Failing row contains (7, null, Patrimônio, patrimonio, PDF, 2025-11-25 00:43:06.314373, 2.28, patrimonio_1764031386306.pdf).
+2025-11-25 00:43:06.315 UTC [4054] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-11-25 00:45:44.782 UTC [3987] LOG:  checkpoint starting: time
+2025-11-25 00:45:45.012 UTC [3987] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.009 s, total=0.231 s; sync files=3, longest=0.005 s, average=0.003 s; distance=0 kB, estimate=67 kB; lsn=0/1BFB4E8, redo lsn=0/1BFB490
+2025-11-25 00:49:12.551 UTC [3986] LOG:  received fast shutdown request
+2025-11-25 00:49:12.577 UTC [3986] LOG:  aborting any active transactions
+2025-11-25 00:49:12.580 UTC [3986] LOG:  background worker "logical replication launcher" (PID 3992) exited with exit code 1
+2025-11-25 00:49:12.581 UTC [3987] LOG:  shutting down
+2025-11-25 00:49:12.589 UTC [3987] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 00:49:12.613 UTC [3987] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.033 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=61 kB; lsn=0/1BFB598, redo lsn=0/1BFB598
+2025-11-25 00:49:12.625 UTC [3986] LOG:  database system is shut down
+2025-11-25 04:02:11.750 UTC [8379] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-25 04:02:11.751 UTC [8379] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-25 04:02:11.752 UTC [8379] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-25 04:02:11.756 UTC [8379] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-25 04:02:11.762 UTC [8382] LOG:  database system was shut down at 2025-11-25 03:53:36 UTC
+2025-11-25 04:02:11.771 UTC [8379] LOG:  database system is ready to accept connections
+2025-11-25 04:07:11.861 UTC [8380] LOG:  checkpoint starting: time
+2025-11-25 04:07:12.314 UTC [8380] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.032 s, total=0.454 s; sync files=6, longest=0.021 s, average=0.006 s; distance=18 kB, estimate=18 kB; lsn=0/1C72480, redo lsn=0/1C72428
+2025-11-25 04:13:30.966 UTC [8379] LOG:  received fast shutdown request
+2025-11-25 04:13:30.980 UTC [8379] LOG:  aborting any active transactions
+2025-11-25 04:13:30.985 UTC [8379] LOG:  background worker "logical replication launcher" (PID 8385) exited with exit code 1
+2025-11-25 04:13:30.985 UTC [8380] LOG:  shutting down
+2025-11-25 04:13:30.990 UTC [8380] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 04:13:31.005 UTC [8380] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.020 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=17 kB; lsn=0/1C72530, redo lsn=0/1C72530
+2025-11-25 04:13:31.019 UTC [8379] LOG:  database system is shut down
+2025-11-25 04:29:20.997 UTC [9496] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-25 04:29:20.999 UTC [9496] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-25 04:29:21.000 UTC [9496] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-25 04:29:21.006 UTC [9496] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-25 04:29:21.018 UTC [9499] LOG:  database system was shut down at 2025-11-25 04:13:31 UTC
+2025-11-25 04:29:21.030 UTC [9496] LOG:  database system is ready to accept connections
+2025-11-25 04:34:21.113 UTC [9497] LOG:  checkpoint starting: time
+2025-11-25 04:34:21.553 UTC [9497] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.017 s, total=0.441 s; sync files=6, longest=0.007 s, average=0.003 s; distance=18 kB, estimate=18 kB; lsn=0/1C77168, redo lsn=0/1C77110
+2025-11-25 04:43:40.069 UTC [9496] LOG:  received fast shutdown request
+2025-11-25 04:43:40.083 UTC [9496] LOG:  aborting any active transactions
+2025-11-25 04:43:40.086 UTC [9496] LOG:  background worker "logical replication launcher" (PID 9502) exited with exit code 1
+2025-11-25 04:43:40.086 UTC [9497] LOG:  shutting down
+2025-11-25 04:43:40.090 UTC [9497] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 04:43:40.110 UTC [9497] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.024 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=17 kB; lsn=0/1C77218, redo lsn=0/1C77218
+2025-11-25 04:43:40.124 UTC [9496] LOG:  database system is shut down
+2025-11-25 05:05:29.918 UTC [10448] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-25 05:05:29.920 UTC [10448] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-25 05:05:29.922 UTC [10448] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-25 05:05:29.927 UTC [10448] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-25 05:05:30.008 UTC [10455] LOG:  database system was shut down at 2025-11-25 04:43:40 UTC
+2025-11-25 05:05:30.020 UTC [10448] LOG:  database system is ready to accept connections
+2025-11-25 05:10:30.109 UTC [10453] LOG:  checkpoint starting: time
+2025-11-25 05:10:30.775 UTC [10453] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.234 s, total=0.667 s; sync files=6, longest=0.207 s, average=0.039 s; distance=19 kB, estimate=19 kB; lsn=0/1C7BE98, redo lsn=0/1C7BE40
+2025-11-25 05:13:32.468 UTC [10448] LOG:  received fast shutdown request
+2025-11-25 05:13:32.482 UTC [10448] LOG:  aborting any active transactions
+2025-11-25 05:13:32.486 UTC [10448] LOG:  background worker "logical replication launcher" (PID 10458) exited with exit code 1
+2025-11-25 05:13:32.487 UTC [10453] LOG:  shutting down
+2025-11-25 05:13:32.492 UTC [10453] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 05:13:32.509 UTC [10453] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.023 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=17 kB; lsn=0/1C7BF48, redo lsn=0/1C7BF48
+2025-11-25 05:13:32.600 UTC [10448] LOG:  database system is shut down
+2025-11-25 05:16:23.756 UTC [10764] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-25 05:16:23.757 UTC [10764] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-25 05:16:23.758 UTC [10764] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-25 05:16:23.762 UTC [10764] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-25 05:16:23.768 UTC [10767] LOG:  database system was shut down at 2025-11-25 05:13:32 UTC
+2025-11-25 05:16:23.778 UTC [10764] LOG:  database system is ready to accept connections
+2025-11-25 05:21:23.867 UTC [10765] LOG:  checkpoint starting: time
+2025-11-25 05:21:24.352 UTC [10765] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.022 s, total=0.485 s; sync files=6, longest=0.009 s, average=0.004 s; distance=19 kB, estimate=19 kB; lsn=0/1C80D90, redo lsn=0/1C80D38
+2025-11-25 05:28:12.521 UTC [10764] LOG:  received fast shutdown request
+2025-11-25 05:28:12.546 UTC [10764] LOG:  aborting any active transactions
+2025-11-25 05:28:12.552 UTC [10764] LOG:  background worker "logical replication launcher" (PID 10770) exited with exit code 1
+2025-11-25 05:28:12.552 UTC [10765] LOG:  shutting down
+2025-11-25 05:28:12.579 UTC [10765] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 05:28:12.594 UTC [10765] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.042 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=17 kB; lsn=0/1C80E40, redo lsn=0/1C80E40
+2025-11-25 05:28:12.619 UTC [10764] LOG:  database system is shut down
+2025-11-25 05:36:39.322 UTC [11112] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-11-25 05:36:39.323 UTC [11112] LOG:  listening on IPv6 address "::1", port 5432
+2025-11-25 05:36:39.324 UTC [11112] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-11-25 05:36:39.327 UTC [11112] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-11-25 05:36:39.333 UTC [11115] LOG:  database system was shut down at 2025-11-25 05:28:12 UTC
+2025-11-25 05:36:39.343 UTC [11112] LOG:  database system is ready to accept connections
+2025-11-25 05:38:46.974 UTC [11112] LOG:  received fast shutdown request
+2025-11-25 05:38:46.984 UTC [11112] LOG:  aborting any active transactions
+2025-11-25 05:38:46.991 UTC [11112] LOG:  background worker "logical replication launcher" (PID 11118) exited with exit code 1
+2025-11-25 05:38:46.994 UTC [11113] LOG:  shutting down
+2025-11-25 05:38:46.999 UTC [11113] LOG:  checkpoint starting: shutdown immediate
+2025-11-25 05:38:47.032 UTC [11113] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.022 s, total=0.038 s; sync files=6, longest=0.010 s, average=0.004 s; distance=19 kB, estimate=19 kB; lsn=0/1C85B60, redo lsn=0/1C85B60
+2025-11-25 05:38:47.041 UTC [11112] LOG:  database system is shut down

@@ -27,8 +27,8 @@
 
             <div class="user-profile">
                 <div class="profile-info">
-                  <span class="user-name" id="userName"></span>
-                  <span class="user-email" id="userEmail"></span>
+                    <span class="user-name" id="userName">Administrador</span>
+                    <span class="user-email" id="userEmail">admin@fatec.sp.gov.br</span>
                 </div>
                 <div class="profile-dropdown">
                     <img src="../../assets/images/default-avatar.png" alt="Foto do Admin" class="profile-avatar">
@@ -73,6 +73,18 @@
                     <a href="importar-matriculas.html">
                         <i class="fas fa-file-arrow-up"></i>
                         <span>Importar Matrículas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="transferir-poder.html">
+                        <i class="fas fa-bolt"></i>
+                        <span>Transferir Poder</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Relatórios</span>
                     </a>
                 </li>
             </ul>
@@ -179,6 +191,7 @@
                             <th>Email</th>
                             <th>Cargo</th>
                             <th>Status</th>
+                            <th>Data Cadastro</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -226,7 +239,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="user-matricula">Matrícula *</label>
-                            <input type="text" id="user-matricula" required maxlength="13" pattern="[0-9]{13}">
+                            <<input type="text" id="user-matricula" required maxlength="13" pattern="[0-9]{5,13}" placeholder="5 ou 13 dígitos">">
                         </div>
                         <div class="form-group">
                             <label for="user-role">Cargo *</label>
@@ -274,6 +287,6 @@
 
     <script src="../../assets/js/admin.js"></script>
     <script src="../../assets/js/gerenciar-usuarios.js"></script>
-    <script src="../../assets/js/globalCred.js"></script>
+     <script src="../../assets/js/globalProfile.js"></script>
 </body>
 </html>

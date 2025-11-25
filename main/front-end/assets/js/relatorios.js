@@ -1,4 +1,7 @@
-// relatorios.js - VERSÃO COMPLETA
+// ============================================
+// 📊 RELATÓRIOS - VERSÃO CORRIGIDA
+// ============================================
+
 document.addEventListener('DOMContentLoaded', function() {
     // =========================
     // Inicialização
@@ -33,9 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     function init() {
         setupEventListeners();
-        loadStatistics();
+        loadStatistics(); // ✅ Carrega estatísticas REAIS
         loadReportsHistory();
         setDefaultDates();
+        updateReportMetaCards(); // ✅ Atualiza contadores dos cards
     }
 
     function setupEventListeners() {
@@ -46,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.btn-table.download').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const reportType = e.currentTarget.dataset.report;
-                downloadReport(reportType, 'csv');
+                downloadReport(reportType);
             });
         });
 
@@ -73,26 +77,88 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
-    // Carregar Estatísticas
+    // ✅ CARREGAR ESTATÍSTICAS REAIS DO BACKEND
     // =========================
     async function loadStatistics() {
         try {
-            // Em produção, faria requisições reais
-            // Dados mock para demonstração
-            const stats = {
-                totalOrders: 156,
-                totalUsers: 42,
-                totalPatrimonio: 89,
-                completionRate: 82
-            };
+            const res = await fetch('/api/admin/relatorios/estatisticas', {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
-            if (totalOrdersEl) totalOrdersEl.textContent = stats.totalOrders;
-            if (totalUsersEl) totalUsersEl.textContent = stats.totalUsers;
+            if (!res.ok) throw new Error('Erro ao carregar estatísticas');
+
+            const data = await res.json();
+            const stats = data.estatisticas;
+
+            // ✅ Atualizar elementos do DOM com dados REAIS
+            if (totalOrdersEl) totalOrdersEl.textContent = stats.totalOrdens;
+            if (totalUsersEl) totalUsersEl.textContent = stats.totalUsuarios;
             if (totalPatrimonioEl) totalPatrimonioEl.textContent = stats.totalPatrimonio;
-            if (completionRateEl) completionRateEl.textContent = `${stats.completionRate}%`;
+            if (completionRateEl) completionRateEl.textContent = stats.taxaConclusao;
+
+            console.log('✅ Estatísticas carregadas:', stats);
 
         } catch (err) {
-            console.error("Erro ao carregar estatísticas:", err);
+            console.error("❌ Erro ao carregar estatísticas:", err);
+            showCustomAlert('error', 'Erro', 'Não foi possível carregar as estatísticas.');
+        }
+    }
+
+    // =========================
+    // ✅ ATUALIZAR CONTADORES DOS CARDS DE RELATÓRIOS
+    // =========================
+    async function updateReportMetaCards() {
+        try {
+            const res = await fetch('/api/admin/relatorios/estatisticas', {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!res.ok) return;
+
+            const data = await res.json();
+            const stats = data.estatisticas;
+
+            // Atualizar os cards de "Relatórios Disponíveis"
+            const reportCards = document.querySelectorAll('.report-card');
+
+            reportCards.forEach(card => {
+                const metaSpans = card.querySelectorAll('.report-meta span');
+                const reportType = card.querySelector('.btn-table.download')?.dataset.report;
+
+                if (metaSpans[0] && reportType) {
+                    let count = 0;
+
+                    switch(reportType) {
+                        case 'ordens':
+                            count = stats.totalOrdens;
+                            break;
+                        case 'usuarios':
+                            count = stats.totalUsuarios;
+                            break;
+                        case 'patrimonio':
+                            count = stats.totalPatrimonio;
+                            break;
+                        case 'matriculas':
+                            // Buscar contagem real de matrículas
+                            count = '...';
+                            break;
+                        case 'desempenho':
+                            count = stats.totalUsuarios; // Técnicos
+                            break;
+                    }
+
+                    metaSpans[0].innerHTML = `<i class="fas fa-database"></i> ${count} registros`;
+                }
+            });
+
+        } catch (err) {
+            console.error("Erro ao atualizar cards:", err);
         }
     }
 
@@ -101,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     async function generateReportFromForm() {
         const reportType = selectReport.value;
-        const format = selectFormat.value;
         const startDate = dateStart.value;
         const endDate = dateEnd.value;
 
@@ -120,20 +185,16 @@ document.addEventListener('DOMContentLoaded', function() {
             generateReportBtn.disabled = true;
             generateReportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
 
-            // Simular processamento
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Gerar relatório
-            await downloadReport(reportType, format, startDate, endDate);
-
-            // Adicionar ao histórico
-            addToReportsHistory(reportType, format);
+            await downloadReport(reportType, startDate, endDate);
 
             showCustomAlert('success', 'Relatório Gerado', 
-                `Relatório ${getReportName(reportType)} gerado com sucesso em formato ${format.toUpperCase()}.`);
+                `Relatório ${getReportName(reportType)} gerado com sucesso! O PDF foi aberto em uma nova aba.`);
+
+            // Recarregar histórico
+            await loadReportsHistory();
 
         } catch (error) {
-            showCustomAlert('error', 'Erro', 'Não foi possível gerar o relatório.');
+            showCustomAlert('error', 'Erro', error.message || 'Não foi possível gerar o relatório.');
         } finally {
             generateReportBtn.disabled = false;
             generateReportBtn.innerHTML = '<i class="fas fa-download"></i> Gerar Relatório';
@@ -141,185 +202,122 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
-    // Download de Relatório
+    // ✅ DOWNLOAD/VISUALIZAÇÃO DE RELATÓRIO (ABRE EM NOVA ABA)
     // =========================
-    async function downloadReport(reportType, format, startDate = null, endDate = null) {
+    async function downloadReport(reportType, startDate = null, endDate = null) {
         try {
-            // Em produção, faria requisição real
-            // const res = await fetch("/api/admin/relatorios/download", {
-            //     method: "POST",
-            //     headers: { 
-            //         "Authorization": `Bearer ${token}`,
-            //         "Content-Type": "application/json"
-            //     },
-            //     body: JSON.stringify({
-            //         tipo: reportType,
-            //         formato: format,
-            //         data_inicio: startDate,
-            //         data_fim: endDate
-            //     })
-            // });
+            // Construir URL com query params
+            let url = `/api/admin/relatorios/${reportType}`;
+            const params = new URLSearchParams();
 
-            // Simular download
-            const reportName = getReportName(reportType);
-            const fileName = `${reportName}_${new Date().toISOString().split('T')[0]}.${format}`;
+            if (startDate) params.append('data_inicio', startDate);
+            if (endDate) params.append('data_fim', endDate);
 
-            // Criar conteúdo mock (em produção viria do backend)
-            let content = '';
-            if (format === 'csv') {
-                content = generateMockCSV(reportType);
-                downloadFile(content, fileName, 'text/csv');
-            } else if (format === 'xlsx') {
-                // Em produção, geraria arquivo Excel real
-                content = generateMockCSV(reportType);
-                downloadFile(content, fileName, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            } else if (format === 'pdf') {
-                // Em produção, geraria PDF real
-                content = 'PDF content would be generated here';
-                downloadFile(content, fileName, 'application/pdf');
+            if (params.toString()) {
+                url += `?${params.toString()}`;
             }
 
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: { 
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Erro ao gerar relatório');
+            }
+
+            // ✅ FIX: Receber o PDF como blob e abrir em nova aba
+            const blob = await res.blob();
+            const pdfUrl = window.URL.createObjectURL(blob);
+
+            // ✅ Abrir PDF em nova aba
+            window.open(pdfUrl, '_blank');
+
+            // ✅ Limpar URL após alguns segundos (opcional)
+            setTimeout(() => {
+                window.URL.revokeObjectURL(pdfUrl);
+            }, 10000);
+
+            console.log('✅ PDF gerado e aberto em nova aba');
+
         } catch (error) {
-            throw new Error('Falha ao gerar relatório');
+            console.error('❌ Erro ao gerar relatório:', error);
+            throw error;
         }
-    }
-
-    function generateMockCSV(reportType) {
-        const headers = {
-            ordens: 'ID,Descrição,Status,Data Criação,Solicitante,Técnico',
-            usuarios: 'ID,Nome,Email,Cargo,Status,Data Cadastro',
-            patrimonio: 'ID,Número Patrimônio,Descrição,Categoria,Local,Status',
-            desempenho: 'Técnico,Ordens Concluídas,Tempo Médio,Avaliação Média',
-            matriculas: 'Matrícula,Nome,Email,Status'
-        };
-
-        const sampleData = {
-            ordens: '\n1,Problema no monitor,Sala 101,Concluída,2024-12-19,Prof. João,Técnico Maria',
-            usuarios: '\n1,Prof. Carlos Silva,carlos.silva@fatec.sp.gov.br,Professor,Ativo,2024-01-15',
-            patrimonio: '\n1,FATEC-001,Computador Dell,Computador,Sala 101,Em Uso',
-            desempenho: '\nTécnico João,45,2.3h,4.8',
-            matriculas: '\n20241001,João Silva,joao.silva@fatec.sp.gov.br,Ativo'
-        };
-
-        return headers[reportType] + sampleData[reportType];
-    }
-
-    function downloadFile(content, fileName, mimeType) {
-        const blob = new Blob([content], { type: mimeType });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
     }
 
     // =========================
     // Visualizar Relatório
     // =========================
     function previewReport(reportType) {
-        showCustomAlert('info', 'Pré-visualização', 
-            `A pré-visualização do relatório ${getReportName(reportType)} será implementada em breve.`,
-            [
-                { text: 'Fechar', action: 'secondary' }
-            ]
-        );
+        // Chama a função de download que já abre em nova aba
+        downloadReport(reportType);
     }
 
     // =========================
-    // Histórico de Relatórios
+    // ✅ HISTÓRICO DE RELATÓRIOS REAL DO BACKEND
     // =========================
-    function addToReportsHistory(reportType, format) {
-        const history = JSON.parse(localStorage.getItem('reportsHistory') || '[]');
-
-        const newReport = {
-            id: Date.now(),
-            nome: getReportName(reportType),
-            tipo: reportType,
-            formato: format.toUpperCase(),
-            data_geracao: new Date().toISOString(),
-            tamanho: '1.2 MB'
-        };
-
-        history.unshift(newReport);
-        localStorage.setItem('reportsHistory', JSON.stringify(history.slice(0, 20))); // Manter últimos 20
-
-        loadReportsHistory();
-    }
-
-    function loadReportsHistory() {
-        const history = JSON.parse(localStorage.getItem('reportsHistory') || '[]');
-
-        if (history.length === 0) {
-            reportsHistoryBody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-medium);">
-                        <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                        Nenhum relatório gerado ainda
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        reportsHistoryBody.innerHTML = history.map(report => `
-            <tr>
-                <td><strong>#${report.id}</strong></td>
-                <td>${report.nome}</td>
-                <td>${report.tipo}</td>
-                <td>${report.formato}</td>
-                <td>${formatDate(report.data_geracao)}</td>
-                <td>${report.tamanho}</td>
-                <td>
-                    <div class="actions-cell">
-                        <button class="btn-table download" data-id="${report.id}" title="Baixar novamente">
-                            <i class="fas fa-download"></i>
-                        </button>
-                        <button class="btn-table delete" data-id="${report.id}" title="Excluir do histórico">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-
-        // Adicionar event listeners
-        document.querySelectorAll('.btn-table.download[data-id]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const reportId = e.currentTarget.dataset.id;
-                const report = history.find(r => r.id == reportId);
-                if (report) {
-                    downloadReport(report.tipo, report.formato.toLowerCase());
+    async function loadReportsHistory() {
+        try {
+            const res = await fetch('/api/admin/relatorios/historico', {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
             });
-        });
 
-        document.querySelectorAll('.btn-table.delete[data-id]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const reportId = e.currentTarget.dataset.id;
-                deleteFromHistory(reportId);
+            if (!res.ok) throw new Error('Erro ao carregar histórico');
+
+            const data = await res.json();
+            const history = data.historico;
+
+            if (!history || history.length === 0) {
+                reportsHistoryBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-medium);">
+                            <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                            Nenhum relatório gerado ainda
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            reportsHistoryBody.innerHTML = history.map(report => `
+                <tr>
+                    <td><strong>#${report.id}</strong></td>
+                    <td>${report.nome_relatorio}</td>
+                    <td>${report.tipo_relatorio}</td>
+                    <td>${report.formato}</td>
+                    <td>${formatDate(report.data_geracao)}</td>
+                    <td>${report.tamanho_kb} KB</td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn-table download" data-tipo="${report.tipo_relatorio}" title="Visualizar/Baixar">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Adicionar event listeners para re-download
+            document.querySelectorAll('.btn-table.download[data-tipo]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tipoRelatorio = e.currentTarget.dataset.tipo;
+                    downloadReport(tipoRelatorio);
+                });
             });
-        });
-    }
 
-    function deleteFromHistory(reportId) {
-        showCustomAlert('warning', 'Confirmar Exclusão', 
-            'Tem certeza que deseja excluir este relatório do histórico?',
-            [
-                { text: 'Cancelar', action: 'secondary' },
-                { text: 'Excluir', action: 'primary', callback: () => confirmDelete(reportId) }
-            ]
-        );
-    }
+            console.log('✅ Histórico carregado:', history.length, 'relatórios');
 
-    function confirmDelete(reportId) {
-        let history = JSON.parse(localStorage.getItem('reportsHistory') || '[]');
-        history = history.filter(report => report.id != reportId);
-        localStorage.setItem('reportsHistory', JSON.stringify(history));
-        loadReportsHistory();
-        showCustomAlert('success', 'Excluído', 'Relatório removido do histórico.');
+        } catch (error) {
+            console.error('❌ Erro ao carregar histórico:', error);
+            showCustomAlert('error', 'Erro', 'Não foi possível carregar o histórico de relatórios.');
+        }
     }
 
     // =========================
@@ -348,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function resetFilters() {
         selectReport.value = '';
-        selectFormat.value = 'csv';
+        selectFormat.value = 'pdf';
         setDefaultDates();
     }
 
@@ -373,7 +371,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${btn.text}
                     </button>
                 `).join('')}
-            </div>` : '';
+            </div>` : 
+            `<div class="alert-actions">
+                <button class="alert-btn alert-btn-primary" data-action="close">OK</button>
+            </div>`;
 
         alertOverlay.innerHTML = `
             <div class="alert-modal">
@@ -392,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
         alertOverlay.querySelectorAll('.alert-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const action = this.dataset.action;
-                const buttonConfig = buttons.find(b => b.text === this.textContent);
+                const buttonConfig = buttons.find(b => b.action === action);
                 if (buttonConfig && buttonConfig.callback) {
                     buttonConfig.callback();
                 }

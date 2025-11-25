@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const inProgressOrdersEl = document.getElementById('inProgressOrders');
 
     // ===================================
-    // 🛑 CORREÇÃO ESSENCIAL: DEFINIÇÃO DE VARIÁVEIS
+    // DEFINIÇÃO DE VARIÁVEIS
     // ===================================
-    const API_URL = "https://40cd6f62-b9ce-40bf-9b67-5082637ff496-00-2goj6eo5b4z6a.riker.replit.dev/";
+    const API_URL = "https://40cd6f62-b9ce-40bf-9b67-5082637ff496-00-2goj6eo5b4z6a.riker.replit.dev";
     const token = localStorage.getItem("authToken");
 
     function loadUserProfile() {
@@ -27,11 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const userEmailEl = document.getElementById("userEmail");
 
         if (userNameEl) {
-            // 🛑 CORREÇÃO: Mudar de user.name para user.nome
             userNameEl.textContent = user.nome || "Professor"; 
         }
         if (userEmailEl) {
-            // Manter user.email
             userEmailEl.textContent = user.email || "";
         }
     }
@@ -51,34 +49,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     // Buscar ordens do backend
     // =========================
-    // =========================
-    // Buscar ordens do backend
-    // =========================
     async function fetchUserOrders() {
         ordersList.innerHTML = `<p class="loading-message">Carregando ordens...</p>`;
 
-        // 🛑 CORREÇÃO: Usar API_URL
         const endpoint = `${API_URL}/api/minhas-ordens`;
         console.log("🔍 Buscando ordens em:", endpoint);
 
         try {
             const res = await fetch(endpoint, {
                 headers: {
-                    // O token deve ser verificado, mas o fetch continua se não existir (para testar o 401)
                     "Authorization": `Bearer ${token}`, 
                     "Content-Type": "application/json"
                 }
             });
 
             if (!res.ok) {
-                // Se a falha for 401 (Não Autorizado), logamos explicitamente
                 if (res.status === 401 || res.status === 403) {
                     throw new Error(`Falha de Autorização (${res.status}). O token pode ser inválido ou expirou.`);
                 }
                 throw new Error(`Falha ao carregar ordens. Status: ${res.status} ${res.statusText}`);
             }
 
-            // ... (Resto do código de tratamento de texto e JSON, que está robusto) ...
             const text = await res.text();
 
             if (text.trim().startsWith("<!DOCTYPE") || text.trim().startsWith("<html")) {
@@ -102,21 +93,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Mapeia os dados das ordens (mantido)
             ordersData = ordens.map(o => ({
                 id: o.id,
                 codigo: o.codigo,
                 date: o.data_criacao || o.data || "",
                 room: o.local_detalhe || o.local || "",
                 equipment: o.equipamento || "",
-                // 🛑 CORREÇÃO: Mapear o status do backend para o português aqui (se necessário)
-                // Usando o status diretamente do backend para evitar inconsistências, mas vamos mapear
-                status: statusMap[o.status] || o.status || "Desconhecido", // Usa o mapeamento
+                status: statusMap[o.status] || o.status || "Desconhecido",
                 title: o.titulo || `${o.tipo_solicitacao || "Solicitação"} - ${o.local_detalhe || "Local não informado"}`,
                 description: o.descricao || o.app_nome || "Sem descrição",
                 type: o.tipo_problema || (o.tipo_solicitacao === "instalacao" ? "Instalação" : "N/A"),
                 technician: o.tecnico_nome || "Não atribuído",
-                evaluation: o.avaliacao ?? null
+                evaluation: o.avaliacao ?? null,
+                total_anexos: o.total_anexos || 0  // ← NOVO
             }));
 
             console.log("✅ Ordens carregadas:", ordersData.length);
@@ -124,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
             applyFilters();
 
         } catch (err) {
-            console.error("❌ Erro ao buscar ordens:", err.message); // Logamos a mensagem
+            console.error("❌ Erro ao buscar ordens:", err.message);
             ordersList.innerHTML = `
                 <p>Erro ao carregar ordens. Verifique o console para mais detalhes.</p>
                 <p><small>Detalhe: ${err.message}</small></p>
@@ -150,19 +139,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     // Inicialização
     // =========================
-    // =========================
-    // Inicialização
-    // =========================
     async function init() {
-        // 🛑 ADICIONE ESTA LINHA:
         loadUserProfile(); 
-
-        // O restante do código de inicialização
         await fetchUserOrders();
         setupEventListeners();
     }
 
-    // ...
     init();
 
     // =========================
@@ -195,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         });
 
-        // Permite fechar clicando fora do conteúdo
         document.querySelectorAll('.modal').forEach(m => {
           m.addEventListener('click', e => {
             if (e.target === m) m.classList.remove('active');
@@ -272,6 +253,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const formattedDate = new Date(order.date).toLocaleDateString('pt-BR');
             const evaluationBadge = order.evaluation !== null ? `<span><i class="fas fa-star"></i> Avaliação: ${order.evaluation}/5</span>` : '';
 
+            // ← NOVO: Badge de anexos
+            const anexosBadge = order.total_anexos > 0 ? `<span><i class="fas fa-paperclip"></i> ${order.total_anexos} anexo(s)</span>` : '';
+
             orderCard.innerHTML = `
                 <div class="order-header">
                     <span class="order-id">#${order.codigo}</span>
@@ -285,11 +269,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span><i class="fas fa-tag"></i> ${order.type}</span>
                         <span><i class="fas fa-user-cog"></i> Técnico: ${order.technician}</span>
                         ${evaluationBadge}
+                        ${anexosBadge}
                     </div>
                 </div>
                 <div class="order-actions">
                     <button class="btn btn-small btn-view"><i class="fas fa-eye"></i> Detalhes</button>
-                    ${order.status === 'Em Andamento' ? '<button class="btn btn-small btn-msg"><i class="fas fa-comment"></i> Mensagem</button>' : ''}
+                    ${(order.status === 'Pendente' || order.status === 'Em Andamento') ? '' : ''}
                     ${order.status === 'Concluída' && !order.evaluation ? '<button class="btn btn-small btn-feedback"><i class="fas fa-star"></i> Avaliar</button>' : ''}
                     ${order.status === 'Não Concluída' ? '<button class="btn btn-small btn-reopen"><i class="fas fa-redo"></i> Reabrir</button>' : ''}
                 </div>
@@ -306,10 +291,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ===================================
+    // ← NOVA FUNÇÃO: Buscar anexos da ordem
+    // ===================================
+    async function buscarAnexosOrdem(ordemId) {
+        try {
+            const res = await fetch(`${API_URL}/api/ordens/${ordemId}/anexos`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) {
+                console.error("Erro ao buscar anexos:", res.status);
+                return [];
+            }
+
+            const anexos = await res.json();
+            return anexos;
+        } catch (err) {
+            console.error("Erro ao buscar anexos:", err);
+            return [];
+        }
+    }
+
     // =========================
-    // Mostrar detalhes no modal
+    // Mostrar detalhes no modal (ATUALIZADO)
     // =========================
-    function showOrderDetails(orderId) {
+    async function showOrderDetails(orderId) {
         const order = ordersData.find(o => o.id == orderId);
         if (!order) return;
 
@@ -323,6 +333,41 @@ document.addEventListener('DOMContentLoaded', function() {
             default: statusClass='desconhecido'; statusText='Desconhecido'; break;
         }
 
+        // ← NOVO: Buscar anexos
+        const anexos = await buscarAnexosOrdem(orderId);
+        let anexosHTML = '';
+
+        if (anexos && anexos.length > 0) {
+            anexosHTML = `
+                <div class="detail-row full-width">
+                    <span class="detail-label">Anexos:</span>
+                    <div class="anexos-container">
+                        ${anexos.map(anexo => {
+                            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(anexo.nome);
+                            if (isImage) {
+                                return `
+                                    <div class="anexo-item">
+                                        <img src="${API_URL}${anexo.url}" alt="${anexo.nome}" class="anexo-imagem" />
+                                        <a href="${API_URL}${anexo.url}" target="_blank" class="anexo-link">
+                                            <i class="fas fa-download"></i> ${anexo.nome}
+                                        </a>
+                                    </div>
+                                `;
+                            } else {
+                                return `
+                                    <div class="anexo-item">
+                                        <a href="${API_URL}${anexo.url}" target="_blank" class="anexo-link">
+                                            <i class="fas fa-file"></i> ${anexo.nome}
+                                        </a>
+                                    </div>
+                                `;
+                            }
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
         document.getElementById('modal-order-details').innerHTML = `
             <div class="detail-row"><span class="detail-label">Número da Ordem:</span><span class="detail-value">#${order.codigo}</span></div>
             <div class="detail-row"><span class="detail-label">Data:</span><span class="detail-value">${formattedDate}</span></div>
@@ -331,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="detail-row"><span class="detail-label">Tipo:</span><span class="detail-value">${order.type}</span></div>
             <div class="detail-row"><span class="detail-label">Técnico Responsável:</span><span class="detail-value">${order.technician}</span></div>
             <div class="detail-row full-width"><span class="detail-label">Descrição:</span><p class="detail-value">${order.description}</p></div>
+            ${anexosHTML}
             ${order.evaluation ? `<div class="detail-row"><span class="detail-label">Avaliação:</span><span class="detail-value">${Array.from({length:5},(_,i)=>`<i class="fas fa-star ${i<order.evaluation?'filled':''}"></i>`).join('')}</span></div>` : ''}
         `;
 
@@ -346,7 +392,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedRating = 0;
     let currentOrderId = null;
 
-    // Abrir modal de avaliação
     document.addEventListener('click', (e) => {
         if (e.target.closest('.btn-feedback')) {
             const orderCard = e.target.closest('.order-card');
@@ -357,7 +402,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Selecionar estrelas corretamente (pintar da esquerda pra direita)
     stars.forEach(star => {
       star.addEventListener('mouseover', () => {
         const hoverValue = parseInt(star.dataset.value);
@@ -376,8 +420,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-
-    // Enviar avaliação
     submitFeedbackBtn.addEventListener('click', async () => {
         if (!selectedRating) {
             alert("Por favor, selecione uma nota antes de enviar.");
@@ -385,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-                const res = await fetch(`${API_URL}/api/ordens/${currentOrderId}/avaliar`, {
+            const res = await fetch(`${API_URL}/api/ordens/${currentOrderId}/avaliar`, {
                 method: 'POST',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -400,17 +442,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             alert('Avaliação enviada com sucesso!');
             feedbackModal.classList.remove('active');
-            await fetchUserOrders(); // recarrega as ordens
+            await fetchUserOrders();
         } catch (err) {
             alert('Falha ao enviar avaliação: ' + err.message);
         }
     });
-
-    
-
-
-    // =========================
-    // Inicializar app
-    // =========================
-    init();
 });

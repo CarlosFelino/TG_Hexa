@@ -1,17 +1,35 @@
-// routes/gerenciarRoutes.js
 import express from "express";
 import {
   listarUsuarios,
+  buscarUsuarioPorId,
   criarUsuario,
   atualizarUsuario,
-  deletarUsuario
+  deletarUsuario,
+  estatisticasUsuarios
 } from "../controllers/gerenciarController.js";
 
 const router = express.Router();
 
-router.get("/", listarUsuarios);      // Listar todos os usuários
-router.post("/", criarUsuario);       // Criar novo usuário
-router.put("/:id", atualizarUsuario); // Atualizar usuário
-router.delete("/:id", deletarUsuario); // Excluir usuário
+// =========================
+// ROTAS DE GERENCIAMENTO DE USUÁRIOS
+// =========================
+
+// 📋 GET - Listar todos os usuários
+router.get("/usuarios", listarUsuarios);
+
+// 📊 GET - Estatísticas de usuários
+router.get("/usuarios/estatisticas", estatisticasUsuarios);
+
+// 🔍 GET - Buscar usuário específico por ID
+router.get("/usuarios/:id", buscarUsuarioPorId);
+
+// ➕ POST - Criar novo usuário
+router.post("/usuarios", criarUsuario);
+
+// ✏️ PUT - Atualizar usuário existente
+router.put("/usuarios/:id", atualizarUsuario);
+
+// 🗑️ DELETE - Deletar usuário
+router.delete("/usuarios/:id", deletarUsuario);
 
 export default router;

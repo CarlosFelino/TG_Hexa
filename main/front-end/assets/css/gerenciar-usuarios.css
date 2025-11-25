@@ -563,6 +563,123 @@
 }
 
 /* =======================
+   Sistema de Alertas Customizado
+   ======================= */
+
+.alert-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.alert-overlay.visible {
+    display: flex;
+    opacity: 1;
+}
+
+.alert-modal {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.alert-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.alert-overlay.alert-success .alert-icon {
+    color: #4CAF50;
+}
+
+.alert-overlay.alert-error .alert-icon {
+    color: #F44336;
+}
+
+.alert-overlay.alert-warning .alert-icon {
+    color: #FF9800;
+}
+
+.alert-overlay.alert-info .alert-icon {
+    color: #2196F3;
+}
+
+.alert-title {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+
+.alert-message {
+    color: var(--text-medium);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.alert-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.alert-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    font-size: 0.95rem;
+    min-width: 120px;
+}
+
+.alert-btn-primary {
+    background: var(--secondary);
+    color: white;
+}
+
+.alert-btn-primary:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(122, 4, 235, 0.3);
+}
+
+.alert-btn-secondary {
+    background: #f0f2f5;
+    color: var(--text-dark);
+}
+
+.alert-btn-secondary:hover {
+    background: #e6e9f0;
+}
+
+/* =======================
    Responsividade
    ======================= */
 
