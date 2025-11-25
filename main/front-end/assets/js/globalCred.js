@@ -49,12 +49,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===================================
 
     // 1. Validar se o usuário está logado
-    if (checkAuth()) {
+    //if (checkAuth()) {
         // 2. Carregar dados do perfil na barra superior
-        loadUserProfile();
+        //loadUserProfile();
         // 3. Configurar o botão de logout
-        setupLogout();
-    }
+        //setupLogout();
+    //}
 
     // Observação: Lógica do menu lateral (toggleSidebar) e do dropdown do avatar
     // também podem ser incluídas aqui para serem globais se forem as mesmas em todas as páginas.

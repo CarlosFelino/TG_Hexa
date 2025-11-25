@@ -6,11 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (!token || !user || user.role !== 'admin') {
-        window.location.href = "../../login.html";
-        return;
-    }
-
     // =========================
     // Elementos do DOM
     // =========================
