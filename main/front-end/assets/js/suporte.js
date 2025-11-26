@@ -1,63 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ suporte.js carregado");
+
     // =========================
-    // AUTENTICAÇÃO E DADOS
+    // 1. AUTENTICAÇÃO
     // =========================
     const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
+    // Se não estiver logado, manda pro login
+    if (!token || !user) {
+        // Verificação para evitar loop de redirecionamento se já estiver no login
+        if (!window.location.pathname.includes("login.html")) {
+            console.warn("Usuário não autenticado.");
+            // window.location.href = "../../login.html"; // Descomente em produção
+        }
+    }
+
     // =========================
-    // ELEMENTOS DOM
+    // 2. MENU LATERAL (HAMBÚRGUER)
     // =========================
-    // Menu e Sidebar
     const menuToggle = document.querySelector(".menu-toggle");
     const sidebar = document.querySelector(".sidebar");
-    const overlay = document.querySelector(".overlay") || createOverlay(); // Cria se não existir
+    let overlay = document.querySelector(".overlay");
 
-    // Perfil
-    const userNameEl = document.getElementById("userName");
-    const userEmailEl = document.getElementById("userEmail");
-    const welcomeNameEl = document.getElementById("welcomeName");
-    const profileAvatar = document.getElementById("userAvatar");
-    const profileDropdown = document.querySelector(".dropdown-content");
-
-    // Dashboard Cards
-    const cardPendentes = document.getElementById("cardPendentes");
-    const cardAndamento = document.getElementById("cardAndamento");
-    const cardMinhas = document.getElementById("cardMinhas");
-    const cardConcluidas = document.getElementById("cardConcluidas");
-    const recentOrdersContainer = document.getElementById("recentOrders");
-
-    // Modal
-    const detalhesModal = document.getElementById("detalhesModal");
-    const modalContent = document.getElementById("modalContent");
-    const modalClose = document.getElementById("modalClose");
-
-    // Cache de dados
-    let ordensCache = [];
-
-    // =========================
-    // INICIALIZAÇÃO UI
-    // =========================
-    
-    // Preencher Perfil
-    if (user) {
-        if(userNameEl) userNameEl.textContent = user.nome;
-        if(userEmailEl) userEmailEl.textContent = user.email;
-        if(welcomeNameEl) welcomeNameEl.textContent = user.nome;
-    }
-
-    // Criar overlay se não existir no HTML
-    function createOverlay() {
-        const div = document.createElement("div");
-        div.className = "overlay";
-        document.body.appendChild(div);
-        return div;
-    }
-
-    // =========================
-    // LOGICA DE MENU E SIDEBAR (Responsividade)
-    // =========================
-
+    // Cria overlay se não existir (garantia para páginas internas)
     if (!overlay) {
         overlay = document.createElement("div");
         overlay.className = "overlay";
@@ -65,13 +31,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (menuToggle && sidebar) {
-        menuToggle.addEventListener("click", (e) => {
+        // Remove event listeners antigos clonando o elemento (truque para limpar)
+        const newMenuToggle = menuToggle.cloneNode(true);
+        menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+
+        newMenuToggle.addEventListener("click", (e) => {
             e.stopPropagation();
             sidebar.classList.toggle("active");
             overlay.classList.toggle("active");
+            console.log("🍔 Menu toggle clicado");
         });
 
-        // Fechar ao clicar no fundo escuro
         overlay.addEventListener("click", () => {
             sidebar.classList.remove("active");
             overlay.classList.remove("active");
@@ -79,292 +49,118 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =========================
-    // LOGICA DO DROPDOWN (CORRIGIDA)
+    // 3. MENU DE PERFIL (DROPDOWN)
     // =========================
+    const userNameEl = document.getElementById("userName");
+    const userEmailEl = document.getElementById("userEmail");
+    const profileAvatar = document.getElementById("userAvatar") || document.querySelector(".profile-avatar");
+    
+    // Tenta encontrar o dropdown de várias formas para garantir
+    const profileDropdown = document.querySelector(".profile-dropdown .dropdown-content") || document.querySelector(".dropdown-content");
+
+    // Preencher dados do usuário na Navbar
+    if (user) {
+        if(userNameEl) userNameEl.textContent = user.nome;
+        if(userEmailEl) userEmailEl.textContent = user.email;
+    }
+
     if (profileAvatar && profileDropdown) {
-        profileAvatar.addEventListener("click", (e) => {
-            e.stopPropagation(); // Impede que o clique feche imediatamente
+        // Limpa eventos antigos
+        const newAvatar = profileAvatar.cloneNode(true);
+        profileAvatar.parentNode.replaceChild(newAvatar, profileAvatar);
+
+        newAvatar.addEventListener("click", (e) => {
+            e.stopPropagation();
             profileDropdown.classList.toggle("active");
+            // Fallback caso o CSS use display:block em vez de .active
+            profileDropdown.style.display = profileDropdown.classList.contains("active") ? "block" : "none";
+            console.log("👤 Perfil clicado");
         });
 
         // Fechar ao clicar fora
         document.addEventListener("click", (e) => {
-            if (!profileDropdown.contains(e.target) && e.target !== profileAvatar) {
+            if (!profileDropdown.contains(e.target) && e.target !== newAvatar) {
                 profileDropdown.classList.remove("active");
+                profileDropdown.style.display = "none";
             }
         });
+    } else {
+        console.warn("⚠️ Elementos de perfil não encontrados nesta página.");
     }
 
     // Logout
-    document.getElementById("logout")?.addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("currentUser");
-        window.location.href = "../../index.html";
-    });
+    const logoutBtn = document.getElementById("logout");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("currentUser");
+            window.location.href = "../../index.html";
+        });
+    }
 
     // =========================
-    // CARREGAMENTO DE DADOS (API)
+    // 4. DASHBOARD (Somente se existirem os cards)
     // =========================
+    const cardPendentes = document.getElementById("cardPendentes");
+    
+    // Só roda a lógica de dashboard se encontrarmos um elemento chave (ex: cardPendentes)
+    if (cardPendentes) {
+        loadDashboardData();
+    }
+
     async function loadDashboardData() {
         try {
-            // Simulação de delay para ver loading (opcional)
-            // await new Promise(r => setTimeout(r, 500));
-
             const res = await fetch("/api/ordens", {
                 headers: { Authorization: "Bearer " + token },
             });
 
-            if (!res.ok) throw new Error("Erro ao buscar ordens");
+            if (!res.ok) throw new Error("Erro ao buscar dados");
 
             const text = await res.text();
             const ordens = JSON.parse(text);
-            ordensCache = ordens;
 
-            atualizarCards(ordens);
-            renderRecentOrders(ordens);
-            verificarAlertas(ordens);
+            // Atualiza cards
+            if(cardPendentes) cardPendentes.textContent = ordens.filter(o => o.status === "Pendente").length;
+            
+            const cardAndamento = document.getElementById("cardAndamento");
+            if(cardAndamento) cardAndamento.textContent = ordens.filter(o => o.status === "Em Andamento").length;
+            
+            const cardMinhas = document.getElementById("cardMinhas");
+            if(cardMinhas) cardMinhas.textContent = ordens.filter(o => o.responsavel_id === user.id).length;
+            
+            const cardConcluidas = document.getElementById("cardConcluidas");
+            if(cardConcluidas) cardConcluidas.textContent = ordens.filter(o => o.status === "Concluída").length;
+
+            // Atualiza lista recente se existir
+            const recentOrdersContainer = document.getElementById("recentOrders");
+            if(recentOrdersContainer) {
+                renderRecentOrders(ordens, recentOrdersContainer);
+            }
 
         } catch (err) {
             console.error("Erro ao carregar dashboard:", err);
-            if(recentOrdersContainer) recentOrdersContainer.innerHTML = "<p class='error-msg'>Erro ao carregar dados.</p>";
         }
     }
 
-    function atualizarCards(ordens) {
-        // Contagens seguras (verificando se elemento existe)
-        if(cardPendentes) cardPendentes.textContent = ordens.filter(o => o.status === "Pendente").length;
-        if(cardAndamento) cardAndamento.textContent = ordens.filter(o => o.status === "Em Andamento").length;
-        if(cardMinhas) cardMinhas.textContent = ordens.filter(o => o.responsavel_id === user.id).length;
-        
-        // Filtro de concluídas nos últimos 7 dias (exemplo de lógica mais refinada)
-        if(cardConcluidas) {
-            cardConcluidas.textContent = ordens.filter(o => o.status === "Concluída").length;
-        }
-    }
+    function renderRecentOrders(ordens, container) {
+        container.innerHTML = "";
+        const ordensRecentes = ordens.sort((a, b) => new Date(b.data_criacao) - new Date(a.data_criacao)).slice(0, 3);
 
-    function renderRecentOrders(ordens) {
-        if (!recentOrdersContainer) return;
-        recentOrdersContainer.innerHTML = "";
-
-        if (ordens.length === 0) {
-            recentOrdersContainer.innerHTML = "<p class='empty-msg'>Nenhuma ordem encontrada.</p>";
+        if (ordensRecentes.length === 0) {
+            container.innerHTML = "<p>Nenhuma ordem recente.</p>";
             return;
         }
 
-        // Ordenar por data (mais recente primeiro) e pegar 6
-        const ordensRecentes = ordens
-            .sort((a, b) => new Date(b.data_criacao) - new Date(a.data_criacao))
-            .slice(0, 6);
-
         ordensRecentes.forEach(order => {
-            const orderCard = document.createElement("div");
-            // Classe CSS baseada no status (tratamento de string)
-            const statusClass = order.status.replace(/\s+/g, "-").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            
-            orderCard.className = `order-card ${statusClass}`;
-            orderCard.dataset.id = order.id;
-
-            const responsavel = order.tecnico_nome || order.responsavel_nome || "Não atribuído";
-            
-            // Conteúdo dinâmico baseado no tipo
-            let detalhe = "";
-            if (order.tipo_solicitacao === "problema") {
-                detalhe = `<p><strong>Equipamento:</strong> ${order.equipamento || "-"} <br> <strong>Problema:</strong> ${order.tipo_problema || "-"}</p>`;
-            } else {
-                detalhe = `<p><strong>Software:</strong> ${order.app_nome || "-"} <br> <strong>Link:</strong> ${order.app_link ? "Sim" : "Não"}</p>`;
-            }
-
-            orderCard.innerHTML = `
-                <div class="order-header">
-                    <span class="order-id">${order.codigo || `#${order.id}`}</span>
-                    <span class="order-status">${getStatusHTML(order.status)}</span>
-                </div>
-                <div class="order-body">
-                    <h3>${truncateText(order.descricao, 60) || "Sem descrição"}</h3>
-                    <p><i class="fas fa-calendar-alt"></i> ${new Date(order.data_criacao).toLocaleDateString()}</p>
-                    <p><i class="fas fa-user-cog"></i> Resp: ${responsavel}</p>
-                    ${detalhe}
-                </div>
-                <div class="order-actions">
-                    ${getButtonsHTML(order)}
-                </div>
+            // Lógica de renderização simplificada para não quebrar
+            const card = document.createElement("div");
+            card.className = "order-card";
+            card.innerHTML = `
+                <h3>#${order.codigo || order.id} - ${order.titulo || 'Sem título'}</h3>
+                <p>${order.status}</p>
             `;
-            recentOrdersContainer.appendChild(orderCard);
-        });
-
-        bindOrderButtons();
-    }
-
-    // =========================
-    // UTILS DE HTML
-    // =========================
-    function getStatusHTML(status) {
-        const iconMap = {
-            "Pendente": "fa-clock",
-            "Em Andamento": "fa-spinner fa-spin",
-            "Concluída": "fa-check-circle",
-            "Não Concluída": "fa-times-circle"
-        };
-        const icon = iconMap[status] || "fa-circle";
-        return `<i class="fas ${icon}"></i> ${status}`;
-    }
-
-    function truncateText(text, length) {
-        if(!text) return "";
-        return text.length > length ? text.substring(0, length) + "..." : text;
-    }
-
-    function getButtonsHTML(order) {
-        let buttons = "";
-        // Botão Assumir (apenas se pendente e sem dono)
-        if (order.status === "Pendente" && !order.responsavel_id) {
-            buttons += `<button class="btn btn-assign"><i class="fas fa-hand-paper"></i> Assumir</button>`;
-        }
-        // Botão Concluir (apenas se eu sou o dono e está em andamento)
-        if (order.status === "Em Andamento" && order.responsavel_id === user.id) {
-            buttons += `<button class="btn btn-finalize"><i class="fas fa-check"></i> Concluir</button>`;
-        }
-        buttons += `<button class="btn btn-details"><i class="fas fa-eye"></i> Ver</button>`;
-        return buttons;
-    }
-
-    // =========================
-    // AÇÕES (Assumir, Concluir, Detalhes)
-    // =========================
-    function bindOrderButtons() {
-        // Assumir
-        document.querySelectorAll(".btn-assign").forEach(btn => {
-            btn.addEventListener("click", async function() {
-                const card = this.closest(".order-card");
-                await updateOrderStatus(card.dataset.id, "accept", null, card);
-            });
-        });
-
-        // Concluir
-        document.querySelectorAll(".btn-finalize").forEach(btn => {
-            btn.addEventListener("click", async function() {
-                const card = this.closest(".order-card");
-                await updateOrderStatus(card.dataset.id, "status", "Concluída", card);
-            });
-        });
-
-        // Detalhes (Modal)
-        document.querySelectorAll(".btn-details").forEach(btn => {
-            btn.addEventListener("click", function() {
-                const id = this.closest(".order-card").dataset.id;
-                openModal(id);
-            });
+            container.appendChild(card);
         });
     }
-
-    async function updateOrderStatus(id, action, status, cardElement) {
-        try {
-            const url = action === "accept" 
-                ? `/api/ordens/${id}/accept`
-                : `/api/ordens/${id}/status`;
-            
-            const body = action === "accept" 
-                ? { userId: user.id } 
-                : { status: status };
-
-            const res = await fetch(url, {
-                method: "PATCH",
-                headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            });
-
-            if (!res.ok) throw new Error("Falha na operação");
-
-            // Recarregar dados para atualizar UI corretamente
-            loadDashboardData();
-
-        } catch (err) {
-            console.error(err);
-            alert("Erro ao atualizar ordem.");
-        }
-    }
-
-    // =========================
-    // MODAL LÓGICA
-    // =========================
-    function openModal(id) {
-        const order = ordensCache.find(o => o.id == id);
-        if(!order) return;
-
-        modalContent.innerHTML = `
-            <span class="modal-close" id="modalClose">&times;</span>
-            <h2>Detalhes da Ordem #${order.id}</h2>
-            <div class="modal-grid">
-                <p><strong>Solicitante:</strong> ${order.solicitante || "N/A"}</p>
-                <p><strong>Local:</strong> ${order.local_tipo} ${order.local_detalhe}</p>
-                <p><strong>Status:</strong> ${order.status}</p>
-                <p><strong>Descrição Completa:</strong><br> ${order.descricao}</p>
-            </div>
-        `;
-        
-        detalhesModal.style.display = "block";
-
-        // Re-bind close button inside dynamic content
-        document.getElementById("modalClose").addEventListener("click", () => {
-            detalhesModal.style.display = "none";
-        });
-    }
-
-    // Fechar modal clicando fora
-    window.addEventListener("click", (e) => {
-        if (e.target === detalhesModal) detalhesModal.style.display = "none";
-    });
-
-    // =========================
-    // ALERTAS FLUTUANTES
-    // =========================
-    function verificarAlertas(ordens) {
-        const popupVenc = document.getElementById("alertPopupVencimento");
-        const bodyVenc = document.getElementById("alertBodyVencimento");
-        const closeVenc = document.getElementById("closeVencimento");
-
-        const popupResp = document.getElementById("alertPopupSemResp");
-        const bodyResp = document.getElementById("alertBodySemResp");
-        const closeResp = document.getElementById("closeSemResp");
-
-        if(!popupVenc || !popupResp) return;
-
-        // Lógica de Vencimento (Exemplo: Ordens criadas há mais de 3 dias e não concluídas)
-        const tresDiasAtras = new Date();
-        tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
-
-        const atrasadas = ordens.filter(o => 
-            new Date(o.data_criacao) < tresDiasAtras && 
-            o.status !== "Concluída" && 
-            o.status !== "Não Concluída"
-        );
-
-        // Lógica de Sem Responsável
-        const semResp = ordens.filter(o => !o.responsavel_id && o.status === "Pendente");
-
-        // Mostrar Alerta de Atraso
-        if (atrasadas.length > 0) {
-            bodyVenc.innerHTML = `<p>Existem <strong>${atrasadas.length}</strong> ordens antigas pendentes.</p>`;
-            popupVenc.classList.remove("hidden");
-            setTimeout(() => popupVenc.classList.add("active"), 100);
-        }
-
-        // Mostrar Alerta de Sem Responsável
-        if (semResp.length > 0) {
-            bodyResp.innerHTML = `<p>Existem <strong>${semResp.length}</strong> ordens aguardando técnico.</p>`;
-            popupResp.classList.remove("hidden");
-            setTimeout(() => popupResp.classList.add("active"), 100);
-        }
-
-        // Fechar alertas
-        closeVenc?.addEventListener("click", () => popupVenc.classList.remove("active"));
-        closeResp?.addEventListener("click", () => popupResp.classList.remove("active"));
-    }
-
-    // Inicializar
-    loadDashboardData();
 });

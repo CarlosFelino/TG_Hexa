@@ -4,36 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Ordem | Support Nexus</title>
+    
     <link rel="stylesheet" href="../../assets/css/global.css">
-    <link rel="stylesheet" href="../../assets/css/professor.css">
+    <link rel="stylesheet" href="../../assets/css/suporte.css">
     <link rel="stylesheet" href="../../assets/css/criar-ordem.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
 </head>
-<body class="professor-dashboard">
-    <!-- Navbar Superior -->
-    <header class="professor-navbar">
-        <div class="navbar-content">
-            <button class="menu-toggle" aria-label="Abrir menu">
-                <i class="fas fa-bars"></i>
-            </button>
 
+<body class="suporte-dashboard"> <header class="suporte-navbar">
+        <div class="navbar-content">
+            <button class="menu-toggle"><i class="fas fa-bars"></i></button>
             <a href="painel-professor.html" class="logo-link">
                 <div class="logo-container">
-                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <img src="../../assets/images/logo.png" alt="Logo" class="logo">
                     <span class="logo-text">Support Nexus</span>
                 </div>
             </a>
-
             <div class="user-profile">
                 <div class="profile-info">
                     <span class="user-name" id="userName"></span>
                     <span class="user-email" id="userEmail"></span>
                 </div>
                 <div class="profile-dropdown">
-                    <img src="../../assets/images/default-avatar.png" alt="Foto do Professor" class="profile-avatar" id="profile-toggle">
-                    <div class="dropdown-content" id="profile-dropdown">
-                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                    <img src="../../assets/images/default-avatar.png" alt="Avatar" class="profile-avatar">
+                    <div class="dropdown-content">
+                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Perfil</a>
                         <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
                     </div>
                 </div>
@@ -41,37 +38,19 @@
         </div>
     </header>
 
-    <!-- Menu Lateral -->
     <aside class="sidebar">
         <nav class="sidebar-nav">
             <ul>
-                <li>
-                    <a href="criar-ordem.html" class="active">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Criar Ordem</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="minhas-ordens.html">
-                        <i class="fas fa-list-ul"></i>
-                        <span>Minhas Ordens</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="perfil-professor.html">
-                        <i class="fas fa-tasks"></i>
-                        <span>Perfil</span>
-                    </a>
-                </li>
+                <li><a href="painel-professor.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="criar-ordem.html" class="active"><i class="fas fa-plus-circle"></i> Criar Ordem</a></li>
+                <li><a href="minhas-ordens.html"><i class="fas fa-list-ul"></i> Minhas Ordens</a></li>
             </ul>
         </nav>
     </aside>
 
-    <!-- Conteúdo Principal -->
-    <main class="professor-content">
-        <div class="order-header">
+    <main class="suporte-content"> <div class="order-header">
             <h1>Criar Nova Ordem de Serviço</h1>
-            <p>Selecione abaixo o tipo de solicitação que deseja realizar.</p>
+            <p>Selecione abaixo o tipo de solicitação.</p>
         </div>
 
         <div class="card-container">
@@ -84,52 +63,43 @@
             <div class="card" id="abrir-instalacao">
                 <div class="card-icon"><i class="fas fa-download"></i></div>
                 <h2>Solicitar Instalação</h2>
-                <p>Peça instalação de aplicativos ou softwares necessários em seu ambiente.</p>
+                <p>Peça instalação de aplicativos ou softwares.</p>
             </div>
         </div>
     </main>
 
-    <!-- Modais -->
     <div class="modal-overlay" id="modal-problema">
         <div class="modal-content">
             <span class="close" data-close="problema">&times;</span>
             <h2><i class="fas fa-tools"></i> Relatar Problema</h2>
             <form id="form-problema">
-                <label for="tipo-ambiente-problema"><i class="fas fa-door-open"></i> Tipo de Ambiente</label>
+                <label>Tipo de Ambiente</label>
                 <select id="tipo-ambiente-problema" required>
                     <option value="">Selecione...</option>
                     <option value="sala">Sala de Aula</option>
                     <option value="laboratorio">Laboratório</option>
                 </select>
-
-                <label for="local-detalhe-problema"><i class="fas fa-map-marker-alt"></i> Local</label>
+                
+                <label>Local</label>
                 <select id="local-detalhe-problema" required></select>
 
-                <label for="tipo-kit-problema"><i class="fas fa-desktop"></i> Equipamento</label>
+                <label>Equipamento</label>
                 <select id="tipo-kit-problema" required></select>
 
-                <label for="tipo-problema-problema"><i class="fas fa-exclamation-triangle"></i> Tipo de Problema</label>
+                <label>Tipo de Problema</label>
                 <select id="tipo-problema-problema" required></select>
 
-                <label for="descricao-problema"><i class="fas fa-file-alt"></i> Descrição Detalhada</label>
-                <textarea id="descricao-problema" placeholder="Descreva o problema com mais detalhes..."></textarea>
+                <label>Descrição</label>
+                <textarea id="descricao-problema" placeholder="Detalhes..."></textarea>
 
                 <div class="file-upload-section">
-                  <label for="file-upload-problema" class="file-label">
-                    <i class="fas fa-paperclip"></i>
-                    Anexos <span class="file-limit">(máx. 3)</span>
-                  </label>
-
-                  <button type="button" id="file-upload-btn" class="file-upload-btn">
-                    <i class="fas fa-upload"></i> Escolher arquivos
-                  </button>
-
-                  <input type="file" id="file-upload-problema" multiple hidden accept="image/*,.pdf,.doc,.docx,.txt">
-                  <div id="file-list-problema"></div>
+                    <label class="file-label"><i class="fas fa-paperclip"></i> Anexos</label>
+                    <button type="button" id="file-upload-btn" class="file-upload-btn">Escolher arquivos</button>
+                    <input type="file" id="file-upload-problema" multiple hidden>
+                    <div id="file-list-problema"></div>
                 </div>
 
-
-                <button type="submit"><i class="fas fa-paper-plane"></i> Enviar Problema</button>
+                <button type="submit">Registrar</button>
             </form>
         </div>
     </div>
@@ -139,33 +109,30 @@
             <span class="close" data-close="instalacao">&times;</span>
             <h2><i class="fas fa-download"></i> Solicitar Instalação</h2>
             <form id="form-instalacao">
-                <label for="tipo-ambiente-instalacao"><i class="fas fa-door-open"></i> Tipo de Ambiente</label>
+                <label>Tipo de Ambiente</label>
                 <select id="tipo-ambiente-instalacao" required>
                     <option value="">Selecione...</option>
                     <option value="sala">Sala de Aula</option>
                     <option value="laboratorio">Laboratório</option>
                 </select>
-
-                <label for="local-detalhe-instalacao"><i class="fas fa-map-marker-alt"></i> Local</label>
+                <label>Local</label>
                 <select id="local-detalhe-instalacao" required></select>
-
-                <label for="app-name-instalacao"><i class="fas fa-cube"></i> Nome do Aplicativo</label>
-                <input type="text" id="app-name-instalacao" required placeholder="Ex: Google Chrome, Visual Studio Code...">
-
-                <label for="app-version-instalacao"><i class="fas fa-code-branch"></i> Versão (opcional)</label>
-                <input type="text" id="app-version-instalacao" placeholder="Ex: 120.0.6099.109">
-
-                <label for="app-link-instalacao"><i class="fas fa-link"></i> Link para Download (opcional)</label>
-                <input type="url" id="app-link-instalacao" placeholder="https://...">
-
-                <button type="submit"><i class="fas fa-paper-plane"></i> Solicitar Instalação</button>
+                <label>Nome do Aplicativo</label>
+                <input type="text" id="app-name-instalacao" required>
+                <label>Versão</label>
+                <input type="text" id="app-version-instalacao">
+                <label>Link</label>
+                <input type="url" id="app-link-instalacao">
+                <button type="submit">Registrar</button>
             </form>
         </div>
     </div>
 
+    <div class="overlay"></div>
+
     <script src="../../assets/js/globalCred.js"></script>
-<script type="module" src="../../assets/js/criar-ordem.js"></script>
     <script src="../../assets/js/globalProfile.js"></script>
-    
+    <script src="../../assets/js/suporte.js"></script>
+    <script src="../../assets/js/criar-ordem.js"></script>
 </body>
 </html>

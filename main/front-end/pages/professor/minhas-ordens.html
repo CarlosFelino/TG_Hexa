@@ -4,23 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Ordens | Support Nexus</title>
+    
     <link rel="stylesheet" href="../../assets/css/global.css">
-    <link rel="stylesheet" href="../../assets/css/professor.css">
+    <link rel="stylesheet" href="../../assets/css/suporte.css">
+    
     <link rel="stylesheet" href="../../assets/css/minhas-ordens.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon">
+    <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
 </head>
-<body class="professor-dashboard">
 
-    <!-- Navbar Superior -->
-    <header class="professor-navbar">
+<body class="suporte-dashboard"> <header class="suporte-navbar">
         <div class="navbar-content">
-            <button class="menu-toggle" aria-label="Abrir menu">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="menu-toggle"><i class="fas fa-bars"></i></button>
             <a href="painel-professor.html" class="logo-link">
                 <div class="logo-container">
-                    <img src="../../assets/images/logo.png" alt="Support Nexus" class="logo">
+                    <img src="../../assets/images/logo.png" alt="Logo" class="logo">
                     <span class="logo-text">Support Nexus</span>
                 </div>
             </a>
@@ -30,9 +29,9 @@
                     <span class="user-email" id="userEmail"></span>
                 </div>
                 <div class="profile-dropdown">
-                    <img src="../../assets/images/default-avatar.png" alt="Foto do Professor" class="profile-avatar">
+                    <img src="../../assets/images/default-avatar.png" alt="Avatar" class="profile-avatar">
                     <div class="dropdown-content">
-                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Meu Perfil</a>
+                        <a href="perfil-professor.html"><i class="fas fa-user"></i> Perfil</a>
                         <a href="../../index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
                     </div>
                 </div>
@@ -40,36 +39,21 @@
         </div>
     </header>
 
-    <!-- Menu Lateral -->
     <aside class="sidebar">
         <nav class="sidebar-nav">
             <ul>
-                <li>
-                    <a href="criar-ordem.html">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Criar Ordem</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="minhas-ordens.html" class="active">
-                        <i class="fas fa-list-ul"></i>
-                        <span>Minhas Ordens</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="minhas-ordens.html#andamento">
-                        <i class="fas fa-tasks"></i>
-                        <span>Acompanhamento</span>
-                    </a>
-                </li>
+                <li><a href="painel-professor.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="criar-ordem.html"><i class="fas fa-plus-circle"></i> Criar Ordem</a></li>
+                <li><a href="minhas-ordens.html" class="active"><i class="fas fa-list-ul"></i> Minhas Ordens</a></li>
             </ul>
         </nav>
     </aside>
 
-    <!-- Conteúdo Principal -->
-    <main class="professor-content">
+
+    <main class="suporte-content">
         <div class="orders-header">
             <h1><i class="fas fa-clipboard-list"></i> Minhas Ordens de Serviço</h1>
+            
             <div class="filters-container">
                 <div class="filter-group">
                     <button class="filter-btn active" data-status="all"><i class="fas fa-list"></i> Todas</button>
@@ -80,88 +64,36 @@
                 <div class="filter-group">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="search-orders" placeholder="Buscar por sala, equipamento...">
-                    </div>
-                    <div class="date-filter">
-                        <label for="date-from"><i class="fas fa-calendar-alt"></i> De:</label>
-                        <input type="date" id="date-from">
-                        <label for="date-to">Até:</label>
-                        <input type="date" id="date-to">
-                        <button id="apply-dates" class="small-btn"><i class="fas fa-filter"></i></button>
+                        <input type="text" id="search-orders" placeholder="Buscar...">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Resumo Estatístico -->
         <div class="stats-summary">
-            <div class="stat-card">
-                <div class="stat-value" id="totalOrders">0</div>
-                <div class="stat-label">Total</div>
-            </div>
-            <div class="stat-card pending">
-                <div class="stat-value" id="pendingOrders">0</div>
-                <div class="stat-label">Pendentes</div>
-            </div>
-            <div class="stat-card in-progress">
-                <div class="stat-value" id="inProgressOrders">0</div>
-                <div class="stat-label">Em Andamento</div>
-            </div>
-            <div class="stat-card completed">
-                <div class="stat-value" id="completedOrders">0</div>
-                <div class="stat-label">Concluídas</div>
-            </div>
+            <div class="stat-card"><div class="stat-value" id="totalOrders">0</div><div class="stat-label">Total</div></div>
+            <div class="stat-card pending"><div class="stat-value" id="pendingOrders">0</div><div class="stat-label">Pendentes</div></div>
+            <div class="stat-card in-progress"><div class="stat-value" id="inProgressOrders">0</div><div class="stat-label">Andamento</div></div>
+            <div class="stat-card completed"><div class="stat-value" id="completedOrders">0</div><div class="stat-label">Concluídas</div></div>
         </div>
 
-        <!-- Lista de Ordens -->
         <div class="orders-list" id="orders-list">
-            <!-- Cards preenchidos via JavaScript -->
+            <div class="no-orders"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>
         </div>
-
-        <!-- Paginação -->
-        <div class="pagination" id="pagination"></div>
     </main>
 
-    <!-- Modal de Detalhes -->
     <div id="order-details-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>Detalhes da Ordem</h3>
-                <button class="modal-close">&times;</button>
-            </div>
+            <div class="modal-header"><h3>Detalhes</h3><span class="modal-close">&times;</span></div>
             <div class="modal-body" id="modal-order-details"></div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary modal-close-btn">Fechar</button>
-            </div>
         </div>
     </div>
 
-    <!-- Modal de Avaliação -->
-    <div id="feedback-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Avaliar Atendimento</h3>
-          <button class="modal-close">&times;</button>
-        </div>
-        <div class="modal-body feedback-body">
-          <div class="stars-container">
-            <i class="fa fa-star" data-value="1"></i>
-            <i class="fa fa-star" data-value="2"></i>
-            <i class="fa fa-star" data-value="3"></i>
-            <i class="fa fa-star" data-value="4"></i>
-            <i class="fa fa-star" data-value="5"></i>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button id="submit-feedback" class="btn btn-primary">Enviar</button>
-          <button class="btn btn-secondary modal-close-btn">Cancelar</button>
-        </div>
-      </div>
-    </div>
+    <div class="overlay"></div>
 
-
-       <script src="../../assets/js/minhas-ordens.js"></script>
-    <script src="../../assets/js/globalProfile.js"></script>
     <script src="../../assets/js/globalCred.js"></script>
+    <script src="../../assets/js/globalProfile.js"></script>
+    <script src="../../assets/js/suporte.js"></script>
+    <script src="../../assets/js/minhas-ordens.js"></script>
 </body>
 </html>
