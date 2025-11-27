@@ -10,7 +10,7 @@ dayjs.extend(isBetween);
     Função auxiliar: atualizar status, prioridade e alertas
 =========================================================== */
 export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
-    const hoje = dataReferencia; // usa a data simulada se for passada
+    const hoje = dataReferencia;
 
     for (let ordem of ordens) {
         if (!ordem.data_limite) {
@@ -35,7 +35,6 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                 statusAtualizado = true;
             }
 
-            // Calcular dias úteis restantes
             let faltando = 0;
             let temp = hoje.clone();
             while (temp.isBefore(prazo, "day")) {
@@ -43,7 +42,6 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                 if (temp.day() !== 0 && temp.day() !== 6) faltando++;
             }
 
-            // Definir prioridade
             let prioridade = 1;
             if (faltando <= 1) prioridade = 5;
             else if (faltando === 2) prioridade = 4;
@@ -51,7 +49,6 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
             else if (faltando === 4) prioridade = 2;
             ordem.prioridade = prioridade;
 
-            // Atualiza prioridade se mudou
             if (ordem.prioridade !== prioridade || statusAtualizado) {
                 await pool.query(
                     "UPDATE ordens SET prioridade = $1 WHERE id = $2",
@@ -63,7 +60,6 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                                  ordem.status !== "Concluída" &&
                                  ordem.status !== "Não Concluída";
 
-            // Após calcular ordem.alerta_prazo
             if (ordem.alerta_prazo) {
               await pool.query(
                 `INSERT INTO ordens_alertas (ordem_id, tipo_alerta)
@@ -72,7 +68,6 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                 [ordem.id]
               );
             } else {
-              // Se não está mais em alerta, marcar como resolvido
               await pool.query(
                 `UPDATE ordens_alertas
                  SET ativo = false, resolvido_em = NOW()
@@ -188,7 +183,6 @@ export async function criarOrdem(req, res) {
 
 /* ===========================================================
     Listar ordens (professor/suporte)
-    ✅ MODIFICADO: Inclui contagem de anexos
 =========================================================== */
 export async function listarOrdens(req, res) {
     try {
@@ -233,7 +227,6 @@ export async function listarOrdens(req, res) {
 
 /* ===========================================================
     Listar ordens detalhadas (somente suporte/admin)
-    ✅ MODIFICADO: Inclui contagem de anexos
 =========================================================== */
 export async function listarOrdensDetalhadas(req, res) {
     try {
@@ -290,7 +283,7 @@ export async function listarOrdensDetalhadas(req, res) {
 }
 
 /* ===========================================================
-    ✅ NOVA FUNÇÃO: Buscar anexos de uma ordem específica
+    Buscar anexos de uma ordem específica
 =========================================================== */
 export async function buscarAnexosOrdem(req, res) {
     try {
@@ -302,7 +295,6 @@ export async function buscarAnexosOrdem(req, res) {
             return res.status(401).json({ erro: "Usuário não autenticado" });
         }
 
-        // Verificar se o usuário tem permissão (é suporte ou é o criador da ordem)
         const ordemResult = await pool.query(
             "SELECT criador_id FROM ordens WHERE id = $1",
             [ordemId]
@@ -314,12 +306,10 @@ export async function buscarAnexosOrdem(req, res) {
 
         const ordem = ordemResult.rows[0];
 
-        // Permitir acesso se for suporte/admin ou se for o criador
         if (userRole !== "suporte" && userRole !== "admin" && ordem.criador_id !== userId) {
             return res.status(403).json({ erro: "Acesso negado" });
         }
 
-        // Buscar anexos
         const anexosResult = await pool.query(
             `SELECT id, arquivo_nome, arquivo_url, criado_em 
              FROM ordens_anexos 
@@ -331,7 +321,6 @@ export async function buscarAnexosOrdem(req, res) {
         const anexos = anexosResult.rows.map(anexo => ({
             id: anexo.id,
             nome: anexo.arquivo_nome,
-            // Criar URL relativa para o frontend acessar
             url: `/uploads/${ordemId}/${anexo.arquivo_nome}`,
             criado_em: anexo.criado_em
         }));
@@ -344,16 +333,39 @@ export async function buscarAnexosOrdem(req, res) {
 }
 
 /* ===========================================================
-    Listar apenas as ordens do usuário logado
+    ✅ Listar apenas as ordens CRIADAS pelo usuário logado
+    Funciona para professor E suporte
 =========================================================== */
 export async function listarMinhasOrdens(req, res) {
     try {
         const userId = req.user.id;
+        const userRole = req.user.role;
+
+        console.log("=== DEBUG listarMinhasOrdens ===", { userId, userRole });
+
+        // Para TODOS os usuários: buscar ordens criadas por ele
         const result = await pool.query(
-            `SELECT * FROM ordens WHERE criador_id = $1 ORDER BY data_criacao DESC`,
+            `SELECT 
+                o.id, o.codigo, o.data_criacao, o.titulo, o.descricao,
+                o.local_detalhe, o.tipo_solicitacao, o.status, o.avaliacao,
+                o.responsavel_id, o.data_limite,
+                p.equipamento, p.tipo_problema,
+                i.app_nome, i.app_versao, i.app_link,
+                u.nome AS tecnico_nome,
+                (SELECT COUNT(*) FROM ordens_anexos WHERE ordem_id = o.id) as total_anexos
+             FROM ordens o
+             LEFT JOIN ordens_problemas p ON p.ordem_id = o.id
+             LEFT JOIN ordens_instalacoes i ON i.ordem_id = o.id
+             LEFT JOIN users u ON u.id = o.responsavel_id
+             WHERE o.criador_id = $1
+             ORDER BY o.data_criacao DESC`,
             [userId]
         );
-        res.json(result.rows);
+
+        const ordens = result.rows;
+        await atualizarOrdens(ordens);
+
+        res.json(ordens);
     } catch (err) {
         console.error("Erro ao listar minhas ordens:", err);
         res.status(500).json({ erro: "Erro ao listar suas ordens" });
@@ -405,7 +417,6 @@ export async function avaliarOrdem(req, res) {
             return res.status(400).json({ erro: "A avaliação deve ser entre 1 e 5." });
         }
 
-        // verifica se a ordem existe e pertence ao usuário
         const result = await pool.query(
             "SELECT criador_id, status FROM ordens WHERE id = $1",
             [ordemId]

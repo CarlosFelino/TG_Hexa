@@ -2,12 +2,14 @@ import { Router } from "express";
 import {
   criarOrdem,
   listarOrdens,
+  listarMinhasOrdens,
   concluirOrdem,
   listarOrdensDetalhadas,
   avaliarOrdem,
   assumirOrdem,
   listarAlertasOrdensPendentes,
-  buscarAnexosOrdem  // ← ADICIONE ESTA IMPORTAÇÃO
+  buscarAnexosOrdem
+  // ❌ Removido: listarMinhasOrdensSuporte (não é mais necessário)
 } from "../controllers/ordemController.js";
 import { autenticarJWT } from "../middlewares/authMiddleware.js";
 import { upload } from "../utils/upload.js";
@@ -21,20 +23,21 @@ const router = Router();
 // Criar nova ordem (com suporte a anexos)
 router.post("/ordens", autenticarJWT, upload.array("anexos", 3), criarOrdem);
 
-// Listar todas as ordens (para suporte ou professor, dependendo do tipo)
+// Listar todas as ordens (para suporte) ou filtradas por criador (para professor)
 router.get("/ordens", autenticarJWT, listarOrdens);
 
-// Listar apenas as ordens do usuário logado (professor)
-router.get("/minhas-ordens", autenticarJWT, listarOrdens);
+// ✅ Listar apenas as ordens CRIADAS pelo usuário logado
+// Funciona tanto para professor quanto para suporte
+router.get("/minhas-ordens", autenticarJWT, listarMinhasOrdens);
 
-// Nova rota detalhada (usada pela tela de listagem)
+// Nova rota detalhada (usada pela tela de listagem do suporte)
 router.get("/ordens-detalhadas", autenticarJWT, listarOrdensDetalhadas);
 
 /* ===========================================================
    Ações sobre ordens existentes
 =========================================================== */
 
-// Buscar anexos de uma ordem específica ← NOVA ROTA
+// Buscar anexos de uma ordem específica
 router.get("/ordens/:ordemId/anexos", autenticarJWT, buscarAnexosOrdem);
 
 // Concluir uma ordem
