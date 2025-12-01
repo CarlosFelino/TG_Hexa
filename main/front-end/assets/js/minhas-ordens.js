@@ -1,4 +1,7 @@
+// minhas-ordens.js - com sistema de modais padronizado
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 Minhas Ordens - Inicializando...');
+
     // =========================
     // Elementos do DOM
     // =========================
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedRating = 0;
 
     // =========================
-    // Sistema de Notificação - CORRIGIDO
+    // Sistema de Notificação - PADRONIZADO
     // =========================
 
     function showCustomConfirm(message) {
@@ -61,14 +64,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const cancelBtn = document.getElementById('confirm-cancel');
             const okBtn = document.getElementById('confirm-ok');
 
+            if (!modal || !messageEl || !cancelBtn || !okBtn) {
+                console.error('❌ Elementos do modal de confirmação não encontrados');
+                resolve(false);
+                return;
+            }
+
             messageEl.textContent = message;
             modal.classList.remove('hidden');
+            modal.classList.add('active');
 
             const cleanup = () => {
+                modal.classList.remove('active');
                 modal.classList.add('hidden');
                 cancelBtn.removeEventListener('click', onCancel);
                 okBtn.removeEventListener('click', onOk);
-                document.removeEventListener('keydown', handleEscKey);
+
+                // Remover listener do ESC
+                document.removeEventListener('keydown', escHandler);
             };
 
             const onCancel = () => {
@@ -81,22 +94,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 resolve(true);
             };
 
-            const handleEscKey = (e) => {
-                if (e.key === 'Escape') {
-                    onCancel();
-                }
+            const escHandler = (e) => {
+                if (e.key === 'Escape') onCancel();
             };
 
             cancelBtn.addEventListener('click', onCancel);
             okBtn.addEventListener('click', onOk);
-            document.addEventListener('keydown', handleEscKey);
 
-            // Fechar ao clicar fora
+            // Fechar clicando fora do modal
             modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    onCancel();
-                }
+                if (e.target === modal) onCancel();
             });
+
+            // Fechar com ESC
+            document.addEventListener('keydown', escHandler);
         });
     }
 
@@ -105,31 +116,43 @@ document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('notification-modal');
             const messageEl = document.getElementById('notification-message');
             const header = modal.querySelector('.modal-header h3');
-            const closeBtns = modal.querySelectorAll('.modal-close, .modal-close-btn');
+
+            if (!modal || !messageEl || !header) {
+                console.error('❌ Elementos do modal de notificação não encontrados');
+                resolve();
+                return;
+            }
 
             messageEl.textContent = message;
 
-            // Configurar estilo baseado no tipo
+            // Configurar cores baseadas no tipo
             if (type === 'success') {
                 header.innerHTML = '<i class="fas fa-check-circle"></i> Sucesso';
                 modal.querySelector('.modal-header').style.background = '#d4edda';
                 header.style.color = '#155724';
-                modal.querySelector('.modal-content').classList.remove('error');
+                modal.classList.remove('error');
             } else if (type === 'error') {
                 header.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro';
                 modal.querySelector('.modal-header').style.background = '#f8d7da';
                 header.style.color = '#721c24';
-                modal.querySelector('.modal-content').classList.add('error');
+                modal.classList.add('error');
             }
 
+            // Mostrar modal
             modal.classList.remove('hidden');
+            modal.classList.add('active');
 
             const cleanup = () => {
+                modal.classList.remove('active');
                 modal.classList.add('hidden');
-                closeBtns.forEach(btn => {
+
+                // Remover event listeners
+                modal.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
                     btn.removeEventListener('click', onClose);
                 });
-                document.removeEventListener('keydown', handleEscKey);
+
+                // Remover listener do ESC
+                document.removeEventListener('keydown', escHandler);
             };
 
             const onClose = () => {
@@ -137,59 +160,123 @@ document.addEventListener('DOMContentLoaded', function() {
                 resolve();
             };
 
-            const handleEscKey = (e) => {
-                if (e.key === 'Escape') {
-                    onClose();
-                }
+            const escHandler = (e) => {
+                if (e.key === 'Escape') onClose();
             };
 
-            closeBtns.forEach(btn => {
+            // Configurar eventos de fechamento
+            modal.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
                 btn.addEventListener('click', onClose);
             });
 
-            document.addEventListener('keydown', handleEscKey);
+            // Fechar clicando fora do modal
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) onClose();
+            });
 
-            // Fechar automaticamente após 3 segundos para sucesso
+            // Fechar com ESC
+            document.addEventListener('keydown', escHandler);
+
+            // Auto-fechar após 3 segundos apenas para sucesso
             if (type === 'success') {
                 setTimeout(onClose, 3000);
             }
-
-            // Fechar ao clicar fora
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    onClose();
-                }
-            });
         });
     }
 
     // =========================
-    // Sistema de Modais - CORRIGIDO
+    // Sistema de Modais - PADRONIZADO
     // =========================
 
     function openModal(modalId) {
+        console.log(`🔓 Abrindo modal: ${modalId}`);
         const modal = document.getElementById(modalId);
         if (modal) {
+            // Remover display: none se existir
+            modal.style.display = '';
             modal.classList.remove('hidden');
-            // Remover a classe 'active' para evitar conflito
-            modal.classList.remove('active');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            console.log(`✅ Modal ${modalId} aberto com sucesso`);
+        } else {
+            console.error(`❌ Modal não encontrado: ${modalId}`);
         }
     }
 
     function closeModal(modalId) {
+        console.log(`🔒 Fechando modal: ${modalId}`);
         const modal = document.getElementById(modalId);
         if (modal) {
-            modal.classList.add('hidden');
             modal.classList.remove('active');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+
+            console.log(`✅ Modal ${modalId} fechado com sucesso`);
         }
     }
 
     function closeAllModals() {
-        // Fechar todos os modais que usam classe 'hidden'
+        console.log('🔒 Fechando todos os modais');
         document.querySelectorAll('.modal').forEach(modal => {
-            modal.classList.add('hidden');
             modal.classList.remove('active');
+            modal.classList.add('hidden');
         });
+        document.body.style.overflow = '';
+    }
+
+    // =========================
+    // Configurar eventos de fechamento para todos os modais
+    // =========================
+    function setupModalCloseListeners() {
+        console.log('🔧 Configurando listeners de fechamento de modais...');
+
+        // Delegar eventos para fechar modais
+        document.addEventListener('click', function(e) {
+            // Botão X (modal-close)
+            if (e.target.classList.contains('modal-close') || 
+                e.target.closest('.modal-close')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    closeModal(modal.id);
+                }
+            }
+
+            // Botão "Cancelar" ou "Fechar" (modal-close-btn)
+            if (e.target.classList.contains('modal-close-btn') || 
+                e.target.closest('.modal-close-btn')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    closeModal(modal.id);
+                }
+            }
+
+            // Botão "Cancelar" específico do feedback
+            if (e.target.id === 'cancel-feedback' || 
+                e.target.closest('#cancel-feedback')) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeModal('feedback-modal');
+            }
+
+            // Clicar fora do modal
+            if (e.target.classList.contains('modal')) {
+                closeModal(e.target.id);
+            }
+        });
+
+        // Fechar com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAllModals();
+            }
+        });
+
+        console.log('✅ Listeners de fechamento configurados');
     }
 
     // =========================
@@ -252,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 technician: o.tecnico_nome || "Não atribuído",
                 evaluation: o.avaliacao ?? null,
                 total_anexos: o.total_anexos || 0,
-                solicitante: o.solicitante_nome || "Desconhecido"
             }));
 
             console.log("✅ Ordens carregadas:", ordersData.length);
@@ -267,6 +353,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <small>Detalhe: ${err.message}</small>
                 </td></tr>
             `;
+            // Usar a nova função de notificação
+            await showNotification(`Erro ao carregar ordens: ${err.message}`, 'error');
         }
     }
 
@@ -291,19 +379,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicialização
     // =========================
     async function init() {
+        console.log('🚀 Inicializando Minhas Ordens...');
+
         loadUserProfile(); 
         await fetchUserOrders();
-        setupEventListeners();
+        setupGlobalEventListeners();
+        setupModalCloseListeners();
         setupFeedbackModal();
-        setupModalEvents();
+
+        console.log('✅ Minhas Ordens inicializado com sucesso!');
     }
 
     init();
 
     // =========================
-    // Configurar event listeners - CORRIGIDO
+    // Configurar event listeners GLOBAIS
     // =========================
-    function setupEventListeners() {
+    function setupGlobalEventListeners() {
+        console.log('🔧 Configurando event listeners...');
+
         // Filtros
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -324,37 +418,37 @@ document.addEventListener('DOMContentLoaded', function() {
             activeFilters.dateTo = dateToInput.value;
             applyFilters();
         });
-    }
 
-    // =========================
-    // Configurar eventos dos modais - NOVO
-    // =========================
-    function setupModalEvents() {
-        // Fechar modais ao clicar no X ou botão fechar
-        document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const modal = this.closest('.modal');
-                if (modal) {
-                    closeModal(modal.id);
-                }
-            });
-        });
+        // DELEGAÇÃO DE EVENTOS PARA BOTÕES DA TABELA
+        document.addEventListener('click', function(e) {
+            // Botão Ver Detalhes
+            if (e.target.classList.contains('btn-view') || 
+                e.target.closest('.btn-view')) {
+                e.preventDefault();
+                e.stopPropagation();
 
-        // Fechar modais ao clicar fora
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeModal(this.id);
-                }
-            });
-        });
+                const btn = e.target.classList.contains('btn-view') ? e.target : e.target.closest('.btn-view');
+                const orderId = btn.dataset.orderId;
+                console.log('📋 Abrindo detalhes da ordem:', orderId);
+                showOrderDetails(orderId);
+            }
 
-        // Fechar com ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeAllModals();
+            // Botão Avaliar
+            if (e.target.classList.contains('btn-feedback') || 
+                e.target.closest('.btn-feedback')) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const btn = e.target.classList.contains('btn-feedback') ? e.target : e.target.closest('.btn-feedback');
+                currentOrderId = btn.dataset.orderId;
+                selectedRating = 0;
+                resetStars();
+                console.log('⭐ Botão Avaliar clicado - Order ID:', currentOrderId);
+                openModal('feedback-modal');
             }
         });
+
+        console.log('✅ Event listeners configurados');
     }
 
     // =========================
@@ -436,41 +530,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${order.type}</td>
                 <td>${order.room}</td>
                 <td><span class="status ${statusClass}">${order.status}</span></td>
-                <td>${order.solicitante}</td>
                 <td class="actions">${actionsHTML}</td>
             `;
 
             ordersBody.appendChild(tr);
-        });
-
-        // Adicionar event listeners aos botões
-        setupTableButtons();
-    }
-
-    // =========================
-    // Configurar botões da tabela - CORRIGIDO
-    // =========================
-    function setupTableButtons() {
-        // Botão Detalhes
-        document.querySelectorAll('.btn-view').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const orderId = this.dataset.orderId;
-                console.log('Abrindo detalhes da ordem:', orderId);
-                showOrderDetails(orderId);
-            });
-        });
-
-        // Botão Avaliar
-        document.querySelectorAll('.btn-feedback').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                currentOrderId = this.dataset.orderId;
-                selectedRating = 0;
-                resetStars();
-                console.log('🎯 Botão Avaliar clicado - Order ID:', currentOrderId);
-                openFeedbackModal();
-            });
         });
     }
 
@@ -500,7 +563,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
-    // Mostrar detalhes no modal - CORRIGIDO
+    // Mostrar detalhes no modal
     // =========================
     async function showOrderDetails(orderId) {
         console.log('🔍 Buscando detalhes da ordem:', orderId);
@@ -508,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const order = ordersData.find(o => o.id == orderId);
         if (!order) {
             console.error('❌ Ordem não encontrada:', orderId);
-            showNotification('Ordem não encontrada!', 'error');
+            await showNotification('Ordem não encontrada!', 'error');
             return;
         }
 
@@ -628,48 +691,122 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Montar o conteúdo do modal
         const modalContent = `
-            <table class="details-table">
-                <tr>
-                    <td class="detail-label"><i class="fas fa-hashtag"></i> Número</td>
-                    <td class="detail-value"><strong>#${order.codigo || order.id}</strong></td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-user"></i> Solicitante</td>
-                    <td class="detail-value">${order.solicitante || 'Não informado'}</td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-calendar"></i> Data</td>
-                    <td class="detail-value">${formattedDate}</td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-info-circle"></i> Status</td>
-                    <td class="detail-value">
-                        <span class="status-badge ${statusClass}">${statusText}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-map-marker-alt"></i> Local</td>
-                    <td class="detail-value">${order.room || 'Não informado'}</td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-desktop"></i> Equipamento</td>
-                    <td class="detail-value">${order.equipment || 'N/A'}</td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-tag"></i> Tipo</td>
-                    <td class="detail-value">${order.type || 'Não especificado'}</td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-user-cog"></i> Técnico</td>
-                    <td class="detail-value">${order.technician}</td>
-                </tr>
-                <tr>
-                    <td class="detail-label"><i class="fas fa-file-alt"></i> Descrição</td>
-                    <td class="detail-value" style="max-width: 300px;">${order.description}</td>
-                </tr>
-                ${anexosHTML}
-                ${evaluationHTML}
-            </table>
+            <div class="details-container">
+                <!-- Coluna 1: Informações Básicas -->
+                <div class="details-section">
+                    <h4><i class="fas fa-info-circle"></i> Informações da Ordem</h4>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label"><i class="fas fa-hashtag"></i> Número</div>
+                            <div class="detail-value"><strong>#${order.codigo || order.id}</strong></div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label"><i class="fas fa-calendar"></i> Data</div>
+                            <div class="detail-value">${formattedDate}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label"><i class="fas fa-info-circle"></i> Status</div>
+                            <div class="detail-value">
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna 2: Local e Equipamento -->
+                <div class="details-section">
+                    <h4><i class="fas fa-map-marker-alt"></i> Localização</h4>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label"><i class="fas fa-map-marker-alt"></i> Local</div>
+                            <div class="detail-value">${order.room || 'Não informado'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label"><i class="fas fa-desktop"></i> Equipamento</div>
+                            <div class="detail-value">${order.equipment || 'N/A'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label"><i class="fas fa-tag"></i> Tipo</div>
+                            <div class="detail-value">${order.type || 'Não especificado'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label"><i class="fas fa-user-cog"></i> Técnico</div>
+                            <div class="detail-value">${order.technician}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Descrição (largura total) -->
+                <div class="details-section full-width">
+                    <h4><i class="fas fa-file-alt"></i> Descrição</h4>
+                    <div class="detail-item">
+                        <div class="detail-value" style="line-height: 1.6; padding: 1rem; background: #f8fafc; border-radius: 6px;">
+                            ${order.description || 'Sem descrição'}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Avaliação -->
+                <div class="details-section">
+                    <h4><i class="fas fa-star"></i> Avaliação</h4>
+                    <div class="detail-item">
+                        ${order.evaluation !== null ? `
+                            <div class="rating-display">
+                                ${Array.from({length: 5}, (_, i) => 
+                                    `<i class="fas fa-star ${i < order.evaluation ? 'filled' : ''}"></i>`
+                                ).join('')}
+                                <span>(${order.evaluation}/5)</span>
+                            </div>
+                        ` : `
+                            <div class="detail-value" style="color: #9ca3af;">
+                                <i class="fas fa-clock"></i> Aguardando avaliação
+                            </div>
+                        `}
+                    </div>
+                </div>
+
+                <!-- Anexos -->
+                ${anexosHTML ? `
+                <div class="details-section full-width">
+                    <h4><i class="fas fa-paperclip"></i> Anexos</h4>
+                    <div class="anexos-list">
+                        ${anexos.map(anexo => {
+                            const isImage = /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(anexo.nome);
+                            const fullUrl = `${API_URL}${anexo.url}`;
+
+                            if (isImage) {
+                                return `
+                                    <div class="anexo-item">
+                                        <img src="${fullUrl}" 
+                                             alt="${anexo.nome}" 
+                                             class="anexo-thumbnail"
+                                             onclick="window.open('${fullUrl}', '_blank')" />
+                                        <a href="${fullUrl}" 
+                                           target="_blank" 
+                                           class="anexo-link"
+                                           download="${anexo.nome}">
+                                            <i class="fas fa-download"></i> ${anexo.nome}
+                                        </a>
+                                    </div>
+                                `;
+                            } else {
+                                return `
+                                    <div class="anexo-item">
+                                        <i class="fas fa-file fa-2x" style="color: #7c05eb; margin-right: 10px;"></i>
+                                        <a href="${fullUrl}" 
+                                           target="_blank" 
+                                           class="anexo-link"
+                                           download="${anexo.nome}">
+                                            <i class="fas fa-download"></i> ${anexo.nome}
+                                        </a>
+                                    </div>
+                                `;
+                            }
+                        }).join('')}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
         `;
 
         // Atualizar o modal
@@ -680,30 +817,39 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ Modal de detalhes aberto com sucesso');
         } else {
             console.error('❌ Elemento modal-order-details não encontrado');
+            await showNotification('Erro ao abrir detalhes da ordem', 'error');
         }
     }
 
     // =========================
-    // Modal de Avaliação - CORRIGIDO
+    // Modal de Avaliação
     // =========================
-    function openFeedbackModal() {
-        openModal('feedback-modal');
-        console.log('✅ Modal de avaliação aberto para ordem:', currentOrderId);
-    }
-
     function resetStars() {
         const stars = document.querySelectorAll('#feedback-modal .fa-star');
         stars.forEach(star => {
             star.classList.remove('selected', 'hovered');
         });
         selectedRating = 0;
+        console.log('✨ Estrelas resetadas');
     }
 
     function setupFeedbackModal() {
+        console.log('🔧 Configurando modal de feedback...');
+
         const feedbackModal = document.getElementById('feedback-modal');
+        if (!feedbackModal) {
+            console.error('❌ Modal de feedback não encontrado!');
+            return;
+        }
+
         const stars = feedbackModal.querySelectorAll('.fa-star');
         const submitFeedbackBtn = document.getElementById('submit-feedback');
         const cancelFeedbackBtn = document.getElementById('cancel-feedback');
+
+        if (!submitFeedbackBtn) {
+            console.error('❌ Botão submit-feedback não encontrado!');
+            return;
+        }
 
         // Eventos das estrelas
         stars.forEach(star => {
@@ -727,14 +873,32 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Enviar avaliação - CORRIGIDO
+        // Enviar avaliação
         submitFeedbackBtn.addEventListener('click', async () => {
+            console.log('📤 Enviando avaliação...');
+
             if (!selectedRating) {
+                console.log('⚠️ Nenhuma nota selecionada');
                 await showNotification('Por favor, selecione uma nota antes de enviar.', 'error');
                 return;
             }
 
+            if (!currentOrderId) {
+                console.error('❌ ID da ordem não definido!');
+                await showNotification('Erro: ID da ordem não encontrado.', 'error');
+                return;
+            }
+
+            // Usar confirmação personalizada (igual ao listar-ordens)
+            const confirmed = await showCustomConfirm(`Deseja realmente enviar a avaliação de ${selectedRating} estrelas?`);
+            if (!confirmed) {
+                console.log('❌ Avaliação cancelada pelo usuário');
+                return;
+            }
+
             try {
+                console.log(`📡 Enviando avaliação ${selectedRating} para ordem ${currentOrderId}`);
+
                 const res = await fetch(`${API_URL}/api/ordens/${currentOrderId}/avaliar`, {
                     method: 'POST',
                     headers: {
@@ -744,27 +908,38 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({ avaliacao: selectedRating })
                 });
 
-                const data = await res.json();
+                console.log(`📡 Resposta recebida: ${res.status} ${res.statusText}`);
 
-                if (!res.ok) throw new Error(data.erro || 'Erro ao enviar avaliação.');
+                if (!res.ok) {
+                    let errorMessage = 'Erro ao enviar avaliação.';
+                    try {
+                        const errorData = await res.json();
+                        errorMessage = errorData.erro || errorMessage;
+                    } catch (e) {
+                        errorMessage = `Erro HTTP: ${res.status} ${res.statusText}`;
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                const data = await res.json();
+                console.log('✅ Avaliação enviada com sucesso:', data);
 
                 // Fechar modal de avaliação
                 closeModal('feedback-modal');
 
-                // Mostrar notificação no padrão do sistema
+                // Mostrar notificação de sucesso (nova função)
                 await showNotification('Avaliação enviada com sucesso!', 'success');
 
                 // Recarregar ordens para atualizar a interface
+                console.log('🔄 Recarregando ordens...');
                 await fetchUserOrders();
 
             } catch (err) {
+                console.error('❌ Erro ao enviar avaliação:', err.message);
                 await showNotification(`Erro ao enviar avaliação: ${err.message}`, 'error');
             }
         });
 
-        // Cancelar avaliação
-        cancelFeedbackBtn.addEventListener('click', () => {
-            closeModal('feedback-modal');
-        });
+        console.log('✅ Modal de feedback configurado');
     }
 });

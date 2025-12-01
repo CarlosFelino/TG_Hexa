@@ -398,50 +398,327 @@
 .modal-close:hover { color: var(--text-dark); }
 
 /* =======================
-   Alertas Flutuantes (Manter funcionalidade)
+   ALERTAS FLUTUANTES - Estilo Minimalista (CORRIGIDO)
    ======================= */
 .alert-popup {
     position: fixed; 
     top: 100px; 
     right: 20px; 
-    width: 350px;
+    width: 320px;
     background: white; 
     border-radius: 12px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    padding: 1.5rem; 
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 1.2rem; 
     z-index: 1500; 
-    border-left: 5px solid;
+    border-left: 4px solid;
     transform: translateX(120%); 
     transition: transform 0.4s ease;
+    font-size: 0.9rem;
 }
 
-.alert-popup.active { transform: translateX(0); }
-.alert-popup.warning { border-left-color: #FF9800; }
-.alert-popup.error { border-left-color: #F44336; }
+.alert-popup.active { 
+    transform: translateX(0); 
+}
 
+.alert-popup.warning { 
+    border-left-color: #FF9800; 
+    background: linear-gradient(to right, rgba(255, 152, 0, 0.03), white);
+}
+
+.alert-popup.error { 
+    border-left-color: #F44336; 
+    background: linear-gradient(to right, rgba(244, 67, 54, 0.03), white);
+}
+
+/* Cabeçalho minimalista */
 .alert-header { 
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    margin-bottom: 1rem; 
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #f0f0f0;
 }
+
 .alert-title { 
-    font-weight: 700; 
-    font-size: 1rem; 
+    font-weight: 600; 
+    font-size: 0.95rem; 
     display: flex; 
     align-items: center; 
     gap: 8px; 
+    color: var(--text-dark);
 }
+
+.alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.alert-popup.warning .alert-icon {
+    background: rgba(255, 152, 0, 0.1);
+    color: #FF9800;
+}
+
+.alert-popup.error .alert-icon {
+    background: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+}
+
 .close-btn { 
     background: none; 
     border: none; 
     font-size: 1.2rem; 
     cursor: pointer; 
-    color: #999; 
+    color: #999;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover { 
+    color: var(--text-dark);
+    background: #f5f5f5;
 }
 
 .alert-popup.hidden {
     display: none;
+}
+
+/* Corpo do alerta minimalista */
+.alert-body {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Item de alerta minimalista - CORRIGIDO */
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border: 1px solid #f0f0f0;
+    transition: all 0.2s;
+}
+
+.alert-item:hover {
+    background: #f0f2f5;
+    border-color: #e1e5eb;
+}
+
+.alert-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    margin-right: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.alert-popup.warning .alert-icon-wrap {
+    background: rgba(255, 152, 0, 0.1);
+    color: #FF9800;
+}
+
+.alert-popup.error .alert-icon-wrap {
+    background: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+}
+
+.alert-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.alert-content strong {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.alert-content p {
+    font-size: 0.8rem;
+    color: var(--text-medium);
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.alert-content small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.alert-content small i {
+    font-size: 0.7rem;
+}
+
+/* Badge de prioridade minimalista - CORRIGIDO */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-top: 0.2rem;
+}
+
+.priority-0 .badge { /* Muito baixa (não usado) */
+    background: rgba(158, 158, 158, 0.15) !important;
+    color: #616161 !important;
+    border: 1px solid rgba(158, 158, 158, 0.3) !important;
+}
+
+.priority-1 .badge { /* Baixa */
+    background: rgba(76, 175, 80, 0.15) !important;
+    color: #2e7d32 !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+.priority-2 .badge { /* Média */
+    background: rgba(255, 152, 0, 0.15) !important;
+    color: #e68900 !important;
+    border: 1px solid rgba(255, 152, 0, 0.3) !important;
+}
+
+.priority-3 .badge { /* Alta */
+    background: rgba(255, 87, 34, 0.15) !important;
+    color: #d84315 !important;
+    border: 1px solid rgba(255, 87, 34, 0.3) !important;
+}
+
+.priority-4 .badge { /* VENCIDO - NOVA COR */
+    background: rgba(244, 67, 54, 0.2) !important;
+    color: #c62828 !important;
+    border: 1px solid rgba(244, 67, 54, 0.4) !important;
+    font-weight: 700;
+    animation: pulse-vencido 2s infinite;
+}
+
+@keyframes pulse-vencido {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* CORREÇÃO: Indicadores de prioridade atualizados */
+.priority-0 .priority-indicator {
+    background: #9E9E9E !important;
+    box-shadow: 0 0 0 2px rgba(158, 158, 158, 0.2) !important;
+}
+
+.priority-1 .priority-indicator {
+    background: #4CAF50 !important;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+}
+
+.priority-2 .priority-indicator {
+    background: #FF9800 !important;
+    box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2) !important;
+}
+
+.priority-3 .priority-indicator {
+    background: #FF5722 !important; /* Laranja mais forte */
+    box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2) !important;
+}
+
+.priority-4 .priority-indicator { /* VENCIDO - VERMELHO PISCANTE */
+    background: #F44336 !important;
+    box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.3) !important;
+    animation: blink-vencido 1.5s infinite;
+}
+
+@keyframes blink-vencido {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Estilo especial para itens vencidos */
+.priority-4.alert-item {
+    border-left: 3px solid #F44336 !important;
+    background: linear-gradient(to right, rgba(244, 67, 54, 0.05), #f8f9fa) !important;
+    border-color: rgba(244, 67, 54, 0.3) !important;
+}
+
+.priority-4 .alert-icon-wrap {
+    background: rgba(244, 67, 54, 0.15) !important;
+    color: #F44336 !important;
+    animation: shake-vencido 2s infinite;
+}
+
+@keyframes shake-vencido {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
+    20%, 40%, 60%, 80% { transform: translateX(1px); }
+}
+
+/* Destacar texto de vencido */
+.priority-4 small {
+    color: #c62828 !important;
+    font-weight: 600;
+}
+
+/* CORREÇÃO: Garantir que os indicadores funcionem para todas as classes */
+.priority-1 .priority-indicator {
+    background: #4CAF50 !important;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+}
+
+.priority-2 .priority-indicator {
+    background: #FF9800 !important;
+    box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2) !important;
+}
+
+.priority-3 .priority-indicator {
+    background: #F44336 !important;
+    box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2) !important;
+}
+
+/* Estilo para quando não há alertas */
+.alert-empty {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-light);
+}
+
+.alert-empty i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #d1d5db;
+}
+
+.alert-empty p {
+    font-size: 0.85rem;
+    margin: 0;
 }
 
 /* =======================
@@ -486,5 +763,26 @@
         width: 90%;
         right: 5%;
         top: 80px;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .alert-popup {
+        width: calc(100% - 20px);
+        right: 10px;
+        left: 10px;
+        padding: 1rem;
+    }
+
+    .alert-item {
+        padding: 0.6rem;
+    }
+
+    .alert-icon-wrap {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
     }
 }

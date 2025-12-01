@@ -11,9 +11,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Variáveis globais
     // ============================
     let ordemEncerrando = null;
-    let currentAction = null;
-    let currentOrderId = null;
     let allOrders = [];
+
+    // ============================
+    // FUNÇÃO DE ORDENAÇÃO UNIVERSAL
+    // ============================
+    function ordenarPorDataDecrescente(orders) {
+        return [...orders].sort((a, b) => {
+            const timeA = new Date(a.data_criacao).getTime();
+            const timeB = new Date(b.data_criacao).getTime();
+            return timeB - timeA; // Mais recente primeiro
+        });
+    }
 
     // ============================
     // Sistema de Confirmação Personalizado
@@ -49,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             cancelBtn.addEventListener('click', onCancel);
             okBtn.addEventListener('click', onOk);
 
-            // Fechar modal ao clicar fora ou no X
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) onCancel();
             });
@@ -65,11 +73,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const modal = document.getElementById('notification-modal');
             const messageEl = document.getElementById('notification-message');
             const header = modal.querySelector('.modal-header h3');
-            const icon = header.querySelector('i');
 
             messageEl.textContent = message;
 
-            // Configurar estilo baseado no tipo
             if (type === 'success') {
                 header.innerHTML = '<i class="fas fa-check-circle"></i> Sucesso';
                 modal.querySelector('.modal-header').style.background = '#d4edda';
@@ -100,7 +106,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 btn.addEventListener('click', onClose);
             });
 
-            // Fechar automaticamente após 3 segundos
             setTimeout(onClose, 3000);
         });
     }
@@ -117,7 +122,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
             const data = await res.json();
 
-            return Array.isArray(data) ? data : (data.ordens || []);
+            let orders = Array.isArray(data) ? data : (data.ordens || []);
+
+            // ✅ ORDENAR IMEDIATAMENTE
+            orders = ordenarPorDataDecrescente(orders);
+
+            console.log("📋 Ordens carregadas e ordenadas (5 primeiras):");
+            orders.slice(0, 5).forEach((o, i) => {
+                console.log(`${i + 1}. ${o.codigo} - ${new Date(o.data_criacao).toLocaleString('pt-BR')}`);
+            });
+
+            return orders;
         } catch (err) {
             console.error("Erro ao buscar ordens:", err);
             await showNotification("Erro ao carregar ordens", "error");
@@ -139,8 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return [];
             }
 
-            const anexos = await res.json();
-            return anexos;
+            return await res.json();
         } catch (err) {
             console.error("Erro ao buscar anexos:", err);
             return [];
@@ -200,14 +214,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const statusFilter = document.getElementById("filter-status").value;
         const typeFilter = document.getElementById("filter-type").value;
 
-        const filtered = allOrders.filter(order => {
-            // Filtro de busca por nome (título, código, responsável)
+        let filtered = allOrders.filter(order => {
             const matchesSearch = !searchTerm || 
                 (order.titulo && order.titulo.toLowerCase().includes(searchTerm)) ||
                 (order.codigo && order.codigo.toLowerCase().includes(searchTerm)) ||
                 (order.responsavel_nome && order.responsavel_nome.toLowerCase().includes(searchTerm));
 
-            // Filtro de status
             const statusMap = {
                 'pending': 'Pendente',
                 'in-progress': 'Em Andamento',
@@ -215,27 +227,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 'not-completed': 'Não Concluída'
             };
             const matchesStatus = !statusFilter || order.status === statusMap[statusFilter];
-
-            // Filtro de tipo
             const matchesType = !typeFilter || order.tipo_solicitacao === typeFilter;
 
             return matchesSearch && matchesStatus && matchesType;
         });
 
+        // ✅ ORDENAR SEMPRE APÓS FILTRAR
+        filtered = ordenarPorDataDecrescente(filtered);
+
         renderTable(filtered);
     }
-
-    // Event listeners para filtros
-    document.getElementById("search-orders").addEventListener("input", applyFilters);
-    document.getElementById("filter-status").addEventListener("change", applyFilters);
-    document.getElementById("filter-type").addEventListener("change", applyFilters);
-
-    document.getElementById("reset-filters").addEventListener("click", () => {
-        document.getElementById("search-orders").value = "";
-        document.getElementById("filter-status").value = "";
-        document.getElementById("filter-type").value = "";
-        applyFilters();
-    });
 
     // ============================
     // Renderização da tabela
@@ -260,31 +261,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             const dataCriacao = new Date(order.data_criacao).toLocaleDateString("pt-BR");
             const titulo = order.titulo || "(sem título)";
 
-            // Lógica de botões
             let actionsHTML = `<button class="view-btn" data-action="view" data-id="${order.id}">
                 <i class="fas fa-eye"></i> Detalhes
             </button>`;
 
-            // Só mostra "Assumir" se não tiver responsável E status for Pendente
             if (!order.responsavel_nome && order.status === "Pendente") {
                 actionsHTML += `<button class="btn-assumir" data-action="assumir" data-id="${order.id}">
                     <i class="fas fa-hand"></i> Assumir
                 </button>`;
-            } 
-            // Se é minha ordem E está em andamento, posso finalizar
-            else if (isMinha && order.status === "Em Andamento") {
+            } else if (isMinha && order.status === "Em Andamento") {
                 actionsHTML += `<button class="btn-encerrar" data-action="encerrar" data-id="${order.id}">
                     <i class="fas fa-check"></i> Finalizar
                 </button>`;
-            }
-            // Ordem de outro técnico
-            else if (!isMinha && order.responsavel_nome) {
+            } else if (!isMinha && order.responsavel_nome) {
                 actionsHTML += `<span class="disabled">
                     <i class="fas fa-user-lock"></i> Outro técnico
                 </span>`;
-            }
-            // Ordem concluída ou não concluída
-            else if (order.status === "Concluída" || order.status === "Não Concluída") {
+            } else if (order.status === "Concluída" || order.status === "Não Concluída") {
                 actionsHTML += `<span class="disabled">
                     <i class="fas fa-ban"></i> ${order.status}
                 </span>`;
@@ -311,7 +304,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const modal = document.getElementById("order-details-modal");
         const body = document.getElementById("modal-order-details");
 
-        // Buscar anexos
         const anexos = await buscarAnexosOrdem(order.id);
         let anexosHTML = '';
 
@@ -379,10 +371,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const id = btn.dataset.id;
         const action = btn.dataset.action;
 
-        const orders = await fetchOrders();
-        const order = orders.find(o => o.id == id);
+        // ✅ CORREÇÃO: Buscar da lista local ao invés de fazer nova requisição
+        const order = allOrders.find(o => o.id == id);
 
-        if (!order) return;
+        if (!order) {
+            console.error(`Ordem ${id} não encontrada em allOrders`);
+            return;
+        }
 
         if (action === "assumir") {
             await assumirOrdem(id);
@@ -418,7 +413,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.addEventListener("click", async (e) => {
         const target = e.target;
 
-        // Cancelar encerramento
         if (target.id === "cancelar-encerrar") {
             document.getElementById("popup-encerrar").classList.remove("active");
             document.getElementById("popup-encerrar").classList.add("hidden");
@@ -426,7 +420,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             ordemEncerrando = null;
         }
 
-        // Confirmar encerramento
         if (target.id === "confirmar-encerrar" && ordemEncerrando) {
             const texto = document.getElementById("solucao-texto").value.trim();
             if (!texto) {
@@ -446,6 +439,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 await showNotification("Falha ao encerrar ordem: " + err.message, "error");
             }
         }
+    });
+
+    // Event listeners para filtros
+    document.getElementById("search-orders").addEventListener("input", applyFilters);
+    document.getElementById("filter-status").addEventListener("change", applyFilters);
+    document.getElementById("filter-type").addEventListener("change", applyFilters);
+
+    document.getElementById("reset-filters").addEventListener("click", () => {
+        document.getElementById("search-orders").value = "";
+        document.getElementById("filter-status").value = "";
+        document.getElementById("filter-type").value = "";
+        applyFilters();
     });
 
     // ============================

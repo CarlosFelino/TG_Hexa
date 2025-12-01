@@ -1,8 +1,4 @@
-// assets/js/criar-ordem.js
-
-// Importa globalCred.js se necessário
-// import "../../assets/js/globalCred.js";
-
+// criar-ordem.js - com sistema de notificações igual às outras páginas
 document.addEventListener("DOMContentLoaded", function() {
     console.log("✅ Script criar-ordem.js iniciado!");
 
@@ -82,6 +78,135 @@ document.addEventListener("DOMContentLoaded", function() {
             opt.textContent = o.label || o;
             select.appendChild(opt);
         });
+    }
+
+    // =========================
+    // SISTEMA DE NOTIFICAÇÃO - IGUAL às outras páginas
+    // =========================
+    function showNotification(message, type = 'success') {
+        return new Promise((resolve) => {
+            const modal = getElement('notification-modal');
+            const messageEl = getElement('notification-message');
+            const header = modal?.querySelector('.modal-header h3');
+
+            if (!modal || !messageEl || !header) {
+                console.error('❌ Elementos do modal de notificação não encontrados');
+                // Fallback para alert padrão
+                alert(message);
+                resolve();
+                return;
+            }
+
+            messageEl.textContent = message;
+
+            // Configurar cores baseadas no tipo
+            if (type === 'success') {
+                header.innerHTML = '<i class="fas fa-check-circle"></i> Sucesso';
+                modal.querySelector('.modal-header').style.background = '#d4edda';
+                header.style.color = '#155724';
+                modal.classList.remove('error');
+            } else if (type === 'error') {
+                header.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro';
+                modal.querySelector('.modal-header').style.background = '#f8d7da';
+                header.style.color = '#721c24';
+                modal.classList.add('error');
+            }
+
+            // Mostrar modal
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+
+            const cleanup = () => {
+                modal.classList.remove('active');
+                modal.classList.add('hidden');
+
+                // Remover event listeners
+                modal.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
+                    btn.removeEventListener('click', onClose);
+                });
+
+                // Remover listener do ESC
+                document.removeEventListener('keydown', escHandler);
+            };
+
+            const onClose = () => {
+                cleanup();
+                resolve();
+            };
+
+            const escHandler = (e) => {
+                if (e.key === 'Escape') onClose();
+            };
+
+            // Configurar eventos de fechamento
+            modal.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', onClose);
+            });
+
+            // Fechar clicando fora do modal
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) onClose();
+            });
+
+            // Fechar com ESC
+            document.addEventListener('keydown', escHandler);
+
+            // Auto-fechar após 3 segundos apenas para sucesso
+            if (type === 'success') {
+                setTimeout(onClose, 3000);
+            }
+        });
+    }
+
+    // =========================
+    // CONFIGURAR EVENT LISTENERS PARA NOTIFICAÇÕES
+    // =========================
+    function setupNotificationListeners() {
+        console.log('🔧 Configurando listeners de notificações...');
+
+        // Delegar eventos para fechar modais de notificação
+        document.addEventListener('click', function(e) {
+            // Botão X (modal-close) no modal de notificação
+            if (e.target.classList.contains('modal-close') || e.target.closest('.modal-close')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                    modal.classList.add('hidden');
+                }
+            }
+
+            // Botão "OK" no modal de notificação
+            if (e.target.classList.contains('modal-close-btn') || e.target.closest('.modal-close-btn')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                    modal.classList.add('hidden');
+                }
+            }
+
+            // Clicar fora do modal de notificação
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+                e.target.classList.add('hidden');
+            }
+        });
+
+        // Fechar notificação com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const notificationModal = getElement('notification-modal');
+                if (notificationModal && notificationModal.classList.contains('active')) {
+                    notificationModal.classList.remove('active');
+                    notificationModal.classList.add('hidden');
+                }
+            }
+        });
+
+        console.log('✅ Listeners de notificações configurados');
     }
 
     // =========================
@@ -186,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const files = Array.from(fileInput.files);
 
         if(files.length > 3) {
-            alert("Máximo de 3 arquivos permitidos.");
+            showNotification("Máximo de 3 arquivos permitidos.", 'error');
             fileInput.value = "";
             return;
         }
@@ -242,13 +367,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================
-    // ENVIO DE FORMULÁRIOS
+    // ENVIO DE FORMULÁRIOS COM NOTIFICAÇÕES
     // =========================
     async function enviarOrdem(body, filesInput, tipoOrdem, modalElement){
         const token = localStorage.getItem("authToken");
         if(!token){
-            alert("Sessão expirada. Faça login novamente.");
-            window.location.href="../../index.html";
+            await showNotification("Sessão expirada. Faça login novamente.", 'error');
+            setTimeout(() => {
+                window.location.href="../../index.html";
+            }, 1500);
             return;
         }
 
@@ -272,47 +399,126 @@ document.addEventListener("DOMContentLoaded", function() {
             });
 
             const data = await res.json();
-            if(!res.ok) throw new Error(data.erro||"Erro ao criar ordem.");
+            if(!res.ok) {
+                const errorMsg = data.erro || data.message || "Erro ao criar ordem.";
+                throw new Error(errorMsg);
+            }
 
-            alert(`${tipoOrdem==="problema"?"Problema":"Instalação"} enviada com sucesso!`);
+            // Sucesso - mostrar notificação personalizada
+            const tipoMsg = tipoOrdem==="problema"?"Problema":"Instalação";
+            await showNotification(`${tipoMsg} enviada com sucesso!`, 'success');
+
             if(modalElement) closeModal(modalElement);
-            window.location.href="minhas-ordens.html";
+
+            // Redirecionar após 1.5 segundos para dar tempo de ver a notificação
+            setTimeout(() => {
+                window.location.href="minhas-ordens.html";
+            }, 1500);
         } catch(err){
-            console.error(err);
-            alert("Erro ao enviar a ordem. Veja console para detalhes.");
+            console.error("Erro ao enviar ordem:", err);
+            await showNotification(`Erro ao enviar a ordem: ${err.message}`, 'error');
         }
     }
 
+    // =========================
+    // VALIDAÇÃO DE FORMULÁRIOS
+    // =========================
+    function validarFormProblema() {
+        const tipoAmbiente = getElement("tipo-ambiente-problema").value;
+        const local = getElement("local-detalhe-problema").value;
+        const kit = getElement("tipo-kit-problema").value;
+        const problema = getElement("tipo-problema-problema").value;
+
+        if (!tipoAmbiente) {
+            showNotification("Selecione o tipo de ambiente", 'error');
+            return false;
+        }
+        if (!local) {
+            showNotification("Selecione o local", 'error');
+            return false;
+        }
+        if (!kit) {
+            showNotification("Selecione o equipamento", 'error');
+            return false;
+        }
+        if (!problema) {
+            showNotification("Selecione o tipo de problema", 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    function validarFormInstalacao() {
+        const tipoAmbiente = getElement("tipo-ambiente-instalacao").value;
+        const local = getElement("local-detalhe-instalacao").value;
+        const appNome = getElement("app-name-instalacao").value;
+
+        if (!tipoAmbiente) {
+            showNotification("Selecione o tipo de ambiente", 'error');
+            return false;
+        }
+        if (!local) {
+            showNotification("Selecione o local", 'error');
+            return false;
+        }
+        if (!appNome.trim()) {
+            showNotification("Informe o nome do aplicativo", 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    // =========================
+    // EVENTOS DE SUBMIT
+    // =========================
     const formProblema = getElement("form-problema");
     const formInstalacao = getElement("form-instalacao");
 
-    formProblema?.addEventListener("submit", e=>{
+    formProblema?.addEventListener("submit", async e => {
         e.preventDefault();
+
+        if (!validarFormProblema()) return;
+
         const body = {
-            tipo_solicitacao:"problema",
-            titulo:`${getElement("local-detalhe-problema").value} + ${getElement("tipo-kit-problema").value}`,
+            tipo_solicitacao: "problema",
+            titulo: `${getElement("local-detalhe-problema").value} - ${getElement("tipo-kit-problema").value}`,
             local_tipo: getElement("tipo-ambiente-problema").value,
             local_detalhe: getElement("local-detalhe-problema").value,
             equipamento: getElement("tipo-kit-problema").value,
             tipo_problema: getElement("tipo-problema-problema").value,
             descricao: getElement("descricao-problema").value
         };
-        enviarOrdem(body, getElement("file-upload-problema"), "problema", modalProblema);
+
+        await enviarOrdem(body, getElement("file-upload-problema"), "problema", modalProblema);
     });
 
-    formInstalacao?.addEventListener("submit", e=>{
+    formInstalacao?.addEventListener("submit", async e => {
         e.preventDefault();
+
+        if (!validarFormInstalacao()) return;
+
         const body = {
-            tipo_solicitacao:"instalacao",
-            titulo:`${getElement("local-detalhe-instalacao").value} + ${getElement("app-name-instalacao").value}`,
+            tipo_solicitacao: "instalacao",
+            titulo: `${getElement("local-detalhe-instalacao").value} - ${getElement("app-name-instalacao").value}`,
             app_nome: getElement("app-name-instalacao").value,
-            app_versao: getElement("app-version-instalacao").value,
-            app_link: getElement("app-link-instalacao").value,
+            app_versao: getElement("app-version-instalacao").value || null,
+            app_link: getElement("app-link-instalacao").value || null,
             local_tipo: getElement("tipo-ambiente-instalacao").value, 
             local_detalhe: getElement("local-detalhe-instalacao").value
         };
-        enviarOrdem(body, null, "instalacao", modalInstalacao);
+
+        await enviarOrdem(body, null, "instalacao", modalInstalacao);
     });
 
-    console.log("Sistema Support Nexus - Criar Ordem carregado com sucesso!");
+    // =========================
+    // INICIALIZAÇÃO
+    // =========================
+    function init() {
+        console.log("Sistema Support Nexus - Criar Ordem carregado com sucesso!");
+        setupNotificationListeners();
+    }
+
+    init();
 });

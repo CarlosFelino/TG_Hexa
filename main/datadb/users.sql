@@ -11,3 +11,11 @@ CREATE TABLE users (
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 );
+
+-- Adicionar colunas de soft delete na tabela users
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deletado_em TIMESTAMP NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deletado_por INT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS motivo_exclusao TEXT NULL;
+
+-- Criar índice
+CREATE INDEX IF NOT EXISTS idx_users_deletado ON users(deletado_em) WHERE deletado_em IS NULL;

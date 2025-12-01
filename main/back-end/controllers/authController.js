@@ -55,13 +55,17 @@ export async function cadastrarUsuario(req, res) {
   }
 }
 
-// -------------------
-// Login
-// -------------------
+// Substitua APENAS a função login no authController.js
+
 export async function login(req, res) {
   const { email, senha } = req.body;
   try {
-    const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    // ✅ CORREÇÃO: Adicionar verificação de soft delete
+    const result = await pool.query(
+      "SELECT * FROM users WHERE email = $1 AND deletado_em IS NULL", 
+      [email]
+    );
+
     if (result.rows.length === 0) {
       return res.status(401).json({ erro: "Usuário não encontrado" });
     }
@@ -78,7 +82,15 @@ export async function login(req, res) {
       { expiresIn: "1h" }
     );
 
-    res.json({ token, user: { id: user.id, nome: user.nome, email: user.email, role: user.role } });
+    res.json({ 
+      token, 
+      user: { 
+        id: user.id, 
+        nome: user.nome, 
+        email: user.email, 
+        role: user.role 
+      } 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ erro: "Erro interno no servidor" });

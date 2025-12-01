@@ -77,7 +77,9 @@
     <main class="suporte-content">
         <div class="order-header">
             <h1>Criar Nova Ordem de Serviço</h1>
-            <p>Selecione abaixo o tipo de solicitação que deseja realizar.</p>
+            <div>
+                <p>Selecione abaixo o tipo de solicitação que deseja realizar.</p>
+            </div>
         </div>
 
         <div class="card-container">
@@ -167,6 +169,38 @@
 
                 <button type="submit"><i class="fas fa-paper-plane"></i> Solicitar Instalação</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal de Notificação (IGUAL às outras páginas) -->
+    <div id="notification-modal" class="modal hidden">
+        <div class="modal-content notification-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-check-circle"></i> Sucesso</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="notification-message">Ação realizada com sucesso!</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary modal-close-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação Personalizado (IGUAL às outras páginas) -->
+    <div id="custom-confirm-modal" class="modal hidden">
+        <div class="modal-content confirm-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-question-circle"></i> Confirmação</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Deseja realmente executar esta ação?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirm-cancel">Cancelar</button>
+                <button class="btn btn-primary" id="confirm-ok">Confirmar</button>
+            </div>
         </div>
     </div>
 

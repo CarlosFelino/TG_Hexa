@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
+    if (!token || !user || user.role !== 'admin') {
+        window.location.href = "../../login.html";
+        return;
+    }
+
     // =========================
     // Elementos do DOM
     // =========================
@@ -176,8 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adicionar event listeners aos botões
         addTableEventListeners();
         renderPagination(filteredUsers.length);
-        optimizeTableForMobile();
-        window.addEventListener('resize', optimizeTableForMobile);
     }
 
     // =========================
@@ -277,6 +280,8 @@ document.addEventListener('DOMContentLoaded', function() {
         userFormModal.classList.add('active');
     }
 
+    // Substitua as funções deleteUser e confirmDelete no seu gerenciar-usuarios.js
+
     function deleteUser(userId) {
         console.log('🗑️ [DELETE] Função deleteUser chamada para ID:', userId);
 
@@ -287,45 +292,149 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         console.log('🗑️ [DELETE] Usuário encontrado:', user);
-        console.log('🗑️ [DELETE] Abrindo modal de confirmação...');
 
-        showCustomAlert('warning', 'Confirmar Exclusão', 
-            `Tem certeza que deseja excluir o usuário <strong>${user.name}</strong> (${user.email})? Esta ação não pode ser desfeita e também removerá a matrícula autorizada.`,
-            [
-                { 
-                    text: 'Cancelar', 
-                    action: 'secondary',
-                    callback: () => console.log('🗑️ [DELETE] Exclusão cancelada pelo usuário')
-                },
-                { 
-                    text: 'Excluir', 
-                    action: 'primary', 
-                    callback: () => {
-                        console.log('🗑️ [DELETE] Botão Excluir clicado! Chamando confirmDelete...');
-                        confirmDelete(userId);
+        // ✅ VERIFICAR SE É ADMIN/SUPORTE - exige senha
+        if (user.role === 'admin' || user.role === 'suporte') {
+            showPasswordConfirmation(userId, user);
+        } else {
+            // Professor - confirmação simples
+            showCustomAlert('warning', 'Confirmar Exclusão', 
+                `Tem certeza que deseja excluir o usuário <strong>${user.name}</strong> (${user.email})? Esta ação não pode ser desfeita.`,
+                [
+                    { 
+                        text: 'Cancelar', 
+                        action: 'secondary',
+                        callback: () => console.log('🗑️ [DELETE] Exclusão cancelada')
+                    },
+                    { 
+                        text: 'Excluir', 
+                        action: 'primary', 
+                        callback: () => confirmDelete(userId, null)
                     }
-                }
-            ]
-        );
+                ]
+            );
+        }
     }
 
-    async function confirmDelete(userId) {
+    // Nova função para solicitar senha
+    function showPasswordConfirmation(userId, user) {
+        const alertOverlay = document.createElement('div');
+        alertOverlay.className = 'alert-overlay alert-warning';
+
+        alertOverlay.innerHTML = `
+            <div class="alert-modal" style="max-width: 450px;">
+                <div class="alert-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3 class="alert-title">Confirmação de Segurança</h3>
+                <div class="alert-message">
+                    Você está excluindo um usuário <strong>${user.role === 'admin' ? 'Administrador' : 'Suporte'}</strong>.<br>
+                    Por segurança, confirme sua senha de administrador:
+                    <div style="margin-top: 1rem;">
+                        <strong>${user.name}</strong> (${user.email})
+                    </div>
+                </div>
+                <div class="form-group" style="margin: 1.5rem 0; text-align: left;">
+                    <label for="confirm-password" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Sua Senha:</label>
+                    <input 
+                        type="password" 
+                        id="confirm-password" 
+                        placeholder="Digite sua senha de administrador"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem;"
+                        autocomplete="current-password"
+                    >
+                    <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.3rem;">
+                        Esta ação será registrada no log de auditoria
+                    </small>
+                </div>
+                <div class="alert-actions">
+                    <button class="alert-btn alert-btn-secondary" id="cancel-delete-btn">
+                        Cancelar
+                    </button>
+                    <button class="alert-btn alert-btn-primary" id="confirm-delete-btn">
+                        <i class="fas fa-trash"></i> Confirmar Exclusão
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(alertOverlay);
+
+        const passwordInput = alertOverlay.querySelector('#confirm-password');
+        const cancelBtn = alertOverlay.querySelector('#cancel-delete-btn');
+        const confirmBtn = alertOverlay.querySelector('#confirm-delete-btn');
+
+        // Focar no input
+        setTimeout(() => {
+            passwordInput.focus();
+        }, 100);
+
+        // Botão cancelar
+        cancelBtn.addEventListener('click', () => {
+            console.log('🗑️ [DELETE] Exclusão cancelada');
+            alertOverlay.remove();
+        });
+
+        // Botão confirmar
+        confirmBtn.addEventListener('click', () => {
+            const senha = passwordInput.value.trim();
+
+            if (!senha) {
+                passwordInput.style.borderColor = '#F44336';
+                passwordInput.focus();
+                return;
+            }
+
+            console.log('🗑️ [DELETE] Senha fornecida, chamando confirmDelete...');
+            alertOverlay.remove();
+            confirmDelete(userId, senha);
+        });
+
+        // Enter no input
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                confirmBtn.click();
+            }
+        });
+
+        // ESC para cancelar
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                alertOverlay.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+
+        // Mostrar com animação
+        setTimeout(() => {
+            alertOverlay.classList.add('visible');
+        }, 10);
+    }
+
+    async function confirmDelete(userId, senhaAdmin) {
         console.log('🗑️ [DELETE] Iniciando exclusão do usuário ID:', userId);
 
         try {
-            console.log('🗑️ [DELETE] Fazendo requisição DELETE...');
-            console.log('🗑️ [DELETE] URL:', `${API_URL}/api/admin/usuarios/${userId}`);
+            const requestBody = {};
+
+            // Adicionar senha apenas se fornecida
+            if (senhaAdmin) {
+                requestBody.senhaAdmin = senhaAdmin;
+            }
+
+            console.log('🗑️ [DELETE] Body da requisição:', requestBody);
 
             const res = await fetch(`${API_URL}/api/admin/usuarios/${userId}`, {
                 method: 'DELETE',
                 headers: { 
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
-                }
+                },
+                body: JSON.stringify(requestBody) // ← CORRIGIDO
             });
 
             console.log('🗑️ [DELETE] Status da resposta:', res.status);
-            console.log('🗑️ [DELETE] Response OK?', res.ok);
 
             const data = await res.json();
             console.log('🗑️ [DELETE] Dados recebidos:', data);
@@ -336,14 +445,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 await fetchAllUsers(); // Recarregar lista
             } else {
                 console.log('❌ [DELETE] Falha ao deletar:', data.message);
-                showCustomAlert('error', 'Erro', data.message || 'Não foi possível excluir o usuário.');
+
+                // Mensagem especial para senha incorreta
+                if (data.message && data.message.includes('Senha incorreta')) {
+                    showCustomAlert('error', 'Senha Incorreta', 'A senha fornecida está incorreta. Tente novamente.');
+                } else {
+                    showCustomAlert('error', 'Erro', data.message || 'Não foi possível excluir o usuário.');
+                }
             }
 
         } catch (error) {
             console.error('❌ [DELETE] Erro ao excluir usuário:', error);
-            console.error('❌ [DELETE] Tipo do erro:', error.constructor.name);
-            console.error('❌ [DELETE] Mensagem:', error.message);
-            console.error('❌ [DELETE] Stack:', error.stack);
             showCustomAlert('error', 'Erro', 'Erro ao excluir usuário. Tente novamente.');
         }
     }
@@ -629,41 +741,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // =========================
-    // Otimização para Mobile
-    // =========================
-
-    function optimizeTableForMobile() {
-        const table = document.querySelector('.users-table');
-        const tableContainer = document.querySelector('.table-responsive');
-        
-        if (!table || !tableContainer) return;
-
-        // Adiciona indicador visual de scroll horizontal apenas em mobile
-        if (window.innerWidth <= 576) {
-            tableContainer.style.position = 'relative';
-            
-            // Remove indicador existente se houver
-            const existingIndicator = tableContainer.querySelector('.scroll-indicator');
-            if (existingIndicator) existingIndicator.remove();
-            
-            // Adiciona novo indicador
-            const indicator = document.createElement('div');
-            indicator.className = 'scroll-indicator';
-            indicator.innerHTML = '<i class="fas fa-chevron-right"></i>';
-            tableContainer.appendChild(indicator);
-            
-            // Remove o indicador após primeiro scroll
-            const scrollHandler = function() {
-                indicator.style.display = 'none';
-                tableContainer.removeEventListener('scroll', scrollHandler);
-            };
-            
-            tableContainer.addEventListener('scroll', scrollHandler, { once: true });
-        }
-    }
-
 
     // =========================
     // Utilitários

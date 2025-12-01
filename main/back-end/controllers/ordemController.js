@@ -23,31 +23,70 @@ function calcularDiasUteis(dataInicio, dataFim) {
     return dias;
 }
 
-/* ===========================================================
-    ✅ FUNÇÃO CORRIGIDA: atualizar status, prioridade e alertas
-=========================================================== */
 export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
     const hoje = dataReferencia;
 
+    console.log('='.repeat(60));
+    console.log('🔄 INICIANDO ATUALIZAÇÃO DE ORDENS');
+    console.log('📅 Data de referência:', hoje.format('YYYY-MM-DD HH:mm:ss'));
+    console.log('📊 Total de ordens:', ordens.length);
+    console.log('='.repeat(60));
+
     for (let ordem of ordens) {
+        console.log('\n' + '-'.repeat(60));
+        console.log(`🔍 Analisando Ordem ID: ${ordem.id} | Código: ${ordem.codigo}`);
+
         if (!ordem.data_limite) {
-            console.warn(`Ordem ID ${ordem.id} não possui data_limite. Pulando atualização.`);
+            console.warn(`⚠️  Ordem ID ${ordem.id} não possui data_limite. Pulando.`);
             continue;
         }
 
-        const prazo = dayjs(ordem.data_limite);
+        // ✅ CRITICAL DEBUG: Ver exatamente o que está sendo comparado
+        const prazo = dayjs(ordem.data_limite).endOf('day');
+
+        console.log('📋 Status atual:', ordem.status);
+        console.log('📅 Data criação:', dayjs(ordem.data_criacao).format('YYYY-MM-DD HH:mm:ss'));
+        console.log('⏰ Data limite (raw):', ordem.data_limite);
+        console.log('⏰ Data limite (parsed):', prazo.format('YYYY-MM-DD HH:mm:ss'));
+        console.log('🕐 Hoje:', hoje.format('YYYY-MM-DD HH:mm:ss'));
+
         if (!prazo.isValid()) {
-            console.warn(`Data limite inválida para Ordem ID ${ordem.id}. Pulando.`);
+            console.warn(`❌ Data limite INVÁLIDA para Ordem ID ${ordem.id}. Pulando.`);
             continue;
         }
+
+        // ✅ TESTES DE COMPARAÇÃO
+        console.log('\n🧪 TESTES DE COMPARAÇÃO:');
+        console.log('   hoje.isAfter(prazo):', hoje.isAfter(prazo));
+        console.log('   hoje.isAfter(prazo, "day"):', hoje.isAfter(prazo, "day"));
+        console.log('   hoje > prazo:', hoje > prazo);
+        console.log('   Diferença em dias:', hoje.diff(prazo, 'day'));
+        console.log('   Diferença em horas:', hoje.diff(prazo, 'hour'));
 
         try {
             let statusAtualizado = false;
-            if (ordem.status !== "Concluída" && ordem.status !== "Não Concluída" && hoje.isAfter(prazo, "day")) {
+
+            // ✅ CONDIÇÃO PRINCIPAL
+            const deveVirarNaoConcluida = (
+                ordem.status !== "Concluída" && 
+                ordem.status !== "Não Concluída" && 
+                hoje.isAfter(prazo) // ← SEM "day"
+            );
+
+            console.log('\n🎯 DEVE MUDAR PARA "NÃO CONCLUÍDA"?', deveVirarNaoConcluida);
+            console.log('   Motivos:');
+            console.log('   - Status não é Concluída?', ordem.status !== "Concluída");
+            console.log('   - Status não é Não Concluída?', ordem.status !== "Não Concluída");
+            console.log('   - Hoje está depois do prazo?', hoje.isAfter(prazo));
+
+            if (deveVirarNaoConcluida) {
+                console.log('\n🚨 MUDANDO STATUS PARA "NÃO CONCLUÍDA"!');
+
                 await pool.query(
                     "UPDATE ordens SET status = 'Não Concluída', prioridade = 1 WHERE id = $1",
                     [ordem.id]
                 );
+
                 ordem.status = "Não Concluída";
                 ordem.prioridade = 1;
                 statusAtualizado = true;
@@ -57,14 +96,20 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                      WHERE ordem_id = $1 AND ativo = true`,
                     [ordem.id]
                 );
+
+                console.log('✅ Status atualizado com sucesso!');
                 continue;
             }
 
+            // ✅ Já está finalizada
             if (ordem.status === "Concluída" || ordem.status === "Não Concluída") {
+                console.log('ℹ️  Ordem já finalizada, garantindo prioridade = 1');
+
                 if (ordem.prioridade !== 1) {
                     await pool.query("UPDATE ordens SET prioridade = 1 WHERE id = $1", [ordem.id]);
                     ordem.prioridade = 1;
                 }
+
                 await pool.query(
                     `UPDATE ordens_alertas SET ativo = false, resolvido_em = NOW()
                      WHERE ordem_id = $1 AND ativo = true`,
@@ -73,7 +118,9 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                 continue;
             }
 
+            // ✅ Calcular prioridade para ordens ativas
             const faltando = calcularDiasUteis(hoje, prazo);
+            console.log(`\n📊 Dias úteis faltando: ${faltando}`);
 
             let prioridade = 1;
             if (faltando <= 1) prioridade = 5;
@@ -82,27 +129,37 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
             else if (faltando === 4) prioridade = 2;
             else prioridade = 1;
 
+            console.log(`🎯 Prioridade calculada: ${prioridade}`);
+
+            // ✅ Alerta sem responsável
             let alertaSemResponsavel = false;
             if (!ordem.responsavel_id && ordem.status === "Pendente") {
                 const dataCriacao = dayjs(ordem.data_criacao);
                 const diasUteisDesdeCreacao = calcularDiasUteis(dataCriacao, hoje);
 
+                console.log(`📋 Sem responsável há ${diasUteisDesdeCreacao} dias úteis`);
+
                 if (diasUteisDesdeCreacao > 2) {
                     prioridade = Math.max(prioridade, 4);
                     alertaSemResponsavel = true;
+                    console.log('⚠️  Alerta sem responsável ativado!');
                 }
             }
 
             const alertaPrazo = faltando <= 3 && prioridade >= 3;
+            console.log(`⏰ Alerta de prazo: ${alertaPrazo}`);
 
+            // ✅ Atualizar prioridade se necessário
             if (ordem.prioridade !== prioridade || statusAtualizado) {
                 await pool.query(
                     "UPDATE ordens SET prioridade = $1 WHERE id = $2",
                     [prioridade, ordem.id]
                 );
                 ordem.prioridade = prioridade;
+                console.log(`✅ Prioridade atualizada para ${prioridade}`);
             }
 
+            // ✅ Gerenciar alertas
             if (alertaPrazo) {
                 await pool.query(
                     `INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo)
@@ -111,6 +168,7 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                      DO UPDATE SET ativo = true, resolvido_em = NULL`,
                     [ordem.id]
                 );
+                console.log('✅ Alerta de prazo ativado');
             } else {
                 await pool.query(
                     `UPDATE ordens_alertas
@@ -128,6 +186,7 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
                      DO UPDATE SET ativo = true, resolvido_em = NULL`,
                     [ordem.id]
                 );
+                console.log('✅ Alerta sem responsável ativado');
             } else {
                 await pool.query(
                     `UPDATE ordens_alertas
@@ -141,10 +200,16 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
             ordem.alerta_sem_responsavel = alertaSemResponsavel;
 
         } catch (error) {
-            console.error(`Erro ao atualizar Ordem ID ${ordem.id}:`, error);
+            console.error(`❌ ERRO ao atualizar Ordem ID ${ordem.id}:`, error);
             throw error;
         }
+
+        console.log('-'.repeat(60));
     }
+
+    console.log('\n' + '='.repeat(60));
+    console.log('✅ ATUALIZAÇÃO CONCLUÍDA');
+    console.log('='.repeat(60) + '\n');
 }
 
 /* ===========================================================
@@ -369,7 +434,7 @@ export async function listarOrdensDetalhadas(req, res) {
             LEFT JOIN ordens_instalacoes i ON i.ordem_id = o.id
             LEFT JOIN users uc ON uc.id = o.criador_id
             LEFT JOIN users ur ON ur.id = o.responsavel_id
-            ORDER BY o.prioridade DESC, o.data_criacao DESC
+            ORDER BY o.data_criacao DESC
         `;
 
         const result = await pool.query(baseQuery);
@@ -383,7 +448,6 @@ export async function listarOrdensDetalhadas(req, res) {
         res.status(500).json({ erro: "Erro ao listar ordens detalhadas" });
     }
 }
-
 /* ===========================================================
     Buscar anexos de uma ordem específica
 =========================================================== */

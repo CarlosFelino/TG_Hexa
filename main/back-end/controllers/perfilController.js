@@ -72,24 +72,35 @@ export const atualizarFotoPerfil = async (req, res) => {
  */
 export const obterFotoPerfil = async (req, res) => {
   try {
+    const userId = req.user.id;
+
+    // Busca no banco primeiro
     const result = await pool.query(
       "SELECT caminho_arquivo FROM imagens_perfil WHERE usuario_id = $1 AND ativo = TRUE LIMIT 1",
-      [req.user.id]
+      [userId]
     );
 
-    const rows = result.rows;
+    if (result.rows.length > 0) {
+      const dbPath = result.rows[0].caminho_arquivo;
+      const filePath = path.join(BACKEND_ROOT, dbPath.substring(1));
 
-    if (rows.length === 0) {
-      return res.json({ fotoUrl: "/uploads/perfis/default-avatar.png" });
+      if (fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+      }
     }
 
-    res.json({ fotoUrl: rows[0].caminho_arquivo });
+    // Fallback para default
+    const defaultPath = path.join(BACKEND_ROOT, "uploads", "default-avatar.png");
+    if (fs.existsSync(defaultPath)) {
+      return res.sendFile(defaultPath);
+    }
+
+    res.status(404).json({ message: "Foto não encontrada" });
   } catch (err) {
     console.error("❌ Erro ao buscar foto de perfil:", err);
     res.status(500).json({ message: "Erro ao buscar foto de perfil." });
   }
 };
-
 /**
  * ==========================================
  * 🗑️ REMOVER FOTO DE PERFIL
