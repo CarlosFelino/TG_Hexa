@@ -7,7 +7,24 @@ import path from "path";
 dayjs.extend(isBetween);
 
 /* ===========================================================
-    Função auxiliar: atualizar status, prioridade e alertas
+    ✅ FUNÇÃO AUXILIAR: Calcular dias úteis entre duas datas
+=========================================================== */
+function calcularDiasUteis(dataInicio, dataFim) {
+    let dias = 0;
+    let temp = dayjs(dataInicio);
+    const fim = dayjs(dataFim);
+
+    while (temp.isBefore(fim, "day") || temp.isSame(fim, "day")) {
+        if (temp.day() !== 0 && temp.day() !== 6) {
+            dias++;
+        }
+        temp = temp.add(1, "day");
+    }
+    return dias;
+}
+
+/* ===========================================================
+    ✅ FUNÇÃO CORRIGIDA: atualizar status, prioridade e alertas
 =========================================================== */
 export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
     const hoje = dataReferencia;
@@ -26,60 +43,160 @@ export async function atualizarOrdens(ordens, dataReferencia = dayjs()) {
 
         try {
             let statusAtualizado = false;
-            if (ordem.status !== "Concluída" && ordem.status !== "Não Concluída" && hoje.isAfter(prazo)) {
+            if (ordem.status !== "Concluída" && ordem.status !== "Não Concluída" && hoje.isAfter(prazo, "day")) {
                 await pool.query(
-                    "UPDATE ordens SET status = 'Não Concluída' WHERE id = $1",
+                    "UPDATE ordens SET status = 'Não Concluída', prioridade = 1 WHERE id = $1",
                     [ordem.id]
                 );
                 ordem.status = "Não Concluída";
+                ordem.prioridade = 1;
                 statusAtualizado = true;
+
+                await pool.query(
+                    `UPDATE ordens_alertas SET ativo = false, resolvido_em = NOW()
+                     WHERE ordem_id = $1 AND ativo = true`,
+                    [ordem.id]
+                );
+                continue;
             }
 
-            let faltando = 0;
-            let temp = hoje.clone();
-            while (temp.isBefore(prazo, "day")) {
-                temp = temp.add(1, "day");
-                if (temp.day() !== 0 && temp.day() !== 6) faltando++;
+            if (ordem.status === "Concluída" || ordem.status === "Não Concluída") {
+                if (ordem.prioridade !== 1) {
+                    await pool.query("UPDATE ordens SET prioridade = 1 WHERE id = $1", [ordem.id]);
+                    ordem.prioridade = 1;
+                }
+                await pool.query(
+                    `UPDATE ordens_alertas SET ativo = false, resolvido_em = NOW()
+                     WHERE ordem_id = $1 AND ativo = true`,
+                    [ordem.id]
+                );
+                continue;
             }
+
+            const faltando = calcularDiasUteis(hoje, prazo);
 
             let prioridade = 1;
             if (faltando <= 1) prioridade = 5;
             else if (faltando === 2) prioridade = 4;
             else if (faltando === 3) prioridade = 3;
             else if (faltando === 4) prioridade = 2;
-            ordem.prioridade = prioridade;
+            else prioridade = 1;
+
+            let alertaSemResponsavel = false;
+            if (!ordem.responsavel_id && ordem.status === "Pendente") {
+                const dataCriacao = dayjs(ordem.data_criacao);
+                const diasUteisDesdeCreacao = calcularDiasUteis(dataCriacao, hoje);
+
+                if (diasUteisDesdeCreacao > 2) {
+                    prioridade = Math.max(prioridade, 4);
+                    alertaSemResponsavel = true;
+                }
+            }
+
+            const alertaPrazo = faltando <= 3 && prioridade >= 3;
 
             if (ordem.prioridade !== prioridade || statusAtualizado) {
                 await pool.query(
                     "UPDATE ordens SET prioridade = $1 WHERE id = $2",
                     [prioridade, ordem.id]
                 );
+                ordem.prioridade = prioridade;
             }
 
-            ordem.alerta_prazo = faltando <= 3 &&
-                                 ordem.status !== "Concluída" &&
-                                 ordem.status !== "Não Concluída";
-
-            if (ordem.alerta_prazo) {
-              await pool.query(
-                `INSERT INTO ordens_alertas (ordem_id, tipo_alerta)
-                 VALUES ($1, 'prazo')
-                 ON CONFLICT DO NOTHING`,
-                [ordem.id]
-              );
+            if (alertaPrazo) {
+                await pool.query(
+                    `INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo)
+                     VALUES ($1, 'prazo', true)
+                     ON CONFLICT (ordem_id, tipo_alerta) 
+                     DO UPDATE SET ativo = true, resolvido_em = NULL`,
+                    [ordem.id]
+                );
             } else {
-              await pool.query(
-                `UPDATE ordens_alertas
-                 SET ativo = false, resolvido_em = NOW()
-                 WHERE ordem_id = $1 AND tipo_alerta = 'prazo' AND ativo = true`,
-                [ordem.id]
-              );
+                await pool.query(
+                    `UPDATE ordens_alertas
+                     SET ativo = false, resolvido_em = NOW()
+                     WHERE ordem_id = $1 AND tipo_alerta = 'prazo' AND ativo = true`,
+                    [ordem.id]
+                );
             }
+
+            if (alertaSemResponsavel) {
+                await pool.query(
+                    `INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo)
+                     VALUES ($1, 'sem_responsavel', true)
+                     ON CONFLICT (ordem_id, tipo_alerta) 
+                     DO UPDATE SET ativo = true, resolvido_em = NULL`,
+                    [ordem.id]
+                );
+            } else {
+                await pool.query(
+                    `UPDATE ordens_alertas
+                     SET ativo = false, resolvido_em = NOW()
+                     WHERE ordem_id = $1 AND tipo_alerta = 'sem_responsavel' AND ativo = true`,
+                    [ordem.id]
+                );
+            }
+
+            ordem.alerta_prazo = alertaPrazo;
+            ordem.alerta_sem_responsavel = alertaSemResponsavel;
 
         } catch (error) {
             console.error(`Erro ao atualizar Ordem ID ${ordem.id}:`, error);
             throw error;
         }
+    }
+}
+
+/* ===========================================================
+    ✅ NOVA ROTA: Listar alertas ativos (para pop-ups)
+=========================================================== */
+export async function listarAlertasAtivos(req, res) {
+    const usuario = req.user;
+
+    if (usuario.role !== "suporte") {
+        return res.status(403).json({ erro: "Apenas suporte pode ver alertas" });
+    }
+
+    try {
+        const result = await pool.query(
+            `SELECT DISTINCT 
+                o.id, o.codigo, o.titulo, o.status, o.prioridade,
+                o.data_criacao, o.data_limite, o.responsavel_id,
+                oa.tipo_alerta
+             FROM ordens o
+             INNER JOIN ordens_alertas oa ON oa.ordem_id = o.id
+             WHERE oa.ativo = true
+               AND o.status NOT IN ('Concluída', 'Não Concluída')
+               AND o.prioridade >= 3
+             ORDER BY o.prioridade DESC, o.data_criacao ASC`
+        );
+
+        const alertas = {
+            prazo: [],
+            sem_responsavel: []
+        };
+
+        result.rows.forEach(row => {
+            const alerta = {
+                id: row.id,
+                codigo: row.codigo,
+                titulo: row.titulo,
+                status: row.status,
+                prioridade: row.prioridade,
+                data_limite: row.data_limite
+            };
+
+            if (row.tipo_alerta === 'prazo') {
+                alertas.prazo.push(alerta);
+            } else if (row.tipo_alerta === 'sem_responsavel') {
+                alertas.sem_responsavel.push(alerta);
+            }
+        });
+
+        res.json(alertas);
+    } catch (err) {
+        console.error("Erro ao listar alertas ativos:", err);
+        res.status(500).json({ erro: "Erro ao listar alertas" });
     }
 }
 
@@ -197,7 +314,7 @@ export async function listarOrdens(req, res) {
             SELECT 
                 o.id, o.codigo, o.data_criacao, o.titulo, o.descricao,
                 o.local_detalhe, o.tipo_solicitacao, o.status, o.avaliacao,
-                o.responsavel_id, o.data_limite, 
+                o.responsavel_id, o.data_limite, o.prioridade,
                 p.equipamento, p.tipo_problema,
                 i.app_nome, i.app_versao, i.app_link,
                 u.nome AS tecnico_nome,
@@ -231,7 +348,6 @@ export async function listarOrdens(req, res) {
 export async function listarOrdensDetalhadas(req, res) {
     try {
         const { id, role: tipo } = req.user || {};
-        console.log("=== DEBUG listarOrdensDetalhadas ===", { id, tipo });
 
         if (!id || (tipo !== "suporte" && tipo !== "admin")) {
             return res.status(403).json({ erro: "Acesso negado: apenas suporte ou admin podem visualizar" });
@@ -239,26 +355,12 @@ export async function listarOrdensDetalhadas(req, res) {
 
         const baseQuery = `
             SELECT 
-                o.id, 
-                o.codigo, 
-                o.data_criacao, 
-                o.titulo, 
-                o.descricao,
-                o.local_tipo,
-                o.local_detalhe, 
-                o.tipo_solicitacao, 
-                o.status, 
-                o.avaliacao,
-                o.responsavel_id, 
-                o.criador_id,
-                o.data_limite,
-                o.solucao,
-                o.observacoes,
-                p.equipamento, 
-                p.tipo_problema,
-                i.app_nome, 
-                i.app_versao, 
-                i.app_link,
+                o.id, o.codigo, o.data_criacao, o.titulo, o.descricao,
+                o.local_tipo, o.local_detalhe, o.tipo_solicitacao, o.status, 
+                o.avaliacao, o.responsavel_id, o.criador_id, o.data_limite,
+                o.solucao, o.observacoes, o.prioridade,
+                p.equipamento, p.tipo_problema,
+                i.app_nome, i.app_versao, i.app_link,
                 uc.nome AS criador_nome,
                 ur.nome AS responsavel_nome,
                 (SELECT COUNT(*) FROM ordens_anexos WHERE ordem_id = o.id) as total_anexos
@@ -267,7 +369,7 @@ export async function listarOrdensDetalhadas(req, res) {
             LEFT JOIN ordens_instalacoes i ON i.ordem_id = o.id
             LEFT JOIN users uc ON uc.id = o.criador_id
             LEFT JOIN users ur ON ur.id = o.responsavel_id
-            ORDER BY o.data_criacao DESC
+            ORDER BY o.prioridade DESC, o.data_criacao DESC
         `;
 
         const result = await pool.query(baseQuery);
@@ -334,7 +436,6 @@ export async function buscarAnexosOrdem(req, res) {
 
 /* ===========================================================
     ✅ Listar apenas as ordens CRIADAS pelo usuário logado
-    Funciona para professor E suporte
 =========================================================== */
 export async function listarMinhasOrdens(req, res) {
     try {
@@ -343,7 +444,6 @@ export async function listarMinhasOrdens(req, res) {
 
         console.log("=== DEBUG listarMinhasOrdens ===", { userId, userRole });
 
-        // Para TODOS os usuários: buscar ordens criadas por ele
         const result = await pool.query(
             `SELECT 
                 o.id, o.codigo, o.data_criacao, o.titulo, o.descricao,
@@ -387,7 +487,7 @@ export async function concluirOrdem(req, res) {
     try {
         const result = await pool.query(
             `UPDATE ordens
-             SET solucao = $1, status = 'Concluída', data_finalizacao = NOW()
+             SET solucao = $1, status = 'Concluída', data_finalizacao = NOW(), prioridade = 1
              WHERE id = $2
              RETURNING *`,
             [solucao, ordemId]
@@ -396,6 +496,12 @@ export async function concluirOrdem(req, res) {
         if (result.rowCount === 0) {
             return res.status(404).json({ erro: "Ordem não encontrada" });
         }
+
+        await pool.query(
+            `UPDATE ordens_alertas SET ativo = false, resolvido_em = NOW()
+             WHERE ordem_id = $1 AND ativo = true`,
+            [ordemId]
+        );
 
         res.json({ mensagem: "Ordem concluída com sucesso", ordem: result.rows[0] });
     } catch (err) {
@@ -448,7 +554,7 @@ export async function avaliarOrdem(req, res) {
 }
 
 /* ===========================================================
-    Assumir ordem
+    ✅ ASSUMIR ORDEM (Corrigido - valida status e desativa alerta)
 =========================================================== */
 export async function assumirOrdem(req, res) {
     const { ordemId } = req.params;
@@ -459,19 +565,55 @@ export async function assumirOrdem(req, res) {
     }
 
     try {
+        // ✅ Verificar o status atual da ordem
+        const checkResult = await pool.query(
+            "SELECT status FROM ordens WHERE id = $1",
+            [ordemId]
+        );
+
+        if (checkResult.rowCount === 0) {
+            return res.status(404).json({ erro: "Ordem não encontrada" });
+        }
+
+        const ordemAtual = checkResult.rows[0];
+
+        // ✅ Bloquear ordens "Não Concluída" ou "Concluída"
+        if (ordemAtual.status === "Não Concluída") {
+            return res.status(400).json({ 
+                erro: "Não é possível assumir uma ordem não concluída. Esta ordem ultrapassou o prazo." 
+            });
+        }
+
+        if (ordemAtual.status === "Concluída") {
+            return res.status(400).json({ 
+                erro: "Não é possível assumir uma ordem já concluída." 
+            });
+        }
+
+        // ✅ Tentar assumir (apenas se Pendente)
         const result = await pool.query(
             `UPDATE ordens
              SET responsavel_id = $1, status = 'Em Andamento'
-             WHERE id = $2 AND (status = 'Pendente' OR responsavel_id IS NULL)
+             WHERE id = $2 AND status = 'Pendente' AND responsavel_id IS NULL
              RETURNING *`,
             [usuario.id, ordemId]
         );
 
         if (result.rowCount === 0) {
-            return res.status(400).json({ erro: "Ordem não disponível para assumir" });
+            return res.status(400).json({ 
+                erro: "Ordem não disponível para assumir. Ela pode já ter sido assumida por outro técnico ou não estar mais pendente." 
+            });
         }
 
-        res.json({ mensagem: "Ordem assumida", ordem: result.rows[0] });
+        // ✅ Desativar alerta de "sem responsável"
+        await pool.query(
+            `UPDATE ordens_alertas 
+             SET ativo = false, resolvido_em = NOW()
+             WHERE ordem_id = $1 AND tipo_alerta = 'sem_responsavel' AND ativo = true`,
+            [ordemId]
+        );
+
+        res.json({ mensagem: "Ordem assumida com sucesso", ordem: result.rows[0] });
     } catch (err) {
         console.error("Erro ao assumir ordem:", err);
         res.status(500).json({ erro: "Erro interno ao assumir a ordem" });
@@ -479,37 +621,8 @@ export async function assumirOrdem(req, res) {
 }
 
 /* ===========================================================
-    Listar alertas de ordens pendentes
+    Listar alertas de ordens pendentes (função obsoleta)
 =========================================================== */
 export async function listarAlertasOrdensPendentes(req, res) {
-    const usuario = req.user;
-
-    if (usuario.role !== "suporte") {
-        return res.status(403).json({ erro: "Apenas suporte pode ver alertas" });
-    }
-
-    try {
-        const hoje = dayjs();
-        const result = await pool.query(
-            `SELECT * FROM ordens WHERE responsavel_id IS NULL AND status = 'Pendente'`
-        );
-
-        const ordens = result.rows.map(ordem => {
-            const dataCriacao = dayjs(ordem.data_criacao);
-            if (!dataCriacao.isValid()) return { ...ordem, alerta_sem_responsavel: false };
-
-            let diasUteis = 0;
-            let temp = dataCriacao.clone();
-            while (temp.isBefore(hoje, "day")) {
-                temp = temp.add(1, "day");
-                if (temp.day() !== 0 && temp.day() !== 6) diasUteis++;
-            }
-            return { ...ordem, alerta_sem_responsavel: diasUteis > 2 };
-        });
-
-        res.json(ordens.filter(o => o.alerta_sem_responsavel));
-    } catch (err) {
-        console.error("Erro ao listar alertas:", err);
-        res.status(500).json({ erro: "Erro ao listar alertas" });
-    }
+    return listarAlertasAtivos(req, res);
 }

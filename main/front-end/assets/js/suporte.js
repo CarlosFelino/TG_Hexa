@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ suporte.js carregado");
+    console.log("✅ suporte.js carregado - Versão Atualizada");
 
     // =========================
     // 1. AUTENTICAÇÃO
@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Se não estiver logado, manda pro login
     if (!token || !user) {
-        // Verificação para evitar loop de redirecionamento se já estiver no login
         if (!window.location.pathname.includes("login.html")) {
             console.warn("Usuário não autenticado.");
             // window.location.href = "../../login.html"; // Descomente em produção
@@ -17,13 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =========================
-    // 2. MENU LATERAL (HAMBÚRGUER)
+    // 2. MENU LATERAL (HAMBÚRGUER) - Estilo Professor
     // =========================
     const menuToggle = document.querySelector(".menu-toggle");
     const sidebar = document.querySelector(".sidebar");
     let overlay = document.querySelector(".overlay");
 
-    // Cria overlay se não existir (garantia para páginas internas)
+    // Cria overlay se não existir
     if (!overlay) {
         overlay = document.createElement("div");
         overlay.className = "overlay";
@@ -31,11 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (menuToggle && sidebar) {
-        // Remove event listeners antigos clonando o elemento (truque para limpar)
-        const newMenuToggle = menuToggle.cloneNode(true);
-        menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
-
-        newMenuToggle.addEventListener("click", (e) => {
+        menuToggle.addEventListener("click", (e) => {
             e.stopPropagation();
             sidebar.classList.toggle("active");
             overlay.classList.toggle("active");
@@ -49,43 +44,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =========================
-    // 3. MENU DE PERFIL (DROPDOWN)
+    // 3. MENU DE PERFIL (DROPDOWN) - Estilo Professor
     // =========================
     const userNameEl = document.getElementById("userName");
     const userEmailEl = document.getElementById("userEmail");
+    const welcomeNameEl = document.getElementById("welcomeName");
     const profileAvatar = document.getElementById("userAvatar") || document.querySelector(".profile-avatar");
-    
-    // Tenta encontrar o dropdown de várias formas para garantir
     const profileDropdown = document.querySelector(".profile-dropdown .dropdown-content") || document.querySelector(".dropdown-content");
 
-    // Preencher dados do usuário na Navbar
+    // Preencher dados do usuário
     if (user) {
         if(userNameEl) userNameEl.textContent = user.nome;
         if(userEmailEl) userEmailEl.textContent = user.email;
+        if(welcomeNameEl) welcomeNameEl.textContent = user.nome;
     }
 
     if (profileAvatar && profileDropdown) {
-        // Limpa eventos antigos
-        const newAvatar = profileAvatar.cloneNode(true);
-        profileAvatar.parentNode.replaceChild(newAvatar, profileAvatar);
-
-        newAvatar.addEventListener("click", (e) => {
+        profileAvatar.addEventListener("click", (e) => {
             e.stopPropagation();
             profileDropdown.classList.toggle("active");
-            // Fallback caso o CSS use display:block em vez de .active
-            profileDropdown.style.display = profileDropdown.classList.contains("active") ? "block" : "none";
             console.log("👤 Perfil clicado");
         });
 
         // Fechar ao clicar fora
         document.addEventListener("click", (e) => {
-            if (!profileDropdown.contains(e.target) && e.target !== newAvatar) {
+            if (!profileDropdown.contains(e.target) && e.target !== profileAvatar) {
                 profileDropdown.classList.remove("active");
-                profileDropdown.style.display = "none";
             }
         });
-    } else {
-        console.warn("⚠️ Elementos de perfil não encontrados nesta página.");
     }
 
     // Logout
@@ -100,12 +86,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =========================
-    // 4. DASHBOARD (Somente se existirem os cards)
+    // 4. DASHBOARD - Estilo Professor
     // =========================
-    const cardPendentes = document.getElementById("cardPendentes");
-    
-    // Só roda a lógica de dashboard se encontrarmos um elemento chave (ex: cardPendentes)
-    if (cardPendentes) {
+    const badgePendentes = document.getElementById("badgePendentes");
+    const badgeMinhas = document.getElementById("badgeMinhas");
+
+    // Só roda a lógica de dashboard se estivermos na página do dashboard
+    if (badgePendentes) {
         loadDashboardData();
     }
 
@@ -120,19 +107,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const text = await res.text();
             const ordens = JSON.parse(text);
 
-            // Atualiza cards
-            if(cardPendentes) cardPendentes.textContent = ordens.filter(o => o.status === "Pendente").length;
-            
-            const cardAndamento = document.getElementById("cardAndamento");
-            if(cardAndamento) cardAndamento.textContent = ordens.filter(o => o.status === "Em Andamento").length;
-            
-            const cardMinhas = document.getElementById("cardMinhas");
-            if(cardMinhas) cardMinhas.textContent = ordens.filter(o => o.responsavel_id === user.id).length;
-            
-            const cardConcluidas = document.getElementById("cardConcluidas");
-            if(cardConcluidas) cardConcluidas.textContent = ordens.filter(o => o.status === "Concluída").length;
+            // Atualiza badges nos cards de ação
+            if(badgePendentes) {
+                badgePendentes.textContent = ordens.filter(o => o.status === "Pendente").length;
+            }
 
-            // Atualiza lista recente se existir
+            if(badgeMinhas) {
+                badgeMinhas.textContent = ordens.filter(o => o.responsavel_id === user.id).length;
+            }
+
+            // Atualiza lista recente
             const recentOrdersContainer = document.getElementById("recentOrders");
             if(recentOrdersContainer) {
                 renderRecentOrders(ordens, recentOrdersContainer);
@@ -145,22 +129,183 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderRecentOrders(ordens, container) {
         container.innerHTML = "";
-        const ordensRecentes = ordens.sort((a, b) => new Date(b.data_criacao) - new Date(a.data_criacao)).slice(0, 3);
+
+        // Ordena por data e pega as 3 mais recentes
+        const ordensRecentes = ordens
+            .sort((a, b) => new Date(b.data_criacao) - new Date(a.data_criacao))
+            .slice(0, 3);
 
         if (ordensRecentes.length === 0) {
-            container.innerHTML = "<p>Nenhuma ordem recente.</p>";
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #6b7280;">
+                    <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 1rem; display: block; color: #d1d5db;"></i>
+                    <p>Nenhuma ordem recente encontrada</p>
+                </div>
+            `;
             return;
         }
 
         ordensRecentes.forEach(order => {
-            // Lógica de renderização simplificada para não quebrar
             const card = document.createElement("div");
-            card.className = "order-card";
+
+            let statusClass = "";
+            switch(order.status) {
+                case "Pendente": statusClass = "pendente"; break;
+                case "Em Andamento": statusClass = "em-andamento"; break;
+                case "Concluída": statusClass = "concluida"; break;
+                default: statusClass = "";
+            }
+
+            const titulo = order.titulo || `${order.tipo_solicitacao} - ${order.local_detalhe || 'Local'}`;
+            const descricao = order.descricao || "Sem descrição";
+
+            card.className = `order-card ${statusClass}`;
             card.innerHTML = `
-                <h3>#${order.codigo || order.id} - ${order.titulo || 'Sem título'}</h3>
-                <p>${order.status}</p>
+                <h3>${titulo}</h3>
+                <p>${descricao}</p>
+                <span class="status">${order.status}</span>
+                <span class="date">${new Date(order.data_criacao).toLocaleDateString('pt-BR')}</span>
             `;
             container.appendChild(card);
         });
+    }
+
+    // =========================
+    // 5. MODAL DE DETALHES - Compatibilidade
+    // =========================
+    const modal = document.getElementById("detalhesModal");
+    const modalClose = document.getElementById("modalClose");
+
+    if (modal && modalClose) {
+        modalClose.addEventListener("click", () => {
+            modal.classList.remove("active");
+        });
+
+        // Fechar modal clicando fora
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.classList.remove("active");
+            }
+        });
+    }
+
+
+    // =========================
+    // 5. POP-UPS DE ALERTAS
+    // =========================
+
+    // Elementos dos pop-ups
+    const alertPopupVencimento = document.getElementById("alertPopupVencimento");
+    const alertBodyVencimento = document.getElementById("alertBodyVencimento");
+    const closeVencimento = document.getElementById("closeVencimento");
+
+    const alertPopupSemResp = document.getElementById("alertPopupSemResp");
+    const alertBodySemResp = document.getElementById("alertBodySemResp");
+    const closeSemResp = document.getElementById("closeSemResp");
+
+    // Botões de fechar
+    if (closeVencimento) {
+        closeVencimento.addEventListener("click", () => {
+            alertPopupVencimento.classList.add("hidden");
+            alertPopupVencimento.classList.remove("active");
+        });
+    }
+
+    if (closeSemResp) {
+        closeSemResp.addEventListener("click", () => {
+            alertPopupSemResp.classList.add("hidden");
+            alertPopupSemResp.classList.remove("active");
+        });
+    }
+
+    // ✅ FUNÇÃO PRINCIPAL: Carregar e exibir alertas
+    async function carregarAlertas() {
+        try {
+            const res = await fetch("/api/ordens/alertas/ativos", {
+                headers: { Authorization: "Bearer " + token }
+            });
+
+            if (!res.ok) {
+                console.error("Erro ao buscar alertas:", res.status);
+                return;
+            }
+
+            const alertas = await res.json();
+            console.log("📢 Alertas recebidos:", alertas);
+
+            // ============================================
+            // POP-UP 1: Ordens próximas do vencimento
+            // ============================================
+            if (alertas.prazo && alertas.prazo.length > 0) {
+                alertBodyVencimento.innerHTML = alertas.prazo.map(ordem => `
+                    <div class="alert-item priority-${ordem.prioridade}">
+                        <div class="alert-icon-wrap">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <strong>${ordem.codigo}</strong>
+                            <p>${ordem.titulo}</p>
+                            <small>Vence em: ${formatarData(ordem.data_limite)}</small>
+                            <span class="badge priority-${ordem.prioridade}">Prioridade ${ordem.prioridade}</span>
+                        </div>
+                        <a href="ordens/listar-ordens.html?id=${ordem.id}" class="alert-action">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                `).join('');
+
+                alertPopupVencimento.classList.remove("hidden");
+                setTimeout(() => alertPopupVencimento.classList.add("active"), 100);
+            } else {
+                alertPopupVencimento.classList.add("hidden");
+                alertPopupVencimento.classList.remove("active");
+            }
+
+            // ============================================
+            // POP-UP 2: Ordens sem responsável (>2 dias)
+            // ============================================
+            if (alertas.sem_responsavel && alertas.sem_responsavel.length > 0) {
+                alertBodySemResp.innerHTML = alertas.sem_responsavel.map(ordem => `
+                    <div class="alert-item priority-${ordem.prioridade}">
+                        <div class="alert-icon-wrap">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                        <div class="alert-content">
+                            <strong>${ordem.codigo}</strong>
+                            <p>${ordem.titulo}</p>
+                            <small>Status: ${ordem.status}</small>
+                            <span class="badge priority-${ordem.prioridade}">Prioridade ${ordem.prioridade}</span>
+                        </div>
+                        <a href="ordens/listar-ordens.html?id=${ordem.id}" class="alert-action">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                `).join('');
+
+                alertPopupSemResp.classList.remove("hidden");
+                setTimeout(() => alertPopupSemResp.classList.add("active"), 100);
+            } else {
+                alertPopupSemResp.classList.add("hidden");
+                alertPopupSemResp.classList.remove("active");
+            }
+
+        } catch (err) {
+            console.error("Erro ao carregar alertas:", err);
+        }
+    }
+
+    // ✅ Função auxiliar: Formatar data
+    function formatarData(data) {
+        if (!data) return "N/A";
+        const d = new Date(data);
+        return d.toLocaleDateString("pt-BR");
+    }
+
+    // ✅ Carregar alertas ao abrir a página (apenas para suporte)
+    if (user && user.role === "suporte" && alertPopupVencimento && alertPopupSemResp) {
+        carregarAlertas();
+
+        // ✅ Recarregar alertas a cada 30 segundos (atualização automática)
+        setInterval(carregarAlertas, 30000);
     }
 });

@@ -10,6 +10,7 @@ import { enviarEmailRedefinirSenha } from "../services/mailerService.js";
 export async function cadastrarUsuario(req, res) {
   const { nome, email, senha, matricula } = req.body;
   try {
+    // Busca a matrícula autorizada
     const matriculaResult = await pool.query(
       "SELECT * FROM matriculas_autorizadas WHERE matricula = $1 AND status = 'ativa'",
       [matricula]
@@ -19,7 +20,22 @@ export async function cadastrarUsuario(req, res) {
       return res.status(400).json({ erro: "Matrícula inválida ou inativa" });
     }
 
-    const role = matriculaResult.rows[0].role;
+    const matriculaData = matriculaResult.rows[0];
+    const nomePrecadastrado = matriculaData.nome_pre_cadastrado;
+
+    // Valida se o nome fornecido corresponde ao nome pré-cadastrado
+    // Remove espaços extras e compara ignorando maiúsculas/minúsculas
+    const nomeNormalizado = nome.trim().toLowerCase();
+    const nomePrecadastradoNormalizado = nomePrecadastrado.trim().toLowerCase();
+
+    if (nomeNormalizado !== nomePrecadastradoNormalizado) {
+      return res.status(400).json({ 
+        erro: "Nome não corresponde ao cadastrado para esta matrícula",
+        nomeCadastrado: nomePrecadastrado 
+      });
+    }
+
+    const role = matriculaData.role;
     const senhaHash = await bcrypt.hash(senha, 10);
 
     const userResult = await pool.query(
@@ -57,7 +73,7 @@ export async function login(req, res) {
     }
 
     const token = jwt.sign(
-      { id: user.id, role: user.role, nome:user.name },
+      { id: user.id, role: user.role, nome: user.nome },
       "segredo123",
       { expiresIn: "1h" }
     );
@@ -88,7 +104,7 @@ export async function recuperarSenha(req, res) {
     await pool.query(
       `INSERT INTO resetSenha (user_id, token, expira_em, usado)
        VALUES ($1, $2, $3, $4)`,
-      [user.id, token, expiraEm, usado]   // <-- AGORA TEM 4
+      [user.id, token, expiraEm, usado]
     );
 
     await enviarEmailRedefinirSenha(user.nome, user.email, token);

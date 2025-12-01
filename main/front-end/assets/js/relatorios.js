@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateEnd = document.getElementById('date-end');
     const resetFiltersBtn = document.getElementById('reset-filters');
     const generateReportBtn = document.getElementById('generate-report');
-    const reportsHistoryBody = document.getElementById('reports-history-body');
 
     // Elementos de estatísticas
     const totalOrdersEl = document.getElementById('total-orders');
@@ -32,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function init() {
         setupEventListeners();
         loadStatistics(); // ✅ Carrega estatísticas REAIS
-        loadReportsHistory();
+       // loadReportsHistory();
         setDefaultDates();
         updateReportMetaCards(); // ✅ Atualiza contadores dos cards
     }
@@ -186,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 `Relatório ${getReportName(reportType)} gerado com sucesso! O PDF foi aberto em uma nova aba.`);
 
             // Recarregar histórico
-            await loadReportsHistory();
+            //await loadReportsHistory();
 
         } catch (error) {
             showCustomAlert('error', 'Erro', error.message || 'Não foi possível gerar o relatório.');

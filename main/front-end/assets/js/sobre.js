@@ -68,5 +68,125 @@ document.addEventListener('DOMContentLoaded', () => {
     // Aplicar fallback a todas as imagens
     document.querySelectorAll('.card-image img, .advisor-image img').forEach(img => {
         img.onerror = () => handleImageError(img);
+
+
+        // =========================
+        // 5. POP-UPS DE ALERTAS
+        // =========================
+
+        // Elementos dos pop-ups
+        const alertPopupVencimento = document.getElementById("alertPopupVencimento");
+        const alertBodyVencimento = document.getElementById("alertBodyVencimento");
+        const closeVencimento = document.getElementById("closeVencimento");
+
+        const alertPopupSemResp = document.getElementById("alertPopupSemResp");
+        const alertBodySemResp = document.getElementById("alertBodySemResp");
+        const closeSemResp = document.getElementById("closeSemResp");
+
+        // Botões de fechar
+        if (closeVencimento) {
+            closeVencimento.addEventListener("click", () => {
+                alertPopupVencimento.classList.add("hidden");
+                alertPopupVencimento.classList.remove("active");
+            });
+        }
+
+        if (closeSemResp) {
+            closeSemResp.addEventListener("click", () => {
+                alertPopupSemResp.classList.add("hidden");
+                alertPopupSemResp.classList.remove("active");
+            });
+        }
+
+        // ✅ FUNÇÃO PRINCIPAL: Carregar e exibir alertas
+        async function carregarAlertas() {
+            try {
+                const res = await fetch("/api/ordens/alertas/ativos", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+
+                if (!res.ok) {
+                    console.error("Erro ao buscar alertas:", res.status);
+                    return;
+                }
+
+                const alertas = await res.json();
+                console.log("📢 Alertas recebidos:", alertas);
+
+                // ============================================
+                // POP-UP 1: Ordens próximas do vencimento
+                // ============================================
+                if (alertas.prazo && alertas.prazo.length > 0) {
+                    alertBodyVencimento.innerHTML = alertas.prazo.map(ordem => `
+                        <div class="alert-item priority-${ordem.prioridade}">
+                            <div class="alert-icon-wrap">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <strong>${ordem.codigo}</strong>
+                                <p>${ordem.titulo}</p>
+                                <small>Vence em: ${formatarData(ordem.data_limite)}</small>
+                                <span class="badge priority-${ordem.prioridade}">Prioridade ${ordem.prioridade}</span>
+                            </div>
+                            <a href="ordens/listar-ordens.html?id=${ordem.id}" class="alert-action">
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    `).join('');
+
+                    alertPopupVencimento.classList.remove("hidden");
+                    setTimeout(() => alertPopupVencimento.classList.add("active"), 100);
+                } else {
+                    alertPopupVencimento.classList.add("hidden");
+                    alertPopupVencimento.classList.remove("active");
+                }
+
+                // ============================================
+                // POP-UP 2: Ordens sem responsável (>2 dias)
+                // ============================================
+                if (alertas.sem_responsavel && alertas.sem_responsavel.length > 0) {
+                    alertBodySemResp.innerHTML = alertas.sem_responsavel.map(ordem => `
+                        <div class="alert-item priority-${ordem.prioridade}">
+                            <div class="alert-icon-wrap">
+                                <i class="fas fa-user-times"></i>
+                            </div>
+                            <div class="alert-content">
+                                <strong>${ordem.codigo}</strong>
+                                <p>${ordem.titulo}</p>
+                                <small>Status: ${ordem.status}</small>
+                                <span class="badge priority-${ordem.prioridade}">Prioridade ${ordem.prioridade}</span>
+                            </div>
+                            <a href="ordens/listar-ordens.html?id=${ordem.id}" class="alert-action">
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    `).join('');
+
+                    alertPopupSemResp.classList.remove("hidden");
+                    setTimeout(() => alertPopupSemResp.classList.add("active"), 100);
+                } else {
+                    alertPopupSemResp.classList.add("hidden");
+                    alertPopupSemResp.classList.remove("active");
+                }
+
+            } catch (err) {
+                console.error("Erro ao carregar alertas:", err);
+            }
+        }
+
+        // ✅ Função auxiliar: Formatar data
+        function formatarData(data) {
+            if (!data) return "N/A";
+            const d = new Date(data);
+            return d.toLocaleDateString("pt-BR");
+        }
+
+        // ✅ Carregar alertas ao abrir a página (apenas para suporte)
+        if (user && user.role === "suporte" && alertPopupVencimento && alertPopupSemResp) {
+            carregarAlertas();
+
+            // ✅ Recarregar alertas a cada 30 segundos (atualização automática)
+            setInterval(carregarAlertas, 30000);
+        }
     });
 });

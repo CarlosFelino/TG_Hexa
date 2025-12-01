@@ -51,19 +51,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="ordens/listar-ordens.html">
+                    <a href="listar-ordens.html">
                         <i class="fas fa-list-ul"></i>
                         <span>Listar Ordens</span>
                     </a>
                 </li>
                 <li>
-                    <a href="ordens/criar-ordem.html">
+                    <a href="criar-ordem.html">
                         <i class="fas fa-plus-circle"></i>
                         <span>Criar Ordem</span>
                     </a>
                 </li>
                 <li>
-                    <a href="ordens/minhas-ordens.html">
+                    <a href="minhas-ordens.html">
                         <i class="fas fa-user-cog"></i>
                         <span>Minhas Ordens</span>
                     </a>
@@ -72,125 +72,99 @@
         </nav>
     </aside>
 
-    <!-- Painel de Controle -->
+    <!-- Conteúdo Principal -->
     <main class="suporte-content">
-        <div class="dashboard-header">
-            <h1><i class="fas fa-tachometer-alt"></i> Painel de Controle</h1>
-            <p class="subtitle">Bem-vindo, <strong id="welcomeName"></strong>. Aqui está o resumo das atividades.</p>
+        <div class="welcome-banner">
+            <h1>Bem-vindo, <span id="welcomeName"></span>!</h1>
+            <p>O que você precisa fazer hoje?</p>
         </div>
 
-        <!-- Cards de Resumo -->
-        <div class="summary-cards">
-            <div class="summary-card pending">
-                <div class="card-content">
-                    <h3>Ordens Pendentes</h3>
-                    <div class="card-value" id="cardPendentes">0</div>
-                    <a href="ordens/listar-ordens.html?status=pending" class="card-link">
-                        Ver todas <i class="fas fa-arrow-right"></i>
-                    </a>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <!-- Card Listar Ordens -->
+            <a href="listar-ordens.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(137, 6, 230, 0.1);">
+                    <i class="fas fa-list-ul" style="color: #8906e6;"></i>
                 </div>
-                <div class="card-icon"><i class="fas fa-clock"></i></div>
-            </div>
+                <h3>Listar Ordens</h3>
+                <p>Visualize e gerencie todas as ordens</p>
+                <div class="card-badge" id="badgePendentes">0</div>
+            </a>
 
-            <div class="summary-card in-progress">
-                <div class="card-content">
-                    <h3>Em Andamento</h3>
-                    <div class="card-value" id="cardAndamento">0</div>
-                    <a href="ordens/listar-ordens.html?status=in-progress" class="card-link">
-                        Ver todas <i class="fas fa-arrow-right"></i>
-                    </a>
+            <!-- Card Criar Ordem -->
+            <a href="criar-ordem.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(5, 13, 235, 0.1);">
+                    <i class="fas fa-plus-circle" style="color: #050deb;"></i>
                 </div>
-                <div class="card-icon"><i class="fas fa-spinner"></i></div>
-            </div>
+                <h3>Criar Ordem</h3>
+                <p>Registre um novo problema técnico</p>
+                <div class="card-badge">+ Novo</div>
+            </a>
 
-            <div class="summary-card assigned">
-                <div class="card-content">
-                    <h3>Atribuídas a Mim</h3>
-                    <div class="card-value" id="cardMinhas">0</div>
-                    <a href="ordens/minhas-ordens.html" class="card-link">
-                        Ver minhas <i class="fas fa-arrow-right"></i>
-                    </a>
+            <!-- Card Minhas Ordens -->
+            <a href="minhas-ordens.html" class="action-card">
+                <div class="card-icon" style="background-color: rgba(76, 175, 80, 0.1);">
+                    <i class="fas fa-user-cog" style="color: #4CAF50;"></i>
                 </div>
-                <div class="card-icon"><i class="fas fa-user-cog"></i></div>
-            </div>
-
-            <div class="summary-card completed">
-                <div class="card-content">
-                    <h3>Concluídas (7 dias)</h3>
-                    <div class="card-value" id="cardConcluidas">0</div>
-                    <a href="ordens/listar-ordens.html?status=completed" class="card-link">
-                        Ver todas <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-                <div class="card-icon"><i class="fas fa-check-circle"></i></div>
-            </div>
+                <h3>Minhas Ordens</h3>
+                <p>Visualize suas ordens atribuídas</p>
+                <div class="card-badge" id="badgeMinhas">0</div>
+            </a>
         </div>
-
-
 
         <!-- Seção de Ordens Recentes -->
-        <div class="recent-orders">
-            <div class="section-header">
-                <h2><i class="fas fa-history"></i> Ordens Recentes</h2>
-
-            </div>
-
-            <!-- Container preenchido pelo JS -->
+        <section class="recent-orders">
+            <h2><i class="fas fa-history"></i> Ordens Recentes</h2>
             <div class="orders-grid" id="recentOrders"></div>
+        </section>
+    </main>
+
+    <!-- Modal de Detalhes -->
+    <div id="detalhesModal" class="modal">
+        <div class="modal-content" id="modalContent">
+            <span class="modal-close" id="modalClose">&times;</span>
         </div>
+    </div>
 
-        <!-- Modal de Detalhes -->
-        <div id="detalhesModal" class="modal">
-            <div class="modal-content" id="modalContent">
-                <span class="modal-close" id="modalClose">&times;</span>
-            </div>
+    <!-- Pop-up lateral de alertas -->
+    <div id="alertPopup" class="alert-popup hidden">
+        <div class="alert-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Avisos Importantes</span>
+            <button id="closeAlert" class="close-btn">&times;</button>
         </div>
-
-        <!-- Pop-up lateral de alertas -->
-        <div id="alertPopup" class="alert-popup hidden">
-            <div class="alert-header">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>Avisos Importantes</span>
-                <button id="closeAlert" class="close-btn">&times;</button>
-            </div>
-            <div class="alert-body" id="alertBody">
-                <!-- Mensagens aparecem aqui -->
-            </div>
+        <div class="alert-body" id="alertBody">
+            <!-- Mensagens aparecem aqui -->
         </div>
+    </div>
 
-
-            </div>
-        </div>
-
-        <!-- Pop-up lateral: Ordens próximas do vencimento -->
-        <div id="alertPopupVencimento" class="alert-popup warning hidden">
-          <div class="alert-header">
+    <!-- Pop-up lateral: Ordens próximas do vencimento -->
+    <div id="alertPopupVencimento" class="alert-popup warning hidden">
+        <div class="alert-header">
             <div class="alert-title">
-              <span class="alert-icon"><i class="fas fa-hourglass-half"></i></span>
-              <span>Ordens Próximas do Vencimento</span>
+                <span class="alert-icon"><i class="fas fa-hourglass-half"></i></span>
+                <span>Ordens Próximas do Vencimento</span>
             </div>
             <button class="close-btn" id="closeVencimento">&times;</button>
-          </div>
-          <div class="alert-body" id="alertBodyVencimento">
-            <!-- Mensagens serão inseridas pelo JS -->
-          </div>
         </div>
+        <div class="alert-body" id="alertBodyVencimento">
+            <!-- Mensagens serão inseridas pelo JS -->
+        </div>
+    </div>
 
-        <!-- Pop-up lateral: Ordens sem responsável -->
-        <div id="alertPopupSemResp" class="alert-popup error hidden">
-          <div class="alert-header">
+    <!-- Pop-up lateral: Ordens sem responsável -->
+    <div id="alertPopupSemResp" class="alert-popup error hidden">
+        <div class="alert-header">
             <div class="alert-title">
-              <span class="alert-icon"><i class="fas fa-user-slash"></i></span>
-              <span>Ordens Sem Responsável</span>
+                <span class="alert-icon"><i class="fas fa-user-slash"></i></span>
+                <span>Ordens Sem Responsável</span>
             </div>
             <button class="close-btn" id="closeSemResp">&times;</button>
-          </div>
-          <div class="alert-body" id="alertBodySemResp">
-            <!-- Mensagens serão inseridas pelo JS -->
-          </div>
         </div>
-
-    </main>
+        <div class="alert-body" id="alertBodySemResp">
+            <!-- Mensagens serão inseridas pelo JS -->
+        </div>
+    </div>
 
     <!-- Script do painel de suporte -->
     <script src="../../assets/js/suporte.js"></script>

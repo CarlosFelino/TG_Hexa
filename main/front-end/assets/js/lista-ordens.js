@@ -1,11 +1,109 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const user = JSON.parse(localStorage.getItem("currentUser")) || {};
     const token = localStorage.getItem("authToken");
-    const API_URL = window.location.origin; // URL base da aplicação
+    const API_URL = window.location.origin;
 
     // Atualiza cabeçalho
-    document.getElementById("userName").textContent = user.nome || user.name || "João Luis Souza";
-    document.getElementById("userEmail").textContent = user.email || "user@example.com";
+    document.getElementById("userName").textContent = user.nome || user.name || "Suporte";
+    document.getElementById("userEmail").textContent = user.email || "suporte@fatec.sp.gov.br";
+
+    // ============================
+    // Variáveis globais
+    // ============================
+    let ordemEncerrando = null;
+    let currentAction = null;
+    let currentOrderId = null;
+    let allOrders = [];
+
+    // ============================
+    // Sistema de Confirmação Personalizado
+    // ============================
+    function showCustomConfirm(message) {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('custom-confirm-modal');
+            const messageEl = document.getElementById('confirm-message');
+            const cancelBtn = document.getElementById('confirm-cancel');
+            const okBtn = document.getElementById('confirm-ok');
+
+            messageEl.textContent = message;
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+
+            const cleanup = () => {
+                modal.classList.remove('active');
+                modal.classList.add('hidden');
+                cancelBtn.removeEventListener('click', onCancel);
+                okBtn.removeEventListener('click', onOk);
+            };
+
+            const onCancel = () => {
+                cleanup();
+                resolve(false);
+            };
+
+            const onOk = () => {
+                cleanup();
+                resolve(true);
+            };
+
+            cancelBtn.addEventListener('click', onCancel);
+            okBtn.addEventListener('click', onOk);
+
+            // Fechar modal ao clicar fora ou no X
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) onCancel();
+            });
+
+            document.querySelectorAll('#custom-confirm-modal .modal-close').forEach(btn => {
+                btn.addEventListener('click', onCancel);
+            });
+        });
+    }
+
+    function showNotification(message, type = 'success') {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('notification-modal');
+            const messageEl = document.getElementById('notification-message');
+            const header = modal.querySelector('.modal-header h3');
+            const icon = header.querySelector('i');
+
+            messageEl.textContent = message;
+
+            // Configurar estilo baseado no tipo
+            if (type === 'success') {
+                header.innerHTML = '<i class="fas fa-check-circle"></i> Sucesso';
+                modal.querySelector('.modal-header').style.background = '#d4edda';
+                header.style.color = '#155724';
+            } else if (type === 'error') {
+                header.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro';
+                modal.querySelector('.modal-header').style.background = '#f8d7da';
+                header.style.color = '#721c24';
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+
+            const cleanup = () => {
+                modal.classList.remove('active');
+                modal.classList.add('hidden');
+                document.querySelectorAll('#notification-modal .modal-close, #notification-modal .modal-close-btn').forEach(btn => {
+                    btn.removeEventListener('click', onClose);
+                });
+            };
+
+            const onClose = () => {
+                cleanup();
+                resolve();
+            };
+
+            document.querySelectorAll('#notification-modal .modal-close, #notification-modal .modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', onClose);
+            });
+
+            // Fechar automaticamente após 3 segundos
+            setTimeout(onClose, 3000);
+        });
+    }
 
     // ============================
     // Funções principais da API
@@ -22,11 +120,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             return Array.isArray(data) ? data : (data.ordens || []);
         } catch (err) {
             console.error("Erro ao buscar ordens:", err);
+            await showNotification("Erro ao carregar ordens", "error");
             return [];
         }
     }
 
-    // ✅ NOVA FUNÇÃO: Buscar anexos de uma ordem
     async function buscarAnexosOrdem(ordemId) {
         try {
             const res = await fetch(`${API_URL}/api/ordens/${ordemId}/anexos`, {
@@ -50,7 +148,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     async function assumirOrdem(id) {
-        if (!confirm("Deseja realmente assumir esta ordem?")) return;
+        const confirmed = await showCustomConfirm("Deseja realmente assumir esta ordem?");
+        if (!confirmed) return;
+
         try {
             const res = await fetch(`/api/ordens/${id}/assumir`, {
                 method: "POST",
@@ -62,15 +162,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error(erro.erro || "Erro ao assumir ordem.");
             }
 
-            alert("✅ Ordem assumida com sucesso!");
-            loadOrders();
+            await showNotification("✅ Ordem assumida com sucesso!");
+            await loadOrders();
         } catch (err) {
-            alert(err.message);
+            await showNotification(`❌ ${err.message}`, "error");
         }
     }
 
-    async function finalizarOrdem(id) {
-        if (!confirm("Deseja marcar esta ordem como concluída?")) return;
+    async function finalizarOrdem(id, solucao) {
         try {
             const res = await fetch(`/api/ordens/${id}/concluir`, {
                 method: "POST",
@@ -78,7 +177,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ solucao: "Ordem concluída pelo técnico." })
+                body: JSON.stringify({ solucao })
             });
 
             if (!res.ok) {
@@ -86,12 +185,57 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error(erro.erro || "Erro ao finalizar ordem.");
             }
 
-            alert("✅ Ordem finalizada com sucesso!");
-            loadOrders();
+            await showNotification("✅ Ordem finalizada com sucesso!");
+            await loadOrders();
         } catch (err) {
-            alert(err.message);
+            await showNotification(`❌ ${err.message}`, "error");
         }
     }
+
+    // ============================
+    // Sistema de Filtros
+    // ============================
+    function applyFilters() {
+        const searchTerm = document.getElementById("search-orders").value.toLowerCase();
+        const statusFilter = document.getElementById("filter-status").value;
+        const typeFilter = document.getElementById("filter-type").value;
+
+        const filtered = allOrders.filter(order => {
+            // Filtro de busca por nome (título, código, responsável)
+            const matchesSearch = !searchTerm || 
+                (order.titulo && order.titulo.toLowerCase().includes(searchTerm)) ||
+                (order.codigo && order.codigo.toLowerCase().includes(searchTerm)) ||
+                (order.responsavel_nome && order.responsavel_nome.toLowerCase().includes(searchTerm));
+
+            // Filtro de status
+            const statusMap = {
+                'pending': 'Pendente',
+                'in-progress': 'Em Andamento',
+                'completed': 'Concluída',
+                'not-completed': 'Não Concluída'
+            };
+            const matchesStatus = !statusFilter || order.status === statusMap[statusFilter];
+
+            // Filtro de tipo
+            const matchesType = !typeFilter || order.tipo_solicitacao === typeFilter;
+
+            return matchesSearch && matchesStatus && matchesType;
+        });
+
+        renderTable(filtered);
+    }
+
+    // Event listeners para filtros
+    document.getElementById("search-orders").addEventListener("input", applyFilters);
+    document.getElementById("filter-status").addEventListener("change", applyFilters);
+    document.getElementById("filter-type").addEventListener("change", applyFilters);
+
+    document.getElementById("reset-filters").addEventListener("click", () => {
+        document.getElementById("search-orders").value = "";
+        document.getElementById("filter-status").value = "";
+        document.getElementById("filter-type").value = "";
+        applyFilters();
+    });
 
     // ============================
     // Renderização da tabela
@@ -101,7 +245,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tbody.innerHTML = "";
 
         if (orders.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="9" class="loading">Nenhuma ordem encontrada.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" class="loading">Nenhuma ordem encontrada.</td></tr>`;
             return;
         }
 
@@ -109,7 +253,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const tr = document.createElement("tr");
             const statusClass = order.status.toLowerCase().replace(/\s/g, "-");
 
-            const criador = order.criador_nome || "—";
             const responsavel = order.responsavel_nome || "Não atribuído";
             const isMinha = order.responsavel_id === user.id;
             const tipo = order.tipo_solicitacao === "problema" ? "Problema" : "Instalação";
@@ -117,21 +260,34 @@ document.addEventListener("DOMContentLoaded", async () => {
             const dataCriacao = new Date(order.data_criacao).toLocaleDateString("pt-BR");
             const titulo = order.titulo || "(sem título)";
 
-            // Determina botões de ação
+            // Lógica de botões
             let actionsHTML = `<button class="view-btn" data-action="view" data-id="${order.id}">
-                <i class="fas fa-eye"></i>
+                <i class="fas fa-eye"></i> Detalhes
             </button>`;
 
-            if (!order.responsavel_nome) {
+            // Só mostra "Assumir" se não tiver responsável E status for Pendente
+            if (!order.responsavel_nome && order.status === "Pendente") {
                 actionsHTML += `<button class="btn-assumir" data-action="assumir" data-id="${order.id}">
                     <i class="fas fa-hand"></i> Assumir
                 </button>`;
-            } else if (isMinha && order.status !== "Concluída") {
-                actionsHTML += `<button class="btn-encerrar" data-action="finalizar" data-id="${order.id}">
+            } 
+            // Se é minha ordem E está em andamento, posso finalizar
+            else if (isMinha && order.status === "Em Andamento") {
+                actionsHTML += `<button class="btn-encerrar" data-action="encerrar" data-id="${order.id}">
                     <i class="fas fa-check"></i> Finalizar
                 </button>`;
-            } else if (!isMinha && order.responsavel_nome) {
-                actionsHTML += `<span class="disabled"><i class="fas fa-user-lock"></i> Outro técnico</span>`;
+            }
+            // Ordem de outro técnico
+            else if (!isMinha && order.responsavel_nome) {
+                actionsHTML += `<span class="disabled">
+                    <i class="fas fa-user-lock"></i> Outro técnico
+                </span>`;
+            }
+            // Ordem concluída ou não concluída
+            else if (order.status === "Concluída" || order.status === "Não Concluída") {
+                actionsHTML += `<span class="disabled">
+                    <i class="fas fa-ban"></i> ${order.status}
+                </span>`;
             }
 
             tr.innerHTML = `
@@ -149,7 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ============================
-    // Modal de detalhes (✅ ATUALIZADO COM IMAGENS)
+    // Modal de detalhes
     // ============================
     async function openDetails(order) {
         const modal = document.getElementById("order-details-modal");
@@ -173,8 +329,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     <div class="anexo-item">
                                         <img src="${fullUrl}" 
                                              alt="${anexo.nome}" 
-                                             class="anexo-imagem" />
-                                        <a href="${fullUrl}" target="_blank" class="anexo-link">
+                                             class="anexo-imagem"
+                                             onclick="window.open('${fullUrl}', '_blank')" />
+                                        <a href="${fullUrl}" target="_blank" class="anexo-link" download="${anexo.nome}">
                                             <i class="fas fa-download"></i> ${anexo.nome}
                                         </a>
                                     </div>
@@ -182,7 +339,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             } else {
                                 return `
                                     <div class="anexo-item">
-                                        <a href="${fullUrl}" target="_blank" class="anexo-link">
+                                        <a href="${fullUrl}" target="_blank" class="anexo-link" download="${anexo.nome}">
                                             <i class="fas fa-file"></i> ${anexo.nome}
                                         </a>
                                     </div>
@@ -208,11 +365,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             ${anexosHTML}
         `;
 
-        modal.style.display = "flex";
+        modal.classList.remove('hidden');
+        modal.classList.add('active');
     }
 
     // ============================
-    // Eventos da tabela
+    // Event Listeners
     // ============================
     document.getElementById("ordersTable").addEventListener("click", async (e) => {
         const btn = e.target.closest("button");
@@ -226,79 +384,77 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!order) return;
 
-        if (action === "assumir") await assumirOrdem(id);
-        else if (action === "encerrar") {
+        if (action === "assumir") {
+            await assumirOrdem(id);
+        } else if (action === "encerrar") {
             ordemEncerrando = id;
             document.getElementById("popup-encerrar").classList.remove("hidden");
+            document.getElementById("popup-encerrar").classList.add("active");
+        } else if (action === "view") {
+            await openDetails(order);
         }
-        else if (action === "view") await openDetails(order);
     });
 
-    // ============================
-    // Fechar modal
-    // ============================
-    document.querySelectorAll(".modal-close").forEach(btn =>
-        btn.addEventListener("click", () => {
-            document.getElementById("order-details-modal").style.display = "none";
-        })
-    );
+    // Fechar modais
+    document.querySelectorAll(".modal-close, .modal-close-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+            const modal = this.closest('.modal') || this.closest('.popup');
+            modal.classList.remove("active");
+            modal.classList.add("hidden");
+        });
+    });
+
+    // Fechar modal clicando fora
+    document.querySelectorAll('.modal, .popup').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                this.classList.add('hidden');
+            }
+        });
+    });
+
+    // Modal de encerrar ordem
+    document.addEventListener("click", async (e) => {
+        const target = e.target;
+
+        // Cancelar encerramento
+        if (target.id === "cancelar-encerrar") {
+            document.getElementById("popup-encerrar").classList.remove("active");
+            document.getElementById("popup-encerrar").classList.add("hidden");
+            document.getElementById("solucao-texto").value = "";
+            ordemEncerrando = null;
+        }
+
+        // Confirmar encerramento
+        if (target.id === "confirmar-encerrar" && ordemEncerrando) {
+            const texto = document.getElementById("solucao-texto").value.trim();
+            if (!texto) {
+                await showNotification("Por favor, descreva como o problema foi resolvido.", "error");
+                return;
+            }
+
+            try {
+                document.getElementById("popup-encerrar").classList.remove("active");
+                document.getElementById("popup-encerrar").classList.add("hidden");
+
+                await finalizarOrdem(ordemEncerrando, texto);
+
+                document.getElementById("solucao-texto").value = "";
+                ordemEncerrando = null;
+            } catch (err) {
+                await showNotification("Falha ao encerrar ordem: " + err.message, "error");
+            }
+        }
+    });
 
     // ============================
     // Inicialização
     // ============================
     async function loadOrders() {
-        const orders = await fetchOrders();
-        renderTable(orders);
+        allOrders = await fetchOrders();
+        renderTable(allOrders);
     }
-
-    //modal finalizar ordem
-    let ordemEncerrando = null;
-
-    document.addEventListener("click", async (e) => {
-      const target = e.target;
-
-      // Abrir pop-up
-      if (target.classList.contains("btn-encerrar")) {
-        ordemEncerrando = target.dataset.id;
-        document.getElementById("popup-encerrar").classList.remove("hidden");
-      }
-
-      // Cancelar
-      if (target.id === "cancelar-encerrar") {
-        document.getElementById("popup-encerrar").classList.add("hidden");
-        ordemEncerrando = null;
-      }
-
-      // Confirmar encerramento
-      if (target.id === "confirmar-encerrar" && ordemEncerrando) {
-        const texto = document.getElementById("solucao-texto").value.trim();
-        if (!texto) {
-          alert("Por favor, descreva como o problema foi resolvido.");
-          return;
-        }
-
-        try {
-          const token = localStorage.getItem("authToken");
-          const res = await fetch(`/api/ordens/${ordemEncerrando}/concluir`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({ solucao: texto })
-          });
-
-          if (!res.ok) throw new Error("Erro ao encerrar a ordem");
-
-          alert("Ordem encerrada com sucesso!");
-          document.getElementById("popup-encerrar").classList.add("hidden");
-          ordemEncerrando = null;
-          location.reload();
-        } catch (err) {
-          alert("Falha ao encerrar ordem: " + err.message);
-        }
-      }
-    });
 
     loadOrders();
 });

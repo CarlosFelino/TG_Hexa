@@ -81,7 +81,6 @@
                         <span>Importar Matrículas</span>
                     </a>
                 </li>
-            
             </ul>
         </nav>
     </aside>
@@ -110,13 +109,6 @@
                         <option value="Em Manutenção">Em Manutenção</option>
                         <option value="Inativo">Inativo</option>
                     </select>
-                    <!-- <select id="filter-category">
-                        <option value="">Todas as categorias</option>
-                        <option value="computador">Computador</option>
-                        <option value="periferico">Periférico</option>
-                        <option value="projetor">Projetor</option>
-                        <option value="mobilia">Mobília</option>
-                    </select> -->
                 </div>
                 <div class="filter-group">
                     <button class="btn btn-secondary" id="reset-filters">
@@ -180,45 +172,23 @@
                 </div>
             </div>
 
-            <div id="modal-form" class="modal">
-                <div class="modal-content form-modal">
-                    <h2><i class="fas fa-plus"></i> Novo Patrimônio</h2>
-                    
-                    <div class="form-group">
-                        <label class="required-field">Número do Patrimônio</label>
-                        <input type="text" id="form-patrimonio" required>
-                        <div class="field-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="required-field">Descrição</label>
-                        <input type="text" id="form-descricao" required>
-                        <div class="field-error"></div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="required-field">Local</label>
-                            <input type="text" id="form-local" required>
-                            <div class="field-error"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select id="form-status">
-                                <option value="Disponível">Disponível</option>
-                                <option value="Em Uso">Em Uso</option>
-                                <option value="Em Manutenção">Em Manutenção</option>
-                                <option value="Inativo">Inativo</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" id="form-cancel">Cancelar</button>
-                        <button class="btn btn-primary" id="form-submit">Salvar</button>
-                    </div>
-                </div>
+            <!-- TABELA COMPLETA ADICIONADA AQUI -->
+            <div class="table-responsive">
+                <table class="patrimonio-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nº Patrimônio</th>
+                            <th>Descrição</th>
+                            <th>Local</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patrimonio-table-body">
+                        <!-- Preenchido via JavaScript -->
+                    </tbody>
+                </table>
             </div>
 
             <!-- Paginação -->
@@ -252,8 +222,8 @@
 
     <script src="../../assets/js/admin.js"></script>
     <script src="../../assets/js/patrimonio.js"></script>
-     <script src="../../assets/js/patrimonio-listar.js"></script>
+    <script src="../../assets/js/patrimonio-listar.js"></script>
     <script src="../../assets/js/globalCred.js"></script>
-     <script src="../../assets/js/globalProfile.js"></script>
+    <script src="../../assets/js/globalProfile.js"></script>
 </body>
 </html>

@@ -8,18 +8,20 @@ CREATE TABLE matriculas_autorizadas (
 
 INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 VALUES 
-('00001', 'professor', 'ativa', 'Ana Paula Ferreira'),
-('2023000000002', 'suporte', 'ativa', 'João Luiz Silva'),
-('00002', 'professor', 'inativa', 'Marcos Lima'),
-('00003', 'professor', 'ativa', 'Luciana Martins'),
-('2023000000005', 'suporte', 'ativa', 'Pedro Henrique'),
-('00004', 'professor', 'ativa', 'Fernanda Souza'),
-('2023000000007', 'suporte', 'inativa', 'Rafael Almeida'),
-('00005', 'professor', 'ativa', 'Bruna Oliveira'),
-('2023000000009', 'suporte', 'ativa', 'Thiago Moreira'),
-('00006', 'professor', 'ativa', 'Juliana Santos'),
-('00007', 'professor', 'inativa', 'Carlos Daniel'),
-('2023000000012', 'suporte', 'ativa', 'Aline Costa'),
-('00008', 'professor', 'ativa', 'Ricardo Mendes'),
-('2023000000014', 'suporte', 'inativa', 'Diana Trevor'),
+
+('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+('00002', 'professor', 'inativa', 'Arya Stark'),
+('00003', 'professor', 'ativa', 'Spock'),
+('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+('00005', 'professor', 'ativa', 'Luke Skywalker'),
+('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+('00006', 'professor', 'ativa', 'Leia Organa'),
+('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+('00008', 'professor', 'ativa', 'James T. Kirk'),
+('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 ('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+

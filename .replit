@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web", "bash"]
+modules = ["web", "nodejs-20", "bash"]
 run = "npm run start"
 
 [nix]
@@ -12,36 +12,8 @@ externalPort = 80
 [[ports]]
 localPort = 5432
 
-[[ports]]
-localPort = 5000
-externalPort = 80
-
 [deployment]
 run = ["sh", "-c", "npm run start"]
 
 [agent]
 expertMode = true
-
-[workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Backend Server"
-
-[[workflows.workflow]]
-name = "Backend Server"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm start"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"

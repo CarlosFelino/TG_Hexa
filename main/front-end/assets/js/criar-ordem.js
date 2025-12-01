@@ -1,5 +1,8 @@
 // assets/js/criar-ordem.js
 
+// Importa globalCred.js se necessário
+// import "../../assets/js/globalCred.js";
+
 document.addEventListener("DOMContentLoaded", function() {
     console.log("✅ Script criar-ordem.js iniciado!");
 
@@ -33,6 +36,33 @@ document.addEventListener("DOMContentLoaded", function() {
             {value:"gabinete-nao-liga", label:"Gabinete não liga"},
             {value:"outro", label:"Outro problema"}
         ],
+        "kit-aluno-desktop":[
+            {value:"sem-video", label:"Monitor não liga"},
+            {value:"sem-internet", label:"Sem Internet"},
+            {value:"gabinete-nao-liga", label:"Gabinete não liga"},
+            {value:"outro", label:"Outro problema"}
+        ],
+        "kit-aluno-notebook":[
+            {value:"sem-internet", label:"Sem Internet"},
+            {value:"bateria", label:"Problema com Bateria"},
+            {value:"nao-liga", label:"Notebook não liga"},
+            {value:"outro", label:"Outro problema"}
+        ],
+        "tv":[
+            {value:"nao-liga", label:"TV não liga"},
+            {value:"sem-sinal", label:"Sem sinal"},
+            {value:"outro", label:"Outro problema"}
+        ],
+        "perifericos":[
+            {value:"mouse-defeito", label:"Mouse com defeito"},
+            {value:"teclado-defeito", label:"Teclado com defeito"},
+            {value:"outro", label:"Outro problema"}
+        ],
+        "conectividade":[
+            {value:"cabo-rede", label:"Problema com cabo de rede"},
+            {value:"keystone", label:"Problema com Keystone"},
+            {value:"outro", label:"Outro problema"}
+        ],
         "default":[
             {value:"outro", label:"Outro problema"}
         ]
@@ -54,7 +84,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Lógica de dependência dos selects
+    // =========================
+    // UPDATE DEPENDÊNCIAS SELECTS
+    // =========================
     function updateLocais(modal) {
         const tipoSelect = getElement(`tipo-ambiente-${modal}`);
         const selectLocal = getElement(`local-detalhe-${modal}`);
@@ -65,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function() {
         else if(tipoAmbiente==="laboratorio") populateSelect(selectLocal, laboratorios);
         else selectLocal.innerHTML = `<option value="">Selecione...</option>`;
 
-        if(modal === "problema") updateKits(modal);
+        updateKits(modal);
     }
 
     function updateKits(modal) {
@@ -86,13 +118,12 @@ document.addEventListener("DOMContentLoaded", function() {
         if(!selectKit || !selectProblema) return;
 
         const kit = selectKit.value || "default";
-        // Verifica se existe lista específica, senão usa default
         const listaProblemas = problemas[kit] || problemas.default;
         populateSelect(selectProblema, listaProblemas);
     }
 
     // =========================
-    // LÓGICA DOS MODAIS
+    // MODAIS
     // =========================
     const modalProblema = getElement("modal-problema");
     const modalInstalacao = getElement("modal-instalacao");
@@ -101,8 +132,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function openModal(modal) {
         if(modal) {
-            modal.classList.add("active"); // Usa a classe do CSS novo
-            document.body.style.overflow = "hidden"; // Previne scroll no fundo
+            modal.classList.add("active");
+            document.body.style.overflow = "hidden";
         }
     }
 
@@ -113,197 +144,175 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Event Listeners para abrir
-    if(abrirProblema) {
-        abrirProblema.addEventListener("click", () => {
-            console.log("Clicou em Relatar Problema");
-            openModal(modalProblema);
-        });
-    }
+    abrirProblema?.addEventListener("click", () => openModal(modalProblema));
+    abrirInstalacao?.addEventListener("click", () => openModal(modalInstalacao));
 
-    if(abrirInstalacao) {
-        abrirInstalacao.addEventListener("click", () => {
-            console.log("Clicou em Solicitar Instalação");
-            openModal(modalInstalacao);
-        });
-    }
-
-    // Event Listeners para fechar (X e Fundo)
     document.querySelectorAll(".close").forEach(btn => {
         btn.addEventListener("click", e => {
-            const target = e.target.dataset.close; // "problema" ou "instalacao"
+            const target = e.target.dataset.close;
             const modal = getElement(`modal-${target}`);
             closeModal(modal);
         });
     });
 
     [modalProblema, modalInstalacao].forEach(modal => {
-        if(modal) {
-            modal.addEventListener("click", e => {
-                if (e.target === modal) closeModal(modal);
-            });
-        }
+        modal?.addEventListener("click", e => {
+            if(e.target === modal) closeModal(modal);
+        });
     });
 
     document.addEventListener("keydown", e => {
-        if (e.key === "Escape") {
+        if(e.key === "Escape") {
             closeModal(modalProblema);
             closeModal(modalInstalacao);
         }
     });
 
-    // Listeners para selects dinâmicos
-    ["problema", "instalacao"].forEach(modal => {
+    ["problema","instalacao"].forEach(modal=>{
         const tipoSelect = getElement(`tipo-ambiente-${modal}`);
         const kitSelect = getElement(`tipo-kit-${modal}`);
-        
-        if(tipoSelect) tipoSelect.addEventListener("change", () => updateLocais(modal));
-        if(kitSelect) kitSelect.addEventListener("change", () => updateProblemas(modal));
+        tipoSelect?.addEventListener("change", ()=>updateLocais(modal));
+        kitSelect?.addEventListener("change", ()=>updateProblemas(modal));
+        updateLocais(modal);
     });
 
     // =========================
     // UPLOAD DE ARQUIVOS
     // =========================
     function handleFileUpload(fileInput, fileList) {
-        if (!fileInput || !fileList) return;
-        
-        // Limpa lista visual atual
+        if(!fileInput || !fileList) return;
+
         fileList.innerHTML = "";
         const files = Array.from(fileInput.files);
 
-        if (files.length > 3) {
+        if(files.length > 3) {
             alert("Máximo de 3 arquivos permitidos.");
-            fileInput.value = ""; // Limpa input
+            fileInput.value = "";
             return;
         }
 
         files.forEach((file, i) => {
             const item = document.createElement("div");
             item.className = "file-item";
-            item.innerHTML = `
-                <i class="fas fa-file"></i>
-                <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</span>
-                <span class="remove" data-index="${i}" style="cursor: pointer; color: red; margin-left: 10px;">&times;</span>
-            `;
+
+            if(file.type.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.className = "preview-thumb";
+                img.alt = file.name;
+                item.appendChild(img);
+            } else {
+                const icon = document.createElement("i");
+                icon.className = "fas fa-file-alt";
+                item.appendChild(icon);
+            }
+
+            const name = document.createElement("span");
+            name.textContent = file.name;
+            item.appendChild(name);
+
+            const remove = document.createElement("span");
+            remove.className = "remove";
+            remove.dataset.index = i;
+            remove.innerHTML = "&times;";
+            item.appendChild(remove);
+
             fileList.appendChild(item);
         });
 
-        // Re-adicionar eventos de remover
-        fileList.querySelectorAll(".remove").forEach(btn => {
-            btn.addEventListener("click", e => {
+        fileList.querySelectorAll(".remove").forEach(btn=>{
+            btn.addEventListener("click", e=>{
                 const index = parseInt(e.target.dataset.index);
+                const newFiles = files.filter((_, i)=>i!==index);
                 const dt = new DataTransfer();
-                const { files } = fileInput;
-                
-                for (let i = 0; i < files.length; i++) {
-                    if (i !== index) dt.items.add(files[i]);
-                }
-                
-                fileInput.files = dt.files; // Atualiza o input real
-                handleFileUpload(fileInput, fileList); // Atualiza visual
+                newFiles.forEach(f=>dt.items.add(f));
+                fileInput.files = dt.files;
+                handleFileUpload(fileInput, fileList);
             });
         });
     }
 
-    // Conectar botão bonito ao input feio
-    const btnUpload = document.getElementById("file-upload-btn");
-    const inputUpload = document.getElementById("file-upload-problema");
-    const listUpload = document.getElementById("file-list-problema");
+    const btnUpload = getElement("file-upload-btn");
+    const inputUpload = getElement("file-upload-problema");
+    const listUpload = getElement("file-list-problema");
 
-    if (btnUpload && inputUpload) {
-        btnUpload.addEventListener("click", () => inputUpload.click());
-        inputUpload.addEventListener("change", () => handleFileUpload(inputUpload, listUpload));
+    if(btnUpload && inputUpload){
+        btnUpload.addEventListener("click", ()=>inputUpload.click());
+        inputUpload.addEventListener("change", ()=>handleFileUpload(inputUpload, listUpload));
     }
 
     // =========================
-    // ENVIO DO FORMULÁRIO
+    // ENVIO DE FORMULÁRIOS
     // =========================
-    const formProblema = getElement("form-problema");
-    const formInstalacao = getElement("form-instalacao");
-
-    async function enviarOrdem(body, fileInput) {
+    async function enviarOrdem(body, filesInput, tipoOrdem, modalElement){
         const token = localStorage.getItem("authToken");
-        if (!token) {
-            alert("Sessão expirada.");
+        if(!token){
+            alert("Sessão expirada. Faça login novamente.");
+            window.location.href="../../index.html";
             return;
         }
 
-        try {
-            let requestBody;
-            let headers = { "Authorization": `Bearer ${token}` };
+        try{
+            let bodyToSend;
+            let headers = {Authorization: `Bearer ${token}`};
 
-            // Se tiver arquivos, usa FormData
-            if (fileInput && fileInput.files.length > 0) {
-                requestBody = new FormData();
-                // Adiciona campos de texto
-                Object.keys(body).forEach(key => requestBody.append(key, body[key]));
-                // Adiciona arquivos
-                Array.from(fileInput.files).forEach(file => requestBody.append("anexos", file));
+            if(filesInput && filesInput.files.length>0){
+                bodyToSend = new FormData();
+                for(const[key,value] of Object.entries(body)) bodyToSend.append(key,value);
+                for(const file of filesInput.files) bodyToSend.append("anexos",file);
             } else {
-                // Se não, usa JSON
-                headers["Content-Type"] = "application/json";
-                requestBody = JSON.stringify(body);
+                headers["Content-Type"]="application/json";
+                bodyToSend = JSON.stringify(body);
             }
 
-            // Simulação de Loading
-            const btn = document.querySelector(".modal.active button[type='submit']");
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-            btn.disabled = true;
-
-            const res = await fetch("/api/ordens", {
-                method: "POST",
-                headers: headers,
-                body: requestBody
+            const res = await fetch("/api/ordens",{
+                method:"POST",
+                headers,
+                body: bodyToSend
             });
 
             const data = await res.json();
+            if(!res.ok) throw new Error(data.erro||"Erro ao criar ordem.");
 
-            if (!res.ok) throw new Error(data.erro || "Erro ao criar ordem");
-
-            alert("✅ Ordem criada com sucesso!");
-            window.location.href = "minhas-ordens.html";
-
-        } catch (err) {
+            alert(`${tipoOrdem==="problema"?"Problema":"Instalação"} enviada com sucesso!`);
+            if(modalElement) closeModal(modalElement);
+            window.location.href="minhas-ordens.html";
+        } catch(err){
             console.error(err);
-            alert("Erro ao enviar: " + err.message);
-            const btn = document.querySelector(".modal.active button[type='submit']");
-            if(btn) {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
+            alert("Erro ao enviar a ordem. Veja console para detalhes.");
         }
     }
 
-    if (formProblema) {
-        formProblema.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const body = {
-                tipo_solicitacao: "problema",
-                titulo: `Problema em ${getElement("local-detalhe-problema").value}`,
-                local_tipo: getElement("tipo-ambiente-problema").value,
-                local_detalhe: getElement("local-detalhe-problema").value,
-                equipamento: getElement("tipo-kit-problema").value,
-                tipo_problema: getElement("tipo-problema-problema").value,
-                descricao: getElement("descricao-problema").value
-            };
-            enviarOrdem(body, getElement("file-upload-problema"));
-        });
-    }
+    const formProblema = getElement("form-problema");
+    const formInstalacao = getElement("form-instalacao");
 
-    if (formInstalacao) {
-        formInstalacao.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const body = {
-                tipo_solicitacao: "instalacao",
-                titulo: `Instalação: ${getElement("app-name-instalacao").value}`,
-                local_tipo: getElement("tipo-ambiente-instalacao").value,
-                local_detalhe: getElement("local-detalhe-instalacao").value,
-                app_nome: getElement("app-name-instalacao").value,
-                app_versao: getElement("app-version-instalacao").value,
-                app_link: getElement("app-link-instalacao").value
-            };
-            enviarOrdem(body, null); // Instalação não tem anexo aqui
-        });
-    }
+    formProblema?.addEventListener("submit", e=>{
+        e.preventDefault();
+        const body = {
+            tipo_solicitacao:"problema",
+            titulo:`${getElement("local-detalhe-problema").value} + ${getElement("tipo-kit-problema").value}`,
+            local_tipo: getElement("tipo-ambiente-problema").value,
+            local_detalhe: getElement("local-detalhe-problema").value,
+            equipamento: getElement("tipo-kit-problema").value,
+            tipo_problema: getElement("tipo-problema-problema").value,
+            descricao: getElement("descricao-problema").value
+        };
+        enviarOrdem(body, getElement("file-upload-problema"), "problema", modalProblema);
+    });
+
+    formInstalacao?.addEventListener("submit", e=>{
+        e.preventDefault();
+        const body = {
+            tipo_solicitacao:"instalacao",
+            titulo:`${getElement("local-detalhe-instalacao").value} + ${getElement("app-name-instalacao").value}`,
+            app_nome: getElement("app-name-instalacao").value,
+            app_versao: getElement("app-version-instalacao").value,
+            app_link: getElement("app-link-instalacao").value,
+            local_tipo: getElement("tipo-ambiente-instalacao").value, 
+            local_detalhe: getElement("local-detalhe-instalacao").value
+        };
+        enviarOrdem(body, null, "instalacao", modalInstalacao);
+    });
+
+    console.log("Sistema Support Nexus - Criar Ordem carregado com sucesso!");
 });

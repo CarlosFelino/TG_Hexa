@@ -79,7 +79,7 @@ export const listarTodasOrdens = async (req, res) => {
       }
 
       return {
-        id: (ordem.codigo || `ORD-${ordem.id}`).replace('#', ''),
+        id: ordem.codigo || `ORD-${ordem.id}`, // Sem # mesmo
         id_numerico: ordem.id, // ID real para operações
         solicitante: ordem.solicitante_nome || 'Não informado',
         email: ordem.solicitante_email || 'Não informado',
@@ -136,25 +136,28 @@ export const listarTodasOrdens = async (req, res) => {
 export const buscarAnexosOrdem = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('🔍 Buscando anexos para ordem:', id);
+    console.log('🔍 [ANEXOS] Buscando anexos para ordem:', id);
 
     // Buscar o ID numérico da ordem
     const ordemResult = await pool.query(
-      "SELECT id FROM ordens WHERE codigo = $1 OR id::text = $1",
+      `SELECT id FROM ordens 
+       WHERE codigo = $1 
+       OR id::text = $1`,
       [id]
     );
 
     if (ordemResult.rows.length === 0) {
-      console.log('❌ Ordem não encontrada:', id);
+      console.log('❌ [ANEXOS] Ordem não encontrada:', id);
       return res.status(404).json({
         success: false,
         message: "Ordem não encontrada"
       });
     }
 
-    console.log('✅ Ordem encontrada, ID numérico:', ordemResult.rows[0].id);
-
     const ordemId = ordemResult.rows[0].id;
+    console.log('✅ [ANEXOS] Ordem encontrada, ID numérico:', ordemId);
+
+
 
     // Buscar anexos
     const anexosResult = await pool.query(
@@ -525,16 +528,27 @@ export const atualizarStatusOrdem = async (req, res) => {
 export const deletarOrdem = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('🗑️ Deletando ordem:', id);
+    console.log('🗑️ [DELETE] ID recebido:', id);
+    console.log('🗑️ [DELETE] Tipo:', typeof id);
 
     // Buscar ID numérico da ordem
+    // Aceita tanto código (ORD-2025-007) quanto ID numérico (7)
     const ordemResult = await pool.query(
-      "SELECT id FROM ordens WHERE codigo = $1 OR id::text = $1",
+      `SELECT id, codigo FROM ordens 
+       WHERE codigo = $1 
+       OR id::text = $1`,
       [id]
     );
 
+    console.log('🗑️ [DELETE] Resultado da busca:', ordemResult.rows);
+
     if (ordemResult.rows.length === 0) {
-      console.log('❌ Ordem não encontrada:', id);
+      console.log('❌ [DELETE] Ordem não encontrada com código/ID:', id);
+
+      // Debug: listar todas as ordens para comparação
+      const todasOrdens = await pool.query('SELECT id, codigo FROM ordens LIMIT 5');
+      console.log('📋 [DELETE] Primeiras ordens no banco:', todasOrdens.rows);
+
       return res.status(404).json({
         success: false,
         message: "Ordem não encontrada"
@@ -542,12 +556,13 @@ export const deletarOrdem = async (req, res) => {
     }
 
     const ordemId = ordemResult.rows[0].id;
-    console.log('✅ Ordem encontrada, deletando ID:', ordemId);
+    const ordemCodigo = ordemResult.rows[0].codigo;
+    console.log('✅ [DELETE] Ordem encontrada - ID:', ordemId, 'Código:', ordemCodigo);
 
     // Deletar a ordem (CASCADE vai deletar automaticamente os registros relacionados)
-    await pool.query("DELETE FROM ordens WHERE id = $1", [ordemId]);
+    const deleteResult = await pool.query("DELETE FROM ordens WHERE id = $1 RETURNING *", [ordemId]);
 
-    console.log('✅ Ordem deletada com sucesso');
+    console.log('✅ [DELETE] Ordem deletada com sucesso:', deleteResult.rowCount, 'registro(s)');
 
     res.status(200).json({
       success: true,
@@ -555,7 +570,8 @@ export const deletarOrdem = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Erro ao deletar ordem:", error);
+    console.error("❌ [DELETE] Erro ao deletar ordem:", error);
+    console.error("❌ [DELETE] Stack:", error.stack);
     res.status(500).json({
       success: false,
       message: "Erro ao deletar ordem",

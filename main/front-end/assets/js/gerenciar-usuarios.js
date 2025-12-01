@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     // Configuração da API
     // =========================
-    const API_URL = "https://40cd6f62-b9ce-40bf-9b67-5082637ff496-00-2goj6eo5b4z6a.riker.replit.dev";
+    const API_URL = "https://59474a86-d1ec-4d8b-be95-f13d54b8921d-00-2dfvvk3i4x3oc.riker.replit.dev";
 
     // =========================
     // Buscar usuários do backend

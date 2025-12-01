@@ -366,7 +366,7 @@ export const atualizarUsuario = async (req, res) => {
 };
 
 // =========================
-// 🗑️ DELETAR USUÁRIO
+// 🗑️ DELETAR USUÁRIO (✅ CORRIGIDO)
 // =========================
 export const deletarUsuario = async (req, res) => {
   const client = await pool.connect();
@@ -376,9 +376,9 @@ export const deletarUsuario = async (req, res) => {
 
     await client.query('BEGIN');
 
-    // Buscar matrícula do usuário
+    // 1️⃣ Buscar informações do usuário
     const userCheck = await client.query(
-      'SELECT matricula FROM users WHERE id = $1',
+      'SELECT matricula, role FROM users WHERE id = $1',
       [id]
     );
 
@@ -392,12 +392,11 @@ export const deletarUsuario = async (req, res) => {
 
     const matricula = userCheck.rows[0].matricula;
 
-    // IMPORTANTE: Deletar na ordem correta
-    // 1º Deletar matrícula autorizada (remove a constraint)
-    await client.query('DELETE FROM matriculas_autorizadas WHERE matricula = $1', [matricula]);
-
-    // 2º Deletar usuário
+    // 2️⃣ ✅ ORDEM CORRETA: Deletar usuário PRIMEIRO
     await client.query('DELETE FROM users WHERE id = $1', [id]);
+
+    // 3️⃣ ✅ DEPOIS deletar a matrícula autorizada
+    await client.query('DELETE FROM matriculas_autorizadas WHERE matricula = $1', [matricula]);
 
     await client.query('COMMIT');
 
@@ -411,7 +410,7 @@ export const deletarUsuario = async (req, res) => {
     console.error("❌ Erro ao deletar usuário:", error);
     console.error("❌ Código do erro:", error.code);
 
-    // Tratamento de erro de constraint (se houver ordens vinculadas, etc)
+    // Tratamento de erro de constraint
     if (error.code === '23503') {
       return res.status(400).json({
         success: false,

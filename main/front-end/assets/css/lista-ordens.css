@@ -1,7 +1,125 @@
 /* =========================
    LISTA DE ORDENS - SUPORTE
-   lista-ordens.css (Versão com Scroll Horizontal)
+   lista-ordens.css (Versão Completa e Estilizada)
    ========================= */
+
+/* =========================
+   HEADER E FILTROS
+   ========================= */
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: var(--text-medium);
+    font-size: 1rem;
+}
+
+.filters-section {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.filter-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    min-width: 300px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(122, 4, 235, 0.1);
+}
+
+.filter-group select {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    background: white;
+    font-size: 0.95rem;
+    min-width: 180px;
+    cursor: pointer;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #6003b0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(122, 4, 235, 0.3);
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
 
 /* =========================
    CONTAINER E SCROLL
@@ -9,19 +127,16 @@
 .orders-container {
     background: #fff;
     padding: 1.5rem;
-    border-radius: 10px;
+    border-radius: 12px;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-    margin-top: 1.5rem;
-    /* Propriedades vitais para o scroll horizontal */
     width: 100%;
-    overflow-x: auto; /* Cria a barra de rolagem automaticamente */
-    -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     position: relative;
 }
 
-/* Estilização da Barra de Rolagem (Scrollbar) */
 .orders-container::-webkit-scrollbar {
-    height: 10px; /* Altura da barra horizontal */
+    height: 10px;
 }
 
 .orders-container::-webkit-scrollbar-track {
@@ -30,13 +145,13 @@
 }
 
 .orders-container::-webkit-scrollbar-thumb {
-    background: #c1c1c1; /* Cor da barra */
+    background: #c1c1c1;
     border-radius: 5px;
     border: 2px solid #f1f1f1;
 }
 
 .orders-container::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary); /* Cor ao passar o mouse */
+    background: var(--secondary);
 }
 
 /* =========================
@@ -45,8 +160,7 @@
 .orders-table {
     width: 100%;
     border-collapse: collapse;
-    /* Define uma largura mínima para FORÇAR o scroll em telas pequenas */
-    min-width: 1000px; 
+    min-width: 1000px;
 }
 
 .orders-table th, 
@@ -56,17 +170,17 @@
     border-bottom: 1px solid var(--border-light);
     font-size: 0.9rem;
     vertical-align: middle;
-    white-space: nowrap; /* Impede que o texto quebre linha, mantendo a tabela larga */
+    white-space: nowrap;
 }
 
 .orders-table th {
-    background: #f8f9fa;
-    color: var(--text-dark);
-    font-weight: 700;
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
     text-transform: uppercase;
     font-size: 0.8rem;
     letter-spacing: 0.5px;
-    position: sticky; /* Opcional: mantem o header fixo se houver scroll vertical */
+    position: sticky;
     top: 0;
 }
 
@@ -75,20 +189,26 @@
 }
 
 .orders-table tbody tr:hover {
-    background-color: #f0f7ff; /* Destaque leve ao passar o mouse */
+    background-color: #f8fafc;
 }
 
-/* Coluna Código */
 .orders-table td:nth-child(1) {
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--text-dark);
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-medium);
+    font-style: italic;
 }
 
 /* =========================
    STATUS (BADGES)
    ========================= */
 .status {
-    padding: 0.4rem 0.8rem;
+    padding: 0.5rem 1rem;
     border-radius: 50px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -97,13 +217,29 @@
     align-items: center;
     gap: 6px;
     justify-content: center;
-    min-width: 100px; /* Garante tamanho uniforme */
+    min-width: 120px;
 }
 
-.status.pendente { background: rgba(255,152,0,0.1); color: #e68900; border: 1px solid rgba(255,152,0,0.2); }
-.status.em-andamento { background: rgba(33,150,243,0.1); color: #0b7ad1; border: 1px solid rgba(33,150,243,0.2); }
-.status.concluída, .status.concluida { background: rgba(76,175,80,0.1); color: #2e7d32; border: 1px solid rgba(76,175,80,0.2); }
-.status.nao-concluida { background: rgba(244, 67, 54, 0.1); color: #c62828; border: 1px solid rgba(244, 67, 54, 0.2); }
+.status.pendente { 
+    background: rgba(255,152,0,0.1); 
+    color: #e68900; 
+    border: 1px solid rgba(255,152,0,0.2); 
+}
+.status.em-andamento { 
+    background: rgba(33,150,243,0.1); 
+    color: #0b7ad1; 
+    border: 1px solid rgba(33,150,243,0.2); 
+}
+.status.concluída, .status.concluida { 
+    background: rgba(76,175,80,0.1); 
+    color: #2e7d32; 
+    border: 1px solid rgba(76,175,80,0.2); 
+}
+.status.nao-concluida, .status.não-concluída { 
+    background: rgba(244, 67, 54, 0.1); 
+    color: #c62828; 
+    border: 1px solid rgba(244, 67, 54, 0.2); 
+}
 
 /* =========================
    AÇÕES (BOTÕES)
@@ -111,49 +247,65 @@
 .actions {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .actions button, .actions .disabled {
     border: none;
-    padding: 0.5rem 0.8rem;
+    padding: 0.6rem 1rem;
     border-radius: 6px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     transition: all 0.2s;
+    min-width: auto;
 }
 
 /* Botão Ver */
 .view-btn { 
-    background: #fff; 
-    border: 1px solid #d1d5db; 
-    color: var(--text-medium); 
+    background: #e2e8f0; 
+    color: #475569; 
 }
-.view-btn:hover { border-color: var(--secondary); color: var(--secondary); }
+.view-btn:hover { 
+    background: #cbd5e1; 
+    transform: translateY(-1px); 
+}
 
 /* Botão Assumir */
 .btn-assumir { 
     background: rgba(122,4,235,0.1); 
-    color: var(--secondary); 
+    color: var(--accent); 
+    border: 1px solid rgba(122,4,235,0.2);
 }
-.btn-assumir:hover { background: var(--secondary); color: white; }
+.btn-assumir:hover { 
+    background: var(--accent); 
+    color: white; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(122, 4, 235, 0.3);
+}
 
 /* Botão Finalizar */
 .btn-encerrar { 
     background: rgba(76,175,80,0.1); 
     color: #2e7d32; 
+    border: 1px solid rgba(76,175,80,0.2);
 }
-.btn-encerrar:hover { background: #2e7d32; color: white; }
+.btn-encerrar:hover { 
+    background: #2e7d32; 
+    color: white; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
 
 /* Botão Desabilitado */
 .disabled {
     background: #f3f4f6;
     color: #9ca3af;
     cursor: not-allowed;
-    border: 1px solid transparent;
+    border: 1px solid #e5e7eb;
 }
 
 /* =========================
@@ -162,22 +314,32 @@
 .modal, .popup {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
     background: rgba(16, 23, 40, 0.7);
     z-index: 2000;
     backdrop-filter: blur(4px);
     justify-content: center;
     align-items: center;
-    padding: 1rem; /* Espaço lateral no mobile */
+    padding: 1rem;
 }
 
-/* Animação suave */
+.modal.active, .popup.active {
+    display: flex;
+}
+
+.hidden {
+    display: none !important;
+}
+
 .modal-content, .popup-content {
     background: white;
     padding: 2rem;
     border-radius: 12px;
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
@@ -203,6 +365,9 @@
     font-size: 1.3rem;
     color: var(--primary-dark);
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .modal-close {
@@ -210,6 +375,74 @@
     cursor: pointer;
     color: #999;
     line-height: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: var(--text-dark);
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+/* Modal de Confirmação Personalizado */
+.confirm-modal {
+    max-width: 400px;
+}
+
+.confirm-modal .modal-header {
+    background: #fff3cd;
+    margin: -2rem -2rem 1.5rem -2rem;
+    padding: 1.5rem 2rem;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+.confirm-modal .modal-header h3 {
+    color: #856404;
+}
+
+.confirm-modal .modal-body {
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* Modal de Notificação */
+.notification-modal {
+    max-width: 400px;
+}
+
+.notification-modal .modal-header {
+    background: #d4edda;
+    margin: -2rem -2rem 1.5rem -2rem;
+    padding: 1.5rem 2rem;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+.notification-modal .modal-header h3 {
+    color: #155724;
+}
+
+.notification-modal .modal-body {
+    text-align: center;
+    font-size: 1.1rem;
 }
 
 /* Campos de Texto no Popup */
@@ -227,7 +460,7 @@
 
 .popup-content textarea:focus {
     outline: none;
-    border-color: var(--secondary);
+    border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(122, 4, 235, 0.1);
 }
 
@@ -257,6 +490,13 @@
     padding: 0.5rem;
     text-align: center;
     background: #f9f9f9;
+    transition: all 0.3s;
+}
+
+.anexo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: var(--accent);
 }
 
 .anexo-imagem {
@@ -265,11 +505,12 @@
     object-fit: cover;
     border-radius: 4px;
     margin-bottom: 0.5rem;
+    cursor: pointer;
 }
 
 .anexo-link {
     font-size: 0.8rem;
-    color: var(--secondary);
+    color: var(--accent);
     text-decoration: none;
     display: block;
     white-space: nowrap;
@@ -277,29 +518,58 @@
     text-overflow: ellipsis;
 }
 
+.anexo-link:hover {
+    text-decoration: underline;
+}
+
 /* =========================
-   RESPONSIVIDADE (Correções Finais)
+   RESPONSIVIDADE
    ========================= */
 
 @media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .search-box {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .filter-group select {
+        width: 100%;
+    }
+
     .orders-container {
         padding: 1rem;
         margin-top: 1rem;
-        /* Assegura que a barra apareça */
-        overflow-x: scroll; 
+        overflow-x: scroll;
     }
 
-    /* Garante que a tabela não encolha e force o scroll */
     .orders-table {
-        min-width: 900px; /* Ajuste conforme a quantidade de colunas */
+        min-width: 900px;
     }
 
-    /* Aumenta a área de toque dos botões no mobile */
+    .actions {
+        flex-direction: column;
+    }
+
     .actions button {
-        padding: 0.6rem 1rem;
+        width: 100%;
+        justify-content: center;
     }
 
-    /* Ajuste nos modais para ocupar mais tela no mobile */
     .modal-content, .popup-content {
         width: 95%;
         padding: 1.5rem;
@@ -307,11 +577,19 @@
     }
 
     .popup-buttons {
-        flex-direction: column; /* Botões empilhados no popup */
+        flex-direction: column;
     }
 
     .popup-buttons button {
         width: 100%;
-        padding: 0.8rem;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+        justify-content: center;
     }
 }

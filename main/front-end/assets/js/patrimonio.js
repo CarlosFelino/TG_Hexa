@@ -1,7 +1,7 @@
 // ===============================================================
 // Configurações iniciais
 // ===============================================================
-const API_URL = `https://40cd6f62-b9ce-40bf-9b67-5082637ff496-00-2goj6eo5b4z6a.riker.replit.dev/api/patrimonios`;
+const API_URL = `https://59474a86-d1ec-4d8b-be95-f13d54b8921d-00-2dfvvk3i4x3oc.riker.replit.dev/api/patrimonios`;
 
 const tableBody = document.getElementById("patrimonio-table-body");
 const addBtn = document.getElementById("add-item-btn");
@@ -55,7 +55,7 @@ function renderTabela(lista) {
     tableBody.innerHTML = "";
 
     if (!lista.length) {
-        tableBody.innerHTML = `<tr><td colspan="8">Nenhum patrimônio encontrado.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6">Nenhum patrimônio encontrado.</td></tr>`;
         return;
     }
 
@@ -66,18 +66,16 @@ function renderTabela(lista) {
             <td>${item.id}</td>
             <td>${item.patrimonio}</td>
             <td>${item.descricao}</td>
-          
             <td>${item.local}</td>
-            <td>${item.status}</td>
-        
-            <td>
-                <button class="action-btn view" data-id="${item.id}">
+            <td><span class="status-badge status-${item.status.toLowerCase().replace(/\s/g, '-')}">${item.status}</span></td>
+            <td class="actions-cell">
+                <button class="btn-table view" data-id="${item.id}" title="Ver detalhes">
                     <i class="fa-solid fa-eye"></i>
                 </button>
-                <button class="action-btn edit" data-id="${item.id}">
+                <button class="btn-table edit" data-id="${item.id}" title="Editar">
                     <i class="fa-solid fa-pen"></i>
                 </button>
-                <button class="action-btn delete" data-id="${item.id}">
+                <button class="btn-table delete" data-id="${item.id}" title="Excluir">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
@@ -100,7 +98,6 @@ function renderTabela(lista) {
     });
 }
 
-
 // ===============================================================
 // Estatísticas
 // ===============================================================
@@ -108,14 +105,11 @@ function atualizarEstatisticas(lista) {
     document.getElementById("total-items").textContent = lista.length;
     document.getElementById("total-active").textContent =
         lista.filter(i => i.status === "Em Uso").length;
-
     document.getElementById("total-available").textContent =
         lista.filter(i => i.status === "Disponível").length;
-
     document.getElementById("total-maintenance").textContent =
         lista.filter(i => i.status === "Em Manutenção").length;
 }
-
 
 // ===============================================================
 // Modal de detalhes
@@ -132,36 +126,47 @@ async function abrirDetalhes(id) {
             <p><strong>ID:</strong> ${item.id}</p>
             <p><strong>Nº Patrimônio:</strong> ${item.patrimonio}</p>
             <p><strong>Descrição:</strong> ${item.descricao}</p>
-           
             <p><strong>Local:</strong> ${item.local}</p>
-            <p><strong>Status:</strong> ${item.status}</p>
-          
+            <p><strong>Status:</strong> <span class="status-badge status-${item.status.toLowerCase().replace(/\s/g, '-')}">${item.status}</span></p>
         `;
 
         modal.style.display = "flex";
+        modal.classList.add("active");
 
         document.getElementById("edit-item-btn").onclick = () => {
             modal.style.display = "none";
+            modal.classList.remove("active");
             abrirFormulario("editar", id);
         };
 
-        document.querySelectorAll(".modal-close, .modal-close-btn")
-            .forEach(btn => btn.onclick = () => modal.style.display = "none");
+        document.querySelectorAll(".modal-close, .modal-close-btn").forEach(btn => {
+            btn.onclick = () => {
+                modal.style.display = "none";
+                modal.classList.remove("active");
+            };
+        });
 
     } catch (err) {
         console.error("Erro ao abrir detalhes:", err);
+        showToast('error', 'Erro', 'Não foi possível carregar os detalhes do item.');
     }
 }
 
 // ===============================================================
-// Sistema de Notificações Toast
+// Sistema de Notificações Toast (ÚNICA VERSÃO)
 // ===============================================================
 function showToast(type, title, message, duration = 5000) {
-    const container = document.getElementById('toast-container') || createToastContainer();
-    
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
+
     const icons = {
         success: 'fa-check-circle',
         error: 'fa-exclamation-circle',
@@ -184,103 +189,89 @@ function showToast(type, title, message, duration = 5000) {
 
     container.appendChild(toast);
 
-    // Animar entrada
     setTimeout(() => toast.classList.add('show'), 100);
 
-    // Event listeners
-    toast.querySelector('.toast-close').addEventListener('click', () => {
-        hideToast(toast);
-    });
+    const closeToast = () => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        setTimeout(() => {
+            if (toast.parentNode) toast.remove();
+        }, 300);
+    };
 
-    // Auto-remover após duração
+    toast.querySelector('.toast-close').addEventListener('click', closeToast);
+
     if (duration > 0) {
-        setTimeout(() => hideToast(toast), duration);
+        setTimeout(closeToast, duration);
     }
 
     return toast;
 }
 
-function createToastContainer() {
-    const container = document.createElement('div');
-    container.id = 'toast-container';
-    container.className = 'toast-container';
-    document.body.appendChild(container);
-    return container;
-}
-
-function hideToast(toast) {
-    toast.classList.remove('show');
-    toast.classList.add('hide');
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.parentNode.removeChild(toast);
-        }
-    }, 300);
-}
-
 // ===============================================================
-// Validação de Formulário Melhorada
+// Validação de Formulário
 // ===============================================================
 function validateForm() {
     const patrimonio = document.getElementById("form-patrimonio").value.trim();
     const descricao = document.getElementById("form-descricao").value.trim();
     const local = document.getElementById("form-local").value.trim();
-    
+
     let isValid = true;
-    
-    // Limpar erros anteriores
+
     document.querySelectorAll('.field-error').forEach(error => {
         error.classList.remove('show');
+        error.textContent = '';
     });
-    
-    // Validar campos
+
+    document.querySelectorAll('input').forEach(input => {
+        input.style.borderColor = '';
+        input.style.backgroundColor = '';
+    });
+
     if (!patrimonio) {
         showFieldError('form-patrimonio', 'Número de patrimônio é obrigatório');
         isValid = false;
     }
-    
+
     if (!descricao) {
         showFieldError('form-descricao', 'Descrição é obrigatória');
         isValid = false;
     }
-    
+
     if (!local) {
         showFieldError('form-local', 'Local é obrigatório');
         isValid = false;
     }
-    
+
     return isValid;
 }
 
 function showFieldError(fieldId, message) {
-    let field = document.getElementById(fieldId);
+    const field = document.getElementById(fieldId);
     let errorElement = field.parentNode.querySelector('.field-error');
-    
+
     if (!errorElement) {
         errorElement = document.createElement('div');
         errorElement.className = 'field-error';
         field.parentNode.appendChild(errorElement);
     }
-    
+
     errorElement.textContent = message;
     errorElement.classList.add('show');
-    
-    // Destacar campo com erro
+
     field.style.borderColor = '#F44336';
     field.style.backgroundColor = 'rgba(244, 67, 54, 0.05)';
-    
-    // Focar no campo com erro
     field.focus();
 }
 
 // ===============================================================
-// Modal de Confirmação Melhorado
+// Modal de Confirmação
 // ===============================================================
 function showConfirmModal(type, title, message, confirmText, cancelText = 'Cancelar') {
     return new Promise((resolve) => {
         const modal = document.createElement('div');
         modal.className = `modal active confirm-modal ${type}`;
-        
+
         modal.innerHTML = `
             <div class="modal-content">
                 <div class="confirm-icon">
@@ -294,29 +285,26 @@ function showConfirmModal(type, title, message, confirmText, cancelText = 'Cance
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(modal);
-        
-        // Event listeners
+
         modal.querySelector('.confirm-btn-cancel').addEventListener('click', () => {
             modal.remove();
             resolve(false);
         });
-        
+
         modal.querySelector('.confirm-btn-confirm').addEventListener('click', () => {
             modal.remove();
             resolve(true);
         });
-        
-        // Fechar ao clicar fora
+
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.remove();
                 resolve(false);
             }
         });
-        
-        // Fechar com ESC
+
         const closeOnEscape = (e) => {
             if (e.key === 'Escape') {
                 modal.remove();
@@ -329,113 +317,9 @@ function showConfirmModal(type, title, message, confirmText, cancelText = 'Cance
 }
 
 // ===============================================================
-// Função Salvar Atualizada com Feedback
-// ===============================================================
-async function salvarFormulario(e) {
-    const acao = e.target.dataset.acao;
-    const id = e.target.dataset.id;
-
-    // Validar formulário
-    if (!validateForm()) {
-        return;
-    }
-
-    const patrimonio = document.getElementById("form-patrimonio").value.trim();
-    const descricao = document.getElementById("form-descricao").value.trim();
-    const local = document.getElementById("form-local").value.trim();
-    const status = document.getElementById("form-status").value;
-
-    const payload = { patrimonio, descricao, local, status };
-    const metodo = acao === "editar" ? "PUT" : "POST";
-    const url = acao === "editar" ? `${API_URL}/${id}` : API_URL;
-
-    // Mostrar loading no botão
-    const submitBtn = e.target;
-    const originalText = submitBtn.innerHTML;
-    submitBtn.classList.add('btn-loading');
-    submitBtn.disabled = true;
-
-    try {
-        const res = await fetch(url, {
-            method: metodo,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.message || "Erro ao salvar patrimônio");
-        }
-
-        // Sucesso
-        document.getElementById("modal-form").style.display = "none";
-        
-        showToast('success', 
-            acao === "editar" ? 'Item Atualizado!' : 'Item Criado!',
-            acao === "editar" 
-                ? `O patrimônio ${patrimonio} foi atualizado com sucesso.`
-                : `Novo item de patrimônio criado com sucesso.`,
-            4000
-        );
-
-        // Recarregar lista
-        setTimeout(() => carregarPatrimonios(), 1000);
-
-    } catch (err) {
-        console.error('Erro ao salvar patrimônio:', err);
-        showToast('error', 'Erro ao Salvar', err.message || 'Não foi possível salvar o item.', 5000);
-    } finally {
-        // Restaurar botão
-        submitBtn.classList.remove('btn-loading');
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    }
-}
-
-// ===============================================================
-// Função Deletar Atualizada com Confirmação
-// ===============================================================
-async function deletarPatrimonio(id) {
-    const item = listaOriginal.find(i => i.id == id);
-    if (!item) return;
-
-    const confirmed = await showConfirmModal(
-        'delete',
-        'Excluir Item',
-        `Tem certeza que deseja excluir o item <strong>"${item.descricao}"</strong> (${item.patrimonio})? Esta ação não pode ser desfeita.`,
-        'Excluir',
-        'Cancelar'
-    );
-
-    if (!confirmed) return;
-
-    try {
-        const res = await fetch(`${API_URL}/${id}`, { 
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" }
-        });
-        
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.message || "Erro ao excluir item");
-        }
-
-        showToast('success', 'Item Excluído', `O patrimônio ${item.patrimonio} foi excluído com sucesso.`, 4000);
-        
-        // Atualizar lista
-        carregarPatrimonios();
-
-    } catch (err) {
-        console.error('Erro ao excluir:', err);
-        showToast('error', 'Erro ao Excluir', err.message || 'Não foi possível excluir o item.', 5000);
-    }
-}
-
-// ===============================================================
-// Modal de adicionar/editar (CORRIGIDO)
+// Modal de adicionar/editar (VERSÃO FINAL)
 // ===============================================================
 function abrirFormulario(acao, id = null) {
-    // 1. Garante que o modal existe (cria se não houver)
     criarModalFormulario();
 
     const modal = document.getElementById("modal-form");
@@ -443,76 +327,87 @@ function abrirFormulario(acao, id = null) {
     const submitBtn = document.getElementById("form-submit");
     const cancelBtn = document.getElementById("form-cancel");
 
-    // 2. Configura os eventos de FECHAR aqui para garantir que funcionem
-    // Usamos .onclick para evitar múltiplos listeners acumulados
     if (cancelBtn) {
         cancelBtn.onclick = () => {
             modal.style.display = "none";
-            // Limpa erros ao fechar
-            document.querySelectorAll('.field-error').forEach(el => el.classList.remove('show'));
+            modal.classList.remove("active");
+            limparErrosFormulario();
         };
     }
 
-    // Fechar clicando fora (Overlay)
     modal.onclick = (e) => {
         if (e.target === modal) {
             modal.style.display = "none";
+            modal.classList.remove("active");
         }
     };
 
-    // Fechar com ESC
     document.onkeydown = (e) => {
         if (e.key === 'Escape' && modal.style.display === 'flex') {
             modal.style.display = 'none';
+            modal.classList.remove('active');
         }
     };
 
-    // 3. Configura o estado do formulário
     modal.style.display = "flex";
-    // Adiciona animação se estiver usando o novo CSS
-    modal.classList.add('active'); 
-    
-    // Verifica se os elementos existem antes de tentar alterar
-    if(titulo) titulo.innerHTML = acao === "editar" ? `<i class="fas fa-edit"></i> Editar Patrimônio` : `<i class="fas fa-plus"></i> Novo Patrimônio`;
-    
+    modal.classList.add('active');
+
+    if(titulo) {
+        titulo.innerHTML = acao === "editar" 
+            ? `<i class="fas fa-edit"></i> Editar Patrimônio` 
+            : `<i class="fas fa-plus"></i> Novo Patrimônio`;
+    }
+
     if(submitBtn) {
         submitBtn.dataset.acao = acao;
         submitBtn.dataset.id = id || "";
-        submitBtn.onclick = salvarFormulario; // Garante que o salvar também está vinculado
+        submitBtn.onclick = salvarFormulario;
     }
 
-    // 4. Preenche ou limpa os campos
-    if (acao === "editar") {
+    limparErrosFormulario();
+
+    if (acao === "editar" && id) {
         fetch(`${API_URL}/${id}`)
             .then(r => r.json())
             .then(item => {
-                if(document.getElementById("form-patrimonio")) document.getElementById("form-patrimonio").value = item.patrimonio;
-                if(document.getElementById("form-descricao")) document.getElementById("form-descricao").value = item.descricao;
-                if(document.getElementById("form-local")) document.getElementById("form-local").value = item.local;
-                if(document.getElementById("form-status")) document.getElementById("form-status").value = item.status;
+                document.getElementById("form-patrimonio").value = item.patrimonio || "";
+                document.getElementById("form-descricao").value = item.descricao || "";
+                document.getElementById("form-local").value = item.local || "";
+                document.getElementById("form-status").value = item.status || "Disponível";
             })
-            .catch(err => console.error("Erro ao buscar item:", err));
+            .catch(err => {
+                console.error("Erro ao buscar item:", err);
+                showToast('error', 'Erro', 'Não foi possível carregar os dados do item.');
+            });
     } else {
-        if(document.getElementById("form-patrimonio")) document.getElementById("form-patrimonio").value = "";
-        if(document.getElementById("form-descricao")) document.getElementById("form-descricao").value = "";
-        if(document.getElementById("form-local")) document.getElementById("form-local").value = "";
-        if(document.getElementById("form-status")) document.getElementById("form-status").value = "Disponível";
+        document.getElementById("form-patrimonio").value = "";
+        document.getElementById("form-descricao").value = "";
+        document.getElementById("form-local").value = "";
+        document.getElementById("form-status").value = "Disponível";
     }
 }
 
+function limparErrosFormulario() {
+    document.querySelectorAll('.field-error').forEach(el => {
+        el.classList.remove('show');
+        el.textContent = '';
+    });
+    document.querySelectorAll('input').forEach(input => {
+        input.style.borderColor = '';
+        input.style.backgroundColor = '';
+    });
+}
 
 // ===============================================================
 // Criar modal de formulário dinamicamente
 // ===============================================================
 function criarModalFormulario() {
-    // Se o modal já existe no HTML, não faz nada (mas a abrirFormulario vai configurar os botões)
     if (document.getElementById("modal-form")) return;
 
     const modal = document.createElement("div");
     modal.id = "modal-form";
     modal.className = "modal";
 
-    // Estrutura atualizada para bater com seu CSS novo
     modal.innerHTML = `
         <div class="modal-content form-modal">
             <h2 id="modal-title"><i class="fas fa-plus"></i> Novo Patrimônio</h2>
@@ -556,36 +451,32 @@ function criarModalFormulario() {
 
     document.body.appendChild(modal);
 }
+
 // ===============================================================
-// Salvar item (adicionar ou editar) - ATUALIZADO
+// Salvar item (VERSÃO FINAL - SEM DUPLICAÇÃO)
 // ===============================================================
 async function salvarFormulario(e) {
-    const btn = e.target; // O botão que foi clicado
-    const acao = btn.dataset.acao;
-    const id = btn.dataset.id;
-    const originalText = btn.innerHTML; // Guarda o texto original do botão
+    const acao = e.target.dataset.acao;
+    const id = e.target.dataset.id;
 
-    // Pegar valores
-    const patrimonio = document.getElementById("form-patrimonio").value;
-    const descricao = document.getElementById("form-descricao").value;
-    const local = document.getElementById("form-local").value;
-    const status = document.getElementById("form-status").value;
-
-    // Validação Simples
-    if (!patrimonio || !descricao || !local) {
-        showToast('warning', 'Campos Vazios', 'Por favor, preencha todos os campos obrigatórios.');
+    if (!validateForm()) {
         return;
     }
 
-    // Configuração da Requisição
+    const patrimonio = document.getElementById("form-patrimonio").value.trim();
+    const descricao = document.getElementById("form-descricao").value.trim();
+    const local = document.getElementById("form-local").value.trim();
+    const status = document.getElementById("form-status").value;
+
     const payload = { patrimonio, descricao, local, status };
     const metodo = acao === "editar" ? "PUT" : "POST";
     const url = acao === "editar" ? `${API_URL}/${id}` : API_URL;
 
-    // Efeito de Loading no Botão
-    btn.classList.add('btn-loading');
-    btn.disabled = true;
-    btn.innerHTML = ''; // Limpa o texto para mostrar o spinner do CSS
+    const submitBtn = e.target;
+    const originalText = submitBtn.innerHTML;
+    submitBtn.classList.add('btn-loading');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
     try {
         const res = await fetch(url, {
@@ -594,169 +485,101 @@ async function salvarFormulario(e) {
             body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error("Falha na comunicação com o servidor.");
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Erro ao salvar patrimônio");
+        }
 
-        // Sucesso!
-        showToast('success', 'Sucesso!', `O item foi ${acao === 'editar' ? 'atualizado' : 'criado'} corretamente.`);
-        
         document.getElementById("modal-form").style.display = "none";
-        carregarPatrimonios(); // Recarrega a tabela
+        document.getElementById("modal-form").classList.remove("active");
+
+        showToast('success', 
+            acao === "editar" ? 'Item Atualizado!' : 'Item Criado!',
+            acao === "editar" 
+                ? `O patrimônio ${patrimonio} foi atualizado com sucesso.`
+                : `Novo item de patrimônio criado com sucesso.`,
+            4000
+        );
+
+        setTimeout(() => carregarPatrimonios(), 500);
 
     } catch (err) {
-        console.error(err);
-        showToast('error', 'Erro ao Salvar', 'Não foi possível salvar os dados. Tente novamente.');
+        console.error('Erro ao salvar patrimônio:', err);
+        showToast('error', 'Erro ao Salvar', err.message || 'Não foi possível salvar o item.', 5000);
     } finally {
-        // Restaura o botão ao estado normal
-        btn.classList.remove('btn-loading');
-        btn.disabled = false;
-        btn.innerHTML = originalText;
+        submitBtn.classList.remove('btn-loading');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
     }
 }
 
-// Função para mostrar toast
-function showToast(type, title, message, duration = 5000) {
-    // Criar container se não existir
-    let container = document.getElementById('toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toast-container';
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-    
-    // Criar toast
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        warning: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-
-    toast.innerHTML = `
-        <div class="toast-icon">
-            <i class="fas ${icons[type]}"></i>
-        </div>
-        <div class="toast-content">
-            <div class="toast-title">${title}</div>
-            <div class="toast-message">${message}</div>
-        </div>
-        <button class="toast-close">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-
-    container.appendChild(toast);
-
-    // Mostrar toast
-    setTimeout(() => toast.classList.add('show'), 100);
-    
-    // Fechar toast
-    const closeToast = () => {
-        toast.classList.remove('show');
-        toast.classList.add('hide');
-        setTimeout(() => toast.remove(), 300);
-    };
-    
-    // Event listeners
-    toast.querySelector('.toast-close').addEventListener('click', closeToast);
-    if (duration > 0) setTimeout(closeToast, duration);
-    
-    return toast;
-}
-
 // ===============================================================
-// Sistema de Notificações (Toasts)
-// ===============================================================
-function showToast(type, title, message) {
-    // 1. Cria o container se não existir
-    let container = document.getElementById('toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toast-container';
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-
-    // 2. Define ícones baseados no tipo
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        warning: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-
-    // 3. Cria o elemento HTML da notificação
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    
-    toast.innerHTML = `
-        <div class="toast-icon">
-            <i class="fas ${icons[type] || 'fa-info-circle'}"></i>
-        </div>
-        <div class="toast-content">
-            <div class="toast-title">${title}</div>
-            <div class="toast-message">${message}</div>
-        </div>
-        <button class="toast-close" onclick="this.parentElement.remove()">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-
-    // 4. Adiciona ao container
-    container.appendChild(toast);
-
-    // 5. Animação de entrada (precisa de um pequeno delay para o CSS transition funcionar)
-    requestAnimationFrame(() => {
-        toast.classList.add('show');
-    });
-
-    // 6. Remove automaticamente após 4 segundos
-    setTimeout(() => {
-        toast.classList.remove('show');
-        toast.classList.add('hide');
-        // Remove do DOM após a animação de saída
-        setTimeout(() => {
-            if (toast.parentElement) toast.remove();
-        }, 400);
-    }, 4000);
-}
-
-
-
-// ===============================================================
-// Excluir item
+// Excluir item (VERSÃO FINAL - SEM DUPLICAÇÃO)
 // ===============================================================
 async function deletarPatrimonio(id) {
-    if (!confirm("Deseja excluir este item?")) return;
+    const item = listaOriginal.find(i => i.id == id);
+    if (!item) return;
+
+    const confirmed = await showConfirmModal(
+        'delete',
+        'Excluir Item',
+        `Tem certeza que deseja excluir o item <strong>"${item.descricao}"</strong> (${item.patrimonio})? Esta ação não pode ser desfeita.`,
+        'Excluir',
+        'Cancelar'
+    );
+
+    if (!confirmed) return;
 
     try {
-        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (!res.ok) throw new Error("Erro ao excluir");
+        const res = await fetch(`${API_URL}/${id}`, { 
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Erro ao excluir item");
+        }
+
+        showToast('success', 'Item Excluído', `O patrimônio ${item.patrimonio} foi excluído com sucesso.`, 4000);
+
         carregarPatrimonios();
 
     } catch (err) {
-        console.error(err);
-        alert("Erro ao excluir item.");
+        console.error('Erro ao excluir:', err);
+        showToast('error', 'Erro ao Excluir', err.message || 'Não foi possível excluir o item.', 5000);
     }
 }
 
 // ===============================================================
 // EVENTOS DE FILTRO
 // ===============================================================
-searchInput.addEventListener("input", aplicarFiltros);
-filterStatus.addEventListener("change", aplicarFiltros);
-
-resetFiltersBtn.addEventListener("click", () => {
-    searchInput.value = "";
-    filterStatus.value = "";
-    aplicarFiltros();
-});
+// Removidos daqui - agora estão dentro do DOMContentLoaded
 
 // ===============================================================
 // Inicialização
 // ===============================================================
-addBtn.addEventListener("click", () => abrirFormulario("novo"));
-carregarPatrimonios();
+document.addEventListener('DOMContentLoaded', () => {
+    if (addBtn) {
+        addBtn.addEventListener("click", () => abrirFormulario("novo"));
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener("input", aplicarFiltros);
+    }
+
+    if (filterStatus) {
+        filterStatus.addEventListener("change", aplicarFiltros);
+    }
+
+    if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener("click", () => {
+            searchInput.value = "";
+            filterStatus.value = "";
+            aplicarFiltros();
+        });
+    }
+
+    // Carrega os patrimônios após garantir que o DOM está pronto
+    carregarPatrimonios();
+});
