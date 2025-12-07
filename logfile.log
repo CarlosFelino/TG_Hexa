@@ -1141,3 +1141,1857 @@
 2025-12-01 03:45:08.958 UTC [4818] LOG:  checkpoint starting: shutdown immediate
 2025-12-01 03:45:08.972 UTC [4818] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.020 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=155 kB; lsn=0/1B460A8, redo lsn=0/1B460A8
 2025-12-01 03:45:08.983 UTC [4817] LOG:  database system is shut down
+2025-12-01 23:30:06.213 UTC [270] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-01 23:30:06.214 UTC [270] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-01 23:30:06.216 UTC [270] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 23:30:06.219 UTC [270] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-01 23:30:06.228 UTC [273] LOG:  database system was interrupted; last known up at 2025-12-01 22:39:03 UTC
+2025-12-01 23:30:06.243 UTC [273] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-01 23:30:06.258 UTC [273] LOG:  redo starts at 0/1EAD940
+2025-12-01 23:30:06.258 UTC [273] LOG:  invalid record length at 0/1EADA48: expected at least 24, got 0
+2025-12-01 23:30:06.258 UTC [273] LOG:  redo done at 0/1EADA10 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-01 23:30:06.263 UTC [271] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-01 23:30:06.279 UTC [271] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.018 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1EADA48, redo lsn=0/1EADA48
+2025-12-01 23:30:06.287 UTC [270] LOG:  database system is ready to accept connections
+2025-12-01 23:30:08.682 UTC [281] ERROR:  database "meu_banco" already exists
+2025-12-01 23:30:08.682 UTC [281] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-01 23:30:08.803 UTC [283] ERROR:  role "meu_usuario" already exists
+2025-12-01 23:30:08.803 UTC [283] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-01 23:30:08.857 UTC [287] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-01 23:30:08.857 UTC [287] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-01 23:30:08.875 UTC [287] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-01 23:30:08.875 UTC [287] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-01 23:30:08.875 UTC [287] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-01 23:30:08.896 UTC [289] ERROR:  relation "users" already exists
+2025-12-01 23:30:08.896 UTC [289] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-01 23:30:08.930 UTC [291] ERROR:  relation "resetsenha" already exists
+2025-12-01 23:30:08.930 UTC [291] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-01 23:30:09.007 UTC [293] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-01 23:30:09.007 UTC [293] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-01 23:30:09.027 UTC [295] ERROR:  relation "ordens_problemas" already exists
+2025-12-01 23:30:09.027 UTC [295] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-01 23:30:09.043 UTC [297] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-01 23:30:09.043 UTC [297] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-01 23:30:09.059 UTC [299] ERROR:  relation "ordens_anexos" already exists
+2025-12-01 23:30:09.059 UTC [299] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-01 23:30:09.080 UTC [301] ERROR:  relation "ordens_alertas" already exists
+2025-12-01 23:30:09.080 UTC [301] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-01 23:30:09.096 UTC [301] ERROR:  column "data_alerta" does not exist
+2025-12-01 23:30:09.096 UTC [301] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-01 23:30:09.096 UTC [301] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-01 23:30:09.096 UTC [301] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 23:30:09.096 UTC [301] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-01 23:30:09.097 UTC [301] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 23:30:09.097 UTC [301] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-01 23:30:09.097 UTC [301] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 23:30:09.097 UTC [301] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-01 23:30:09.097 UTC [301] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 23:30:09.097 UTC [301] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-01 23:30:09.097 UTC [301] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 23:30:09.097 UTC [301] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-01 23:30:09.097 UTC [301] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 23:30:09.097 UTC [301] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-01 23:30:09.097 UTC [301] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 23:30:09.097 UTC [301] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-01 23:35:06.379 UTC [271] LOG:  checkpoint starting: time
+2025-12-01 23:35:14.147 UTC [271] LOG:  checkpoint complete: wrote 77 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.664 s, sync=0.080 s, total=7.768 s; sync files=66, longest=0.004 s, average=0.002 s; distance=321 kB, estimate=321 kB; lsn=0/1EFDFF0, redo lsn=0/1EFDF98
+2025-12-01 23:40:06.247 UTC [271] LOG:  checkpoint starting: time
+2025-12-01 23:40:06.471 UTC [271] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.007 s, total=0.224 s; sync files=3, longest=0.004 s, average=0.003 s; distance=5 kB, estimate=289 kB; lsn=0/1EFF460, redo lsn=0/1EFF408
+2025-12-01 23:45:06.570 UTC [271] LOG:  checkpoint starting: time
+2025-12-01 23:45:06.902 UTC [271] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.013 s, total=0.332 s; sync files=4, longest=0.010 s, average=0.004 s; distance=16 kB, estimate=262 kB; lsn=0/1F035C0, redo lsn=0/1F03568
+2025-12-01 23:50:07.001 UTC [271] LOG:  checkpoint starting: time
+2025-12-01 23:50:08.057 UTC [271] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.015 s, sync=0.017 s, total=1.056 s; sync files=11, longest=0.003 s, average=0.002 s; distance=25 kB, estimate=238 kB; lsn=0/1F09B90, redo lsn=0/1F09B38
+2025-12-01 23:55:07.157 UTC [271] LOG:  checkpoint starting: time
+2025-12-01 23:55:11.169 UTC [271] LOG:  checkpoint complete: wrote 40 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.916 s, sync=0.069 s, total=4.013 s; sync files=33, longest=0.030 s, average=0.003 s; distance=115 kB, estimate=226 kB; lsn=0/1F26B80, redo lsn=0/1F26AF0
+2025-12-01 23:58:50.350 UTC [1204] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-01 23:58:50.350 UTC [1204] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-01 23:59:31.224 UTC [1206] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-01 23:59:31.224 UTC [1206] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-02 00:00:07.269 UTC [271] LOG:  checkpoint starting: time
+2025-12-02 00:00:08.834 UTC [271] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.518 s, sync=0.017 s, total=1.565 s; sync files=13, longest=0.003 s, average=0.002 s; distance=19 kB, estimate=205 kB; lsn=0/1F2B800, redo lsn=0/1F2B7A8
+2025-12-02 00:00:22.168 UTC [1209] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-02 00:00:22.168 UTC [1209] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-02 00:05:07.933 UTC [271] LOG:  checkpoint starting: time
+2025-12-02 00:05:08.580 UTC [271] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.015 s, total=0.647 s; sync files=7, longest=0.005 s, average=0.003 s; distance=12 kB, estimate=186 kB; lsn=0/1F2EC30, redo lsn=0/1F2EBA0
+2025-12-02 00:06:02.054 UTC [270] LOG:  received fast shutdown request
+2025-12-02 00:06:02.076 UTC [270] LOG:  aborting any active transactions
+2025-12-02 00:06:02.083 UTC [270] LOG:  background worker "logical replication launcher" (PID 276) exited with exit code 1
+2025-12-02 00:06:02.083 UTC [271] LOG:  shutting down
+2025-12-02 00:06:02.091 UTC [271] LOG:  checkpoint starting: shutdown immediate
+2025-12-02 00:06:02.100 UTC [271] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.017 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=167 kB; lsn=0/1F2ECE0, redo lsn=0/1F2ECE0
+2025-12-02 00:06:02.112 UTC [270] LOG:  database system is shut down
+2025-12-02 15:09:30.889 UTC [305] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-02 15:09:30.894 UTC [305] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-02 15:09:30.907 UTC [305] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-02 15:09:30.915 UTC [305] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-02 15:09:30.942 UTC [308] LOG:  database system was shut down at 2025-12-02 00:06:02 UTC
+2025-12-02 15:09:30.958 UTC [305] LOG:  database system is ready to accept connections
+2025-12-02 15:09:33.367 UTC [315] ERROR:  database "meu_banco" already exists
+2025-12-02 15:09:33.367 UTC [315] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-02 15:09:33.416 UTC [317] ERROR:  role "meu_usuario" already exists
+2025-12-02 15:09:33.416 UTC [317] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-02 15:09:33.502 UTC [321] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-02 15:09:33.502 UTC [321] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 15:09:33.528 UTC [321] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 15:09:33.528 UTC [321] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 15:09:33.528 UTC [321] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-02 15:09:33.593 UTC [323] ERROR:  relation "users" already exists
+2025-12-02 15:09:33.593 UTC [323] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 15:09:33.645 UTC [325] ERROR:  relation "resetsenha" already exists
+2025-12-02 15:09:33.645 UTC [325] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-02 15:09:33.712 UTC [327] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-02 15:09:33.712 UTC [327] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-02 15:09:33.738 UTC [329] ERROR:  relation "ordens_problemas" already exists
+2025-12-02 15:09:33.738 UTC [329] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 15:09:33.758 UTC [331] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 15:09:33.758 UTC [331] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 15:09:33.790 UTC [333] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 15:09:33.790 UTC [333] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-02 15:09:33.819 UTC [335] ERROR:  relation "ordens_alertas" already exists
+2025-12-02 15:09:33.819 UTC [335] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-02 15:09:33.841 UTC [335] ERROR:  column "data_alerta" does not exist
+2025-12-02 15:09:33.841 UTC [335] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-02 15:09:33.841 UTC [335] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-02 15:09:33.842 UTC [335] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 15:09:33.842 UTC [335] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-02 15:09:33.842 UTC [335] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 15:09:33.842 UTC [335] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-02 15:09:33.842 UTC [335] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 15:09:33.842 UTC [335] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-02 15:09:33.842 UTC [335] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 15:09:33.842 UTC [335] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-02 15:09:33.843 UTC [335] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 15:09:33.843 UTC [335] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-02 15:09:33.843 UTC [335] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 15:09:33.843 UTC [335] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-02 15:09:33.843 UTC [335] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 15:09:33.843 UTC [335] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-02 15:14:31.029 UTC [306] LOG:  checkpoint starting: time
+2025-12-02 15:14:37.172 UTC [306] LOG:  checkpoint complete: wrote 63 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=6.039 s, sync=0.085 s, total=6.143 s; sync files=58, longest=0.022 s, average=0.002 s; distance=291 kB, estimate=291 kB; lsn=0/1F77C00, redo lsn=0/1F77B70
+2025-12-02 15:19:31.271 UTC [306] LOG:  checkpoint starting: time
+2025-12-02 15:19:32.968 UTC [306] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.317 s, sync=0.297 s, total=1.697 s; sync files=10, longest=0.151 s, average=0.030 s; distance=58 kB, estimate=268 kB; lsn=0/1F86588, redo lsn=0/1F86530
+2025-12-02 15:24:32.068 UTC [306] LOG:  checkpoint starting: time
+2025-12-02 15:24:32.606 UTC [306] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.504 s, sync=0.014 s, total=0.539 s; sync files=3, longest=0.009 s, average=0.005 s; distance=7 kB, estimate=242 kB; lsn=0/1F884F0, redo lsn=0/1F88498
+2025-12-02 15:33:31.924 UTC [305] LOG:  received fast shutdown request
+2025-12-02 15:33:31.933 UTC [305] LOG:  aborting any active transactions
+2025-12-02 15:33:31.938 UTC [305] LOG:  background worker "logical replication launcher" (PID 311) exited with exit code 1
+2025-12-02 15:33:31.938 UTC [306] LOG:  shutting down
+2025-12-02 15:33:31.943 UTC [306] LOG:  checkpoint starting: shutdown immediate
+2025-12-02 15:33:31.952 UTC [306] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.014 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=218 kB; lsn=0/1F885A0, redo lsn=0/1F885A0
+2025-12-02 15:33:31.957 UTC [305] LOG:  database system is shut down
+2025-12-02 17:15:54.316 UTC [468] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-02 17:15:54.319 UTC [468] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-02 17:15:54.320 UTC [468] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-02 17:15:54.323 UTC [468] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-02 17:15:54.335 UTC [471] LOG:  database system was shut down at 2025-12-02 15:33:31 UTC
+2025-12-02 17:15:54.347 UTC [468] LOG:  database system is ready to accept connections
+2025-12-02 17:15:56.489 UTC [478] ERROR:  database "meu_banco" already exists
+2025-12-02 17:15:56.489 UTC [478] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-02 17:15:56.589 UTC [480] ERROR:  role "meu_usuario" already exists
+2025-12-02 17:15:56.589 UTC [480] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-02 17:15:56.681 UTC [484] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-02 17:15:56.681 UTC [484] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 17:15:56.687 UTC [484] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 17:15:56.687 UTC [484] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 17:15:56.687 UTC [484] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-02 17:15:56.721 UTC [486] ERROR:  relation "users" already exists
+2025-12-02 17:15:56.721 UTC [486] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 17:15:56.757 UTC [488] ERROR:  relation "resetsenha" already exists
+2025-12-02 17:15:56.757 UTC [488] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-02 17:15:56.786 UTC [490] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-02 17:15:56.786 UTC [490] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-02 17:15:56.809 UTC [492] ERROR:  relation "ordens_problemas" already exists
+2025-12-02 17:15:56.809 UTC [492] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 17:15:56.830 UTC [494] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 17:15:56.830 UTC [494] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 17:15:56.864 UTC [496] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 17:15:56.864 UTC [496] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-02 17:15:56.889 UTC [498] ERROR:  relation "ordens_alertas" already exists
+2025-12-02 17:15:56.889 UTC [498] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-02 17:15:56.901 UTC [498] ERROR:  column "data_alerta" does not exist
+2025-12-02 17:15:56.901 UTC [498] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-02 17:15:56.901 UTC [498] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-02 17:15:56.902 UTC [498] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:15:56.902 UTC [498] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-02 17:15:56.902 UTC [498] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:15:56.902 UTC [498] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-02 17:15:56.902 UTC [498] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:15:56.902 UTC [498] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-02 17:15:56.902 UTC [498] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:15:56.902 UTC [498] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-02 17:15:56.903 UTC [498] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:15:56.903 UTC [498] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-02 17:15:56.903 UTC [498] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:15:56.903 UTC [498] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-02 17:15:56.903 UTC [498] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:15:56.903 UTC [498] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-02 17:18:00.012 UTC [468] LOG:  received fast shutdown request
+2025-12-02 17:18:00.025 UTC [468] LOG:  aborting any active transactions
+2025-12-02 17:18:00.028 UTC [468] LOG:  background worker "logical replication launcher" (PID 474) exited with exit code 1
+2025-12-02 17:18:00.030 UTC [469] LOG:  shutting down
+2025-12-02 17:18:00.035 UTC [469] LOG:  checkpoint starting: shutdown immediate
+2025-12-02 17:18:00.153 UTC [469] LOG:  checkpoint complete: wrote 62 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.053 s, sync=0.057 s, total=0.123 s; sync files=53, longest=0.003 s, average=0.002 s; distance=284 kB, estimate=284 kB; lsn=0/1FCF890, redo lsn=0/1FCF890
+2025-12-02 17:18:00.161 UTC [468] LOG:  database system is shut down
+2025-12-02 17:55:27.915 UTC [584] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-02 17:55:27.917 UTC [584] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-02 17:55:27.918 UTC [584] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-02 17:55:27.924 UTC [584] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-02 17:55:27.933 UTC [587] LOG:  database system was shut down at 2025-12-02 17:18:00 UTC
+2025-12-02 17:55:27.945 UTC [584] LOG:  database system is ready to accept connections
+2025-12-02 17:55:29.987 UTC [594] ERROR:  database "meu_banco" already exists
+2025-12-02 17:55:29.987 UTC [594] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-02 17:55:30.006 UTC [596] ERROR:  role "meu_usuario" already exists
+2025-12-02 17:55:30.006 UTC [596] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-02 17:55:30.198 UTC [600] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-02 17:55:30.198 UTC [600] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 17:55:30.200 UTC [600] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 17:55:30.200 UTC [600] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 17:55:30.200 UTC [600] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-02 17:55:30.222 UTC [602] ERROR:  relation "users" already exists
+2025-12-02 17:55:30.222 UTC [602] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 17:55:30.252 UTC [604] ERROR:  relation "resetsenha" already exists
+2025-12-02 17:55:30.252 UTC [604] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-02 17:55:30.279 UTC [606] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-02 17:55:30.279 UTC [606] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-02 17:55:30.307 UTC [608] ERROR:  relation "ordens_problemas" already exists
+2025-12-02 17:55:30.307 UTC [608] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 17:55:30.321 UTC [610] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 17:55:30.321 UTC [610] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 17:55:30.337 UTC [612] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 17:55:30.337 UTC [612] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-02 17:55:30.354 UTC [614] ERROR:  relation "ordens_alertas" already exists
+2025-12-02 17:55:30.354 UTC [614] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-02 17:55:30.359 UTC [614] ERROR:  column "data_alerta" does not exist
+2025-12-02 17:55:30.359 UTC [614] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-02 17:55:30.359 UTC [614] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-02 17:55:30.359 UTC [614] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:55:30.359 UTC [614] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-02 17:55:30.359 UTC [614] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:55:30.359 UTC [614] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-02 17:55:30.359 UTC [614] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:55:30.359 UTC [614] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-02 17:55:30.360 UTC [614] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:55:30.360 UTC [614] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-02 17:55:30.360 UTC [614] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:55:30.360 UTC [614] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-02 17:55:30.360 UTC [614] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:55:30.360 UTC [614] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-02 17:55:30.360 UTC [614] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 17:55:30.360 UTC [614] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-02 18:00:28.031 UTC [585] LOG:  checkpoint starting: time
+2025-12-02 18:00:33.952 UTC [585] LOG:  checkpoint complete: wrote 60 buffers (0.4%); 0 WAL file(s) added, 0 removed, 1 recycled; write=5.796 s, sync=0.089 s, total=5.922 s; sync files=52, longest=0.074 s, average=0.002 s; distance=293 kB, estimate=293 kB; lsn=0/2018E38, redo lsn=0/2018DE0
+2025-12-02 20:01:16.890 UTC [137] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-02 20:01:16.893 UTC [137] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-02 20:01:16.895 UTC [137] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-02 20:01:16.899 UTC [137] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-02 20:01:16.910 UTC [140] LOG:  database system was interrupted; last known up at 2025-12-02 18:00:33 UTC
+2025-12-02 20:01:16.931 UTC [140] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-02 20:01:16.952 UTC [140] LOG:  redo starts at 0/2018DE0
+2025-12-02 20:01:16.952 UTC [140] LOG:  invalid record length at 0/2018EE8: expected at least 24, got 0
+2025-12-02 20:01:16.952 UTC [140] LOG:  redo done at 0/2018EB0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-02 20:01:16.966 UTC [138] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-02 20:01:16.985 UTC [138] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.006 s, total=0.025 s; sync files=2, longest=0.003 s, average=0.003 s; distance=0 kB, estimate=0 kB; lsn=0/2018EE8, redo lsn=0/2018EE8
+2025-12-02 20:01:16.996 UTC [137] LOG:  database system is ready to accept connections
+2025-12-02 20:01:19.622 UTC [148] ERROR:  database "meu_banco" already exists
+2025-12-02 20:01:19.622 UTC [148] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-02 20:01:19.704 UTC [150] ERROR:  role "meu_usuario" already exists
+2025-12-02 20:01:19.704 UTC [150] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-02 20:01:19.769 UTC [154] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-02 20:01:19.769 UTC [154] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 20:01:19.784 UTC [154] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 20:01:19.784 UTC [154] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 20:01:19.784 UTC [154] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-02 20:01:19.803 UTC [156] ERROR:  relation "users" already exists
+2025-12-02 20:01:19.803 UTC [156] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 20:01:19.859 UTC [158] ERROR:  relation "resetsenha" already exists
+2025-12-02 20:01:19.859 UTC [158] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-02 20:01:19.907 UTC [160] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-02 20:01:19.907 UTC [160] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-02 20:01:19.930 UTC [162] ERROR:  relation "ordens_problemas" already exists
+2025-12-02 20:01:19.930 UTC [162] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 20:01:19.956 UTC [164] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 20:01:19.956 UTC [164] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 20:01:19.985 UTC [166] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 20:01:19.985 UTC [166] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-02 20:01:20.018 UTC [168] ERROR:  relation "ordens_alertas" already exists
+2025-12-02 20:01:20.018 UTC [168] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-02 20:01:20.048 UTC [168] ERROR:  column "data_alerta" does not exist
+2025-12-02 20:01:20.048 UTC [168] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-02 20:01:20.048 UTC [168] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-02 20:01:20.049 UTC [168] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 20:01:20.049 UTC [168] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-02 20:01:20.049 UTC [168] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 20:01:20.049 UTC [168] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-02 20:01:20.049 UTC [168] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 20:01:20.049 UTC [168] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-02 20:01:20.050 UTC [168] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 20:01:20.050 UTC [168] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-02 20:01:20.050 UTC [168] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 20:01:20.050 UTC [168] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-02 20:01:20.050 UTC [168] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 20:01:20.050 UTC [168] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-02 20:01:20.050 UTC [168] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-02 20:01:20.050 UTC [168] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-02 20:06:17.085 UTC [138] LOG:  checkpoint starting: time
+2025-12-02 20:06:22.802 UTC [138] LOG:  checkpoint complete: wrote 57 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.649 s, sync=0.052 s, total=5.718 s; sync files=51, longest=0.003 s, average=0.002 s; distance=293 kB, estimate=293 kB; lsn=0/2062578, redo lsn=0/20624E8
+2025-12-02 20:16:18.002 UTC [138] LOG:  checkpoint starting: time
+2025-12-02 20:16:18.438 UTC [138] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.014 s, total=0.436 s; sync files=5, longest=0.007 s, average=0.003 s; distance=20 kB, estimate=266 kB; lsn=0/20677E0, redo lsn=0/2067788
+2025-12-06 03:13:07.642 UTC [281] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-06 03:13:07.646 UTC [281] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-06 03:13:07.647 UTC [281] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-06 03:13:07.653 UTC [281] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-06 03:13:07.669 UTC [285] LOG:  database system was interrupted; last known up at 2025-12-02 20:16:18 UTC
+2025-12-06 03:13:07.700 UTC [285] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-06 03:13:08.111 UTC [285] LOG:  redo starts at 0/2067788
+2025-12-06 03:13:08.111 UTC [285] LOG:  invalid record length at 0/2067890: expected at least 24, got 0
+2025-12-06 03:13:08.111 UTC [285] LOG:  redo done at 0/2067858 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-06 03:13:08.121 UTC [283] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-06 03:13:08.240 UTC [283] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.011 s, total=0.123 s; sync files=2, longest=0.009 s, average=0.006 s; distance=0 kB, estimate=0 kB; lsn=0/2067890, redo lsn=0/2067890
+2025-12-06 03:13:08.246 UTC [281] LOG:  database system is ready to accept connections
+2025-12-06 03:13:10.850 UTC [293] ERROR:  database "meu_banco" already exists
+2025-12-06 03:13:10.850 UTC [293] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-06 03:13:10.951 UTC [296] ERROR:  role "meu_usuario" already exists
+2025-12-06 03:13:10.951 UTC [296] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-06 03:13:11.019 UTC [300] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-06 03:13:11.019 UTC [300] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-06 03:13:11.032 UTC [300] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-06 03:13:11.032 UTC [300] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-06 03:13:11.032 UTC [300] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-06 03:13:11.053 UTC [302] ERROR:  relation "users" already exists
+2025-12-06 03:13:11.053 UTC [302] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-06 03:13:11.084 UTC [304] ERROR:  relation "resetsenha" already exists
+2025-12-06 03:13:11.084 UTC [304] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-06 03:13:11.135 UTC [306] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-06 03:13:11.135 UTC [306] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-06 03:13:11.151 UTC [308] ERROR:  relation "ordens_problemas" already exists
+2025-12-06 03:13:11.151 UTC [308] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-06 03:13:11.167 UTC [310] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-06 03:13:11.167 UTC [310] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-06 03:13:11.191 UTC [312] ERROR:  relation "ordens_anexos" already exists
+2025-12-06 03:13:11.191 UTC [312] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-06 03:13:11.227 UTC [314] ERROR:  relation "ordens_alertas" already exists
+2025-12-06 03:13:11.227 UTC [314] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-06 03:13:11.253 UTC [314] ERROR:  column "data_alerta" does not exist
+2025-12-06 03:13:11.253 UTC [314] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-06 03:13:11.253 UTC [314] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-06 03:13:11.256 UTC [314] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 03:13:11.256 UTC [314] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-06 03:13:11.256 UTC [314] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 03:13:11.256 UTC [314] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-06 03:13:11.257 UTC [314] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 03:13:11.257 UTC [314] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-06 03:13:11.267 UTC [314] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 03:13:11.267 UTC [314] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-06 03:13:11.268 UTC [314] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 03:13:11.268 UTC [314] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-06 03:13:11.268 UTC [314] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 03:13:11.268 UTC [314] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-06 03:13:11.270 UTC [314] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 03:13:11.270 UTC [314] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-06 03:16:31.254 UTC [281] LOG:  received fast shutdown request
+2025-12-06 03:16:31.279 UTC [281] LOG:  aborting any active transactions
+2025-12-06 03:16:31.282 UTC [281] LOG:  background worker "logical replication launcher" (PID 289) exited with exit code 1
+2025-12-06 03:16:31.282 UTC [283] LOG:  shutting down
+2025-12-06 03:16:31.307 UTC [283] LOG:  checkpoint starting: shutdown immediate
+2025-12-06 03:16:31.561 UTC [283] LOG:  checkpoint complete: wrote 63 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.147 s, sync=0.095 s, total=0.279 s; sync files=58, longest=0.007 s, average=0.002 s; distance=312 kB, estimate=312 kB; lsn=0/20B58B8, redo lsn=0/20B58B8
+2025-12-06 03:16:31.568 UTC [281] LOG:  database system is shut down
+2025-12-06 18:01:33.856 UTC [289] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-06 18:01:33.858 UTC [289] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-06 18:01:33.859 UTC [289] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-06 18:01:33.866 UTC [289] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-06 18:01:33.891 UTC [292] LOG:  database system was shut down at 2025-12-06 03:16:31 UTC
+2025-12-06 18:01:33.942 UTC [289] LOG:  database system is ready to accept connections
+2025-12-06 18:01:36.493 UTC [300] ERROR:  database "meu_banco" already exists
+2025-12-06 18:01:36.493 UTC [300] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-06 18:01:36.579 UTC [302] ERROR:  role "meu_usuario" already exists
+2025-12-06 18:01:36.579 UTC [302] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-06 18:01:36.666 UTC [306] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-06 18:01:36.666 UTC [306] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-06 18:01:36.681 UTC [306] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-06 18:01:36.681 UTC [306] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-06 18:01:36.681 UTC [306] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-06 18:01:36.717 UTC [308] ERROR:  relation "users" already exists
+2025-12-06 18:01:36.717 UTC [308] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-06 18:01:36.802 UTC [310] ERROR:  relation "resetsenha" already exists
+2025-12-06 18:01:36.802 UTC [310] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-06 18:01:36.881 UTC [312] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-06 18:01:36.881 UTC [312] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-06 18:01:36.905 UTC [314] ERROR:  relation "ordens_problemas" already exists
+2025-12-06 18:01:36.905 UTC [314] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-06 18:01:36.934 UTC [316] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-06 18:01:36.934 UTC [316] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-06 18:01:36.961 UTC [318] ERROR:  relation "ordens_anexos" already exists
+2025-12-06 18:01:36.961 UTC [318] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-06 18:01:36.999 UTC [320] ERROR:  relation "ordens_alertas" already exists
+2025-12-06 18:01:36.999 UTC [320] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-06 18:01:37.016 UTC [320] ERROR:  column "data_alerta" does not exist
+2025-12-06 18:01:37.016 UTC [320] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-06 18:01:37.016 UTC [320] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-06 18:01:37.016 UTC [320] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:01:37.016 UTC [320] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-06 18:01:37.016 UTC [320] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:01:37.016 UTC [320] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-06 18:01:37.017 UTC [320] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:01:37.017 UTC [320] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-06 18:01:37.017 UTC [320] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:01:37.017 UTC [320] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-06 18:01:37.017 UTC [320] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:01:37.017 UTC [320] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-06 18:01:37.017 UTC [320] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:01:37.017 UTC [320] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-06 18:01:37.017 UTC [320] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:01:37.017 UTC [320] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-06 18:06:33.987 UTC [290] LOG:  checkpoint starting: time
+2025-12-06 18:06:39.729 UTC [290] LOG:  checkpoint complete: wrote 59 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.662 s, sync=0.062 s, total=5.742 s; sync files=52, longest=0.004 s, average=0.002 s; distance=293 kB, estimate=293 kB; lsn=0/20FEDF0, redo lsn=0/20FED60
+2025-12-06 18:21:34.029 UTC [290] LOG:  checkpoint starting: time
+2025-12-06 18:21:35.968 UTC [290] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.717 s, sync=0.191 s, total=1.939 s; sync files=15, longest=0.169 s, average=0.013 s; distance=64 kB, estimate=270 kB; lsn=0/210F0F8, redo lsn=0/210F0A0
+2025-12-06 18:26:23.394 UTC [439] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-06 18:26:23.394 UTC [439] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-06 18:26:35.068 UTC [290] LOG:  checkpoint starting: time
+2025-12-06 18:26:36.342 UTC [290] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.216 s, sync=0.027 s, total=1.274 s; sync files=13, longest=0.006 s, average=0.003 s; distance=18 kB, estimate=245 kB; lsn=0/2113980, redo lsn=0/2113928
+2025-12-06 18:26:36.343 UTC [441] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-06 18:26:36.343 UTC [441] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-06 18:31:35.442 UTC [290] LOG:  checkpoint starting: time
+2025-12-06 18:31:35.628 UTC [290] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.030 s, total=0.186 s; sync files=2, longest=0.028 s, average=0.015 s; distance=0 kB, estimate=220 kB; lsn=0/2113C40, redo lsn=0/2113BE8
+2025-12-06 18:36:35.727 UTC [290] LOG:  checkpoint starting: time
+2025-12-06 18:36:36.721 UTC [290] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.903 s, sync=0.033 s, total=0.994 s; sync files=6, longest=0.024 s, average=0.006 s; distance=60 kB, estimate=204 kB; lsn=0/2122CB8, redo lsn=0/2122C28
+2025-12-06 18:38:25.168 UTC [289] LOG:  received fast shutdown request
+2025-12-06 18:38:25.181 UTC [289] LOG:  aborting any active transactions
+2025-12-06 18:38:25.184 UTC [289] LOG:  background worker "logical replication launcher" (PID 295) exited with exit code 1
+2025-12-06 18:38:25.188 UTC [290] LOG:  shutting down
+2025-12-06 18:38:25.193 UTC [290] LOG:  checkpoint starting: shutdown immediate
+2025-12-06 18:38:25.216 UTC [290] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.013 s, total=0.029 s; sync files=5, longest=0.006 s, average=0.003 s; distance=15 kB, estimate=185 kB; lsn=0/2126BA0, redo lsn=0/2126BA0
+2025-12-06 18:38:25.225 UTC [289] LOG:  database system is shut down
+2025-12-06 18:44:28.750 UTC [715] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-06 18:44:28.751 UTC [715] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-06 18:44:28.752 UTC [715] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-06 18:44:28.756 UTC [715] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-06 18:44:28.762 UTC [718] LOG:  database system was shut down at 2025-12-06 18:38:25 UTC
+2025-12-06 18:44:28.771 UTC [715] LOG:  database system is ready to accept connections
+2025-12-06 18:44:30.824 UTC [747] ERROR:  database "meu_banco" already exists
+2025-12-06 18:44:30.824 UTC [747] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-06 18:44:30.844 UTC [749] ERROR:  role "meu_usuario" already exists
+2025-12-06 18:44:30.844 UTC [749] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-06 18:44:30.875 UTC [753] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-06 18:44:30.875 UTC [753] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-06 18:44:30.877 UTC [753] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-06 18:44:30.877 UTC [753] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-06 18:44:30.877 UTC [753] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-06 18:44:30.900 UTC [755] ERROR:  relation "users" already exists
+2025-12-06 18:44:30.900 UTC [755] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-06 18:44:30.936 UTC [757] ERROR:  relation "resetsenha" already exists
+2025-12-06 18:44:30.936 UTC [757] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+	);
+2025-12-06 18:44:30.964 UTC [759] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
+2025-12-06 18:44:30.964 UTC [759] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
+	BEFORE UPDATE ON ordens
+	FOR EACH ROW
+	EXECUTE FUNCTION atualiza_data_atualizacao();
+2025-12-06 18:44:30.999 UTC [761] ERROR:  relation "ordens_problemas" already exists
+2025-12-06 18:44:30.999 UTC [761] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-06 18:44:31.015 UTC [763] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-06 18:44:31.015 UTC [763] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-06 18:44:31.037 UTC [765] ERROR:  relation "ordens_anexos" already exists
+2025-12-06 18:44:31.037 UTC [765] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+2025-12-06 18:44:31.055 UTC [767] ERROR:  relation "ordens_alertas" already exists
+2025-12-06 18:44:31.055 UTC [767] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+2025-12-06 18:44:31.060 UTC [767] ERROR:  column "data_alerta" does not exist
+2025-12-06 18:44:31.060 UTC [767] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em"
+	PL/pgSQL function inline_code_block line 3 at SQL statement
+2025-12-06 18:44:31.060 UTC [767] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        RENAME COLUMN data_alerta TO criado_em;
+	    RAISE NOTICE '✅ Coluna data_alerta renomeada para criado_em';
+	END$$;
+2025-12-06 18:44:31.061 UTC [767] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:44:31.061 UTC [767] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN criado_em SET DEFAULT CURRENT_TIMESTAMP;
+	    RAISE NOTICE '✅ Default de criado_em ajustado';
+	END$$;
+2025-12-06 18:44:31.061 UTC [767] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:44:31.061 UTC [767] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP NOT NULL;
+	
+	    ALTER TABLE ordens_alertas
+	        ALTER COLUMN resolvido_em DROP DEFAULT;
+	
+	    RAISE NOTICE '✅ Coluna resolvido_em configurada para aceitar NULL';
+	END$$;
+2025-12-06 18:44:31.061 UTC [767] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:44:31.061 UTC [767] STATEMENT:  DO $$
+	DECLARE
+	    deletados INT;
+	BEGIN
+	    WITH duplicatas AS (
+	        SELECT id,
+	               ROW_NUMBER() OVER (
+	                   PARTITION BY ordem_id, tipo_alerta
+	                   ORDER BY ativo DESC, criado_em DESC, id DESC
+	               ) AS rn
+	        FROM ordens_alertas
+	    )
+	    DELETE FROM ordens_alertas
+	    WHERE id IN (
+	        SELECT id FROM duplicatas WHERE rn > 1
+	    );
+	
+	    GET DIAGNOSTICS deletados = ROW_COUNT;
+	    RAISE NOTICE '✅ Duplicatas removidas: % registros deletados', deletados;
+	END$$;
+2025-12-06 18:44:31.061 UTC [767] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:44:31.061 UTC [767] STATEMENT:  DO $$
+	BEGIN
+	    ALTER TABLE ordens_alertas
+	        ADD CONSTRAINT ordens_alertas_ordem_tipo_unq 
+	        UNIQUE (ordem_id, tipo_alerta);
+	    RAISE NOTICE '✅ Constraint UNIQUE adicionada';
+	EXCEPTION
+	    WHEN duplicate_table THEN
+	        RAISE NOTICE '⚠️ Constraint já existe, pulando...';
+	END$$;
+2025-12-06 18:44:31.061 UTC [767] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:44:31.061 UTC [767] STATEMENT:  DO $$
+	BEGIN
+	    -- Índice para buscar alertas ativos rapidamente
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ativos
+	        ON ordens_alertas(ativo, tipo_alerta) 
+	        WHERE ativo = true;
+	
+	    -- Índice para buscar alertas por ordem
+	    CREATE INDEX IF NOT EXISTS idx_alertas_ordem
+	        ON ordens_alertas(ordem_id);
+	
+	    -- Índice para buscar por tipo
+	    CREATE INDEX IF NOT EXISTS idx_alertas_tipo
+	        ON ordens_alertas(tipo_alerta)
+	        WHERE ativo = true;
+	
+	    RAISE NOTICE '✅ Índices criados';
+	END$$;
+2025-12-06 18:44:31.061 UTC [767] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:44:31.061 UTC [767] STATEMENT:  DO $$
+	BEGIN
+	    COMMENT ON TABLE ordens_alertas IS 
+	        'Rastreia alertas ativos para ordens de serviço. Prioridade >= 3 dispara alertas.';
+	
+	    COMMENT ON COLUMN ordens_alertas.tipo_alerta IS 
+	        'Tipos: ''prazo'' (vencimento próximo, faltando <= 3 dias úteis) ou ''sem_responsavel'' (ordem sem técnico por >2 dias úteis)';
+	
+	    COMMENT ON COLUMN ordens_alertas.ativo IS 
+	        'true = alerta ainda válido e deve aparecer no pop-up | false = resolvido/desativado';
+	
+	    COMMENT ON COLUMN ordens_alertas.criado_em IS 
+	        'Data/hora em que o alerta foi criado automaticamente pelo sistema';
+	
+	    COMMENT ON COLUMN ordens_alertas.resolvido_em IS 
+	        'Data/hora em que o alerta foi desativado (ordem assumida/concluída)';
+	
+	    RAISE NOTICE '✅ Comentários adicionados';
+	END$$;
+2025-12-06 18:44:31.061 UTC [767] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-06 18:44:31.061 UTC [767] STATEMENT:  DO $$
+	DECLARE
+	    total_alertas INT;
+	    alertas_ativos INT;
+	    alertas_resolvidos INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_alertas FROM ordens_alertas;
+	    SELECT COUNT(*) INTO alertas_ativos FROM ordens_alertas WHERE ativo = true;
+	    SELECT COUNT(*) INTO alertas_resolvidos FROM ordens_alertas WHERE ativo = false;
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '📊 ESTATÍSTICAS PÓS-MIGRAÇÃO';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Total de alertas: %', total_alertas;
+	    RAISE NOTICE 'Alertas ativos: %', alertas_ativos;
+	    RAISE NOTICE 'Alertas resolvidos: %', alertas_resolvidos;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-06 18:44:57.992 UTC [715] LOG:  received fast shutdown request
+2025-12-06 18:44:58.011 UTC [715] LOG:  aborting any active transactions
+2025-12-06 18:44:58.027 UTC [715] LOG:  background worker "logical replication launcher" (PID 721) exited with exit code 1
+2025-12-06 18:44:58.027 UTC [716] LOG:  shutting down
+2025-12-06 18:44:58.038 UTC [716] LOG:  checkpoint starting: shutdown immediate
+2025-12-06 18:44:58.314 UTC [716] LOG:  checkpoint complete: wrote 63 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.005 s, sync=0.105 s, total=0.287 s; sync files=54, longest=0.038 s, average=0.002 s; distance=304 kB, estimate=304 kB; lsn=0/2172D90, redo lsn=0/2172D90
+2025-12-06 18:44:58.322 UTC [715] LOG:  database system is shut down

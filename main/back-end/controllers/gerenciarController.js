@@ -417,23 +417,23 @@ export const atualizarUsuario = async (req, res) => {
 // =========================
 // 🗑️ DELETAR USUÁRIO (CORRIGIDO)
 // =========================
+// Substitua a função deletarUsuario COMPLETA no gerenciarController.js
+
 export const deletarUsuario = async (req, res) => {
   const client = await pool.connect();
 
   try {
     const { id } = req.params;
     const { senhaAdmin } = req.body;
-    const adminId = req.user?.id; // Token usa 'id'
+    const adminId = req.user?.id;
 
     console.log('🗑️ [BACKEND] Deletar usuário:', { 
       usuarioId: id, 
       adminId, 
-      adminRole: req.user?.role,
       temSenha: !!senhaAdmin 
     });
 
     if (!adminId) {
-      console.error('❌ [BACKEND] req.user não definido ou sem id');
       return res.status(401).json({
         success: false,
         message: "Sessão inválida. Faça login novamente."
@@ -457,14 +457,18 @@ export const deletarUsuario = async (req, res) => {
     }
 
     const usuario = userCheck.rows[0];
-    console.log('🗑️ [BACKEND] Usuário alvo:', { 
-      id: usuario.id,
-      nome: usuario.nome, 
-      role: usuario.role 
-    });
 
-    // 2️⃣ VALIDAÇÃO: Não pode deletar a si mesmo se for o último admin
-    if (parseInt(id) === adminId && usuario.role === 'admin') {
+    // ✅ VALIDAÇÃO 1: Impedir que admin delete a si mesmo
+    if (parseInt(id) === adminId) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({
+        success: false,
+        message: "Você não pode excluir sua própria conta. Peça a outro administrador para fazer isso."
+      });
+    }
+
+    // ✅ VALIDAÇÃO 2: Proteger último admin
+    if (usuario.role === 'admin') {
       const adminsCount = await client.query(
         `SELECT COUNT(*) as total FROM users WHERE role = 'admin' AND deletado_em IS NULL`
       );
@@ -473,18 +477,57 @@ export const deletarUsuario = async (req, res) => {
         await client.query('ROLLBACK');
         return res.status(403).json({
           success: false,
-          message: "Você é o único administrador. Promova outro usuário antes de se excluir."
+          message: "Este é o único administrador do sistema. Promova outro usuário antes de excluí-lo."
         });
       }
     }
 
-    // 3️⃣ VALIDAÇÃO DE SENHA: Sempre obrigatória para admin/suporte
-    if (usuario.role === 'admin' || usuario.role === 'suporte') {
-      console.log('🔐 [BACKEND] Usuário é admin/suporte, validando senha...');
+    // ✅ VALIDAÇÃO 3: Verificar ordens em andamento (APENAS para suporte)
+    if (usuario.role === 'suporte') {
+      const ordensEmAndamento = await client.query(
+        `SELECT id, codigo, titulo 
+         FROM ordens 
+         WHERE responsavel_id = $1 
+         AND status = 'Em Andamento'`,
+        [id]
+      );
 
+      if (ordensEmAndamento.rows.length > 0) {
+        await client.query('ROLLBACK');
+
+        // Buscar outros usuários de suporte disponíveis
+        const outrosSuporte = await client.query(
+          `SELECT id, nome, matricula 
+           FROM users 
+           WHERE role = 'suporte' 
+           AND id != $1 
+           AND deletado_em IS NULL
+           ORDER BY nome`,
+          [id]
+        );
+
+        return res.status(409).json({
+          success: false,
+          requireReassignment: true,
+          message: `Este usuário possui ${ordensEmAndamento.rows.length} ordem(ns) em andamento. Reatribua as ordens antes de excluir.`,
+          ordens: ordensEmAndamento.rows.map(o => ({
+            id: o.id,
+            codigo: o.codigo,
+            titulo: o.titulo
+          })),
+          suporteDisponiveis: outrosSuporte.rows.map(s => ({
+            id: s.id,
+            nome: s.nome,
+            matricula: s.matricula
+          }))
+        });
+      }
+    }
+
+    // ✅ VALIDAÇÃO 4: Confirmar senha para admin/suporte
+    if (usuario.role === 'admin' || usuario.role === 'suporte') {
       if (!senhaAdmin || senhaAdmin.trim() === '') {
         await client.query('ROLLBACK');
-        console.log('⚠️ [BACKEND] Senha não fornecida');
         return res.status(400).json({
           success: false,
           requirePasswordConfirmation: true,
@@ -492,56 +535,31 @@ export const deletarUsuario = async (req, res) => {
         });
       }
 
-      // 🔍 Buscar senha do ADMIN LOGADO (não do usuário sendo deletado!)
-      console.log('🔍 [BACKEND] Buscando senha do admin logado (ID:', adminId, ')');
-
       const adminCheck = await client.query(
-        'SELECT id, senha_hash FROM users WHERE id = $1 AND deletado_em IS NULL',
+        'SELECT senha_hash FROM users WHERE id = $1 AND deletado_em IS NULL',
         [adminId]
       );
 
-      console.log('🔍 [BACKEND] Resultado da busca:', {
-        encontrado: adminCheck.rows.length > 0,
-        adminId: adminCheck.rows[0]?.id
-      });
-
       if (adminCheck.rows.length === 0) {
         await client.query('ROLLBACK');
-        console.log('❌ [BACKEND] Admin logado não encontrado no banco');
         return res.status(401).json({
           success: false,
           message: "Sessão inválida. Faça login novamente."
         });
       }
 
-      const adminSenhaHash = adminCheck.rows[0].senha_hash;
-
-      if (!adminSenhaHash) {
-        await client.query('ROLLBACK');
-        console.log('❌ [BACKEND] senha_hash está null/undefined');
-        return res.status(500).json({
-          success: false,
-          message: "Erro de integridade de dados. Contate o suporte."
-        });
-      }
-
-      console.log('🔐 [BACKEND] Comparando senhas...');
-      const senhaValida = await bcrypt.compare(senhaAdmin, adminSenhaHash);
+      const senhaValida = await bcrypt.compare(senhaAdmin, adminCheck.rows[0].senha_hash);
 
       if (!senhaValida) {
         await client.query('ROLLBACK');
-        console.log('❌ [BACKEND] Senha incorreta');
         return res.status(401).json({
           success: false,
           message: "Senha incorreta"
         });
       }
-
-      console.log('✅ [BACKEND] Senha confirmada!');
     }
 
     // 4️⃣ REGISTRAR LOG ANTES DE DELETAR
-    console.log('📝 [BACKEND] Registrando audit log...');
     await registrarAuditLog(client, adminId, parseInt(id), 'DELETAR_USER', {
       usuario_deletado: {
         matricula: usuario.matricula,
@@ -557,7 +575,6 @@ export const deletarUsuario = async (req, res) => {
 
     if (usuario.role === 'suporte' || usuario.role === 'admin') {
       // SOFT DELETE
-      console.log('🔄 [BACKEND] Aplicando SOFT DELETE...');
       await client.query(
         `UPDATE users 
          SET deletado_em = NOW(), deletado_por = $1, motivo_exclusao = $2 
@@ -570,18 +587,18 @@ export const deletarUsuario = async (req, res) => {
         [usuario.matricula]
       );
 
-      mensagem = `Usuário ${usuario.role} desativado com sucesso. Histórico mantido.`;
+      // ✅ MENSAGEM SIMPLES (sem mencionar soft delete ou auditoria)
+      mensagem = `Usuário ${usuario.nome} foi excluído com sucesso.`;
 
     } else {
-      // HARD DELETE
-      console.log('🔄 [BACKEND] Aplicando HARD DELETE...');
+      // HARD DELETE para professor
       await client.query('DELETE FROM users WHERE id = $1', [id]);
       await client.query(
         'DELETE FROM matriculas_autorizadas WHERE matricula = $1', 
         [usuario.matricula]
       );
 
-      mensagem = "Usuário professor excluído permanentemente.";
+      mensagem = `Usuário ${usuario.nome} foi excluído com sucesso.`;
     }
 
     await client.query('COMMIT');
@@ -595,12 +612,11 @@ export const deletarUsuario = async (req, res) => {
   } catch (error) {
     await client.query('ROLLBACK');
     console.error("❌ [BACKEND] Erro ao deletar usuário:", error);
-    console.error("❌ [BACKEND] Stack trace:", error.stack);
 
     if (error.code === '23503') {
       return res.status(400).json({
         success: false,
-        message: "Não é possível excluir usuário com ordens de serviço vinculadas"
+        message: "Não é possível excluir este usuário pois possui registros vinculados no sistema."
       });
     }
 

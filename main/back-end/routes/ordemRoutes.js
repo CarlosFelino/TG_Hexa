@@ -8,6 +8,7 @@ import {
   assumirOrdem,
   listarAlertasAtivos,
   buscarAnexosOrdem,
+   atribuirOrdem,
   listarMinhasOrdens  // ✅ ADICIONE ESTA IMPORTAÇÃO
 } from "../controllers/ordemController.js";
 import { autenticarJWT } from "../middlewares/authMiddleware.js";
@@ -46,6 +47,8 @@ router.post("/ordens/:ordemId/avaliar", autenticarJWT, avaliarOrdem);
 
 // Assumir uma ordem pendente
 router.post("/ordens/:ordemId/assumir", autenticarJWT, assumirOrdem);
+
+router.put("/ordens/:id/atribuir", autenticarJWT, atribuirOrdem);
 
 /* ===========================================================
    ✅ ALERTAS

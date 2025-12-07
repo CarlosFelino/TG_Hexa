@@ -44,7 +44,6 @@
 
 /* Container do botão posicionado na parte inferior */
 .btn-container {
-    margin-top: auto; /* Empurra o botão para baixo */
     margin-bottom: var(--spacing-large);
     padding: var(--spacing-medium) 0;
 }

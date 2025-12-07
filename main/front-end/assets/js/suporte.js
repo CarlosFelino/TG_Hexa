@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // 6. POP-UPS DE ALERTAS (COM LÓGICA DE PRIORIDADE DINÂMICA)
+    // 6. POP-UPS DE ALERTAS (APENAS MENSAGENS, SEM DATAS)
     // =========================
 
     // Elementos dos pop-ups
@@ -272,28 +272,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ✅ FUNÇÃO: Calcular prioridade baseada na data de vencimento
+    // ✅ FUNÇÃO: Adicionar +1 dia à data de vencimento (TOLERÂNCIA)
+    function adicionarDiaTolerancia(dataLimite) {
+        if (!dataLimite) return null;
+
+        const data = new Date(dataLimite);
+        data.setDate(data.getDate() + 1); // Adiciona 1 dia
+        return data;
+    }
+
+    // ✅ FUNÇÃO: Calcular prioridade baseada na data de vencimento COM TOLERÂNCIA
     function calcularPrioridadePorData(dataLimite) {
         if (!dataLimite) return 2; // Prioridade média se não tiver data
 
+        // Adiciona +1 dia de tolerância à data original
+        const dataComTolerancia = adicionarDiaTolerancia(dataLimite);
+
         const hoje = new Date();
-        const dataVencimento = new Date(dataLimite);
 
         // Resetar horas para comparar apenas datas
         hoje.setHours(0, 0, 0, 0);
-        dataVencimento.setHours(0, 0, 0, 0);
+        dataComTolerancia.setHours(0, 0, 0, 0);
 
-        // Calcular diferença em dias
-        const diferencaMs = dataVencimento - hoje;
+        // Calcular diferença em dias (com tolerância)
+        const diferencaMs = dataComTolerancia - hoje;
         const diferencaDias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
 
-        console.log(`📅 Data vencimento: ${dataVencimento.toLocaleDateString()}, Hoje: ${hoje.toLocaleDateString()}, Diferença: ${diferencaDias} dias`);
-
-        // Lógica de prioridade:
+        // Lógica de prioridade COM TOLERÂNCIA:
         if (diferencaDias < 0) {
-            return 4; // Vencido (prioridade máxima - cor diferente)
+            return 4; // Vencido (com tolerância já aplicada)
         } else if (diferencaDias <= 1) {
-            return 3; // Alta - vence hoje ou amanhã
+            return 3; // Alta - vence hoje/amanhã (considerando tolerância)
         } else if (diferencaDias <= 3) {
             return 2; // Média - vence em 2-3 dias
         } else if (diferencaDias <= 7) {
@@ -325,25 +334,33 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // ✅ FUNÇÃO: Formatar mensagem de vencimento
+    // ✅ FUNÇÃO: Formatar mensagem de vencimento (APENAS MENSAGEM, SEM DATA)
     function formatarMensagemVencimento(dataLimite) {
         if (!dataLimite) return "Sem data limite";
 
+        // Adicionar tolerância de +1 dia
+        const dataComTolerancia = adicionarDiaTolerancia(dataLimite);
+
         const hoje = new Date();
-        const dataVencimento = new Date(dataLimite);
 
         // Resetar horas para comparar apenas datas
         hoje.setHours(0, 0, 0, 0);
-        dataVencimento.setHours(0, 0, 0, 0);
+        dataComTolerancia.setHours(0, 0, 0, 0);
 
-        const diferencaMs = dataVencimento - hoje;
+        const diferencaMs = dataComTolerancia - hoje;
         const diferencaDias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
 
         if (diferencaDias < 0) {
             const diasAtraso = Math.abs(diferencaDias);
-            return `Vencido há ${diasAtraso} ${diasAtraso === 1 ? 'dia' : 'dias'}`;
+            if (diasAtraso === 0) {
+                return "Venceu ontem";
+            } else if (diasAtraso === 1) {
+                return "Venceu hoje";
+            } else {
+                return `Venceu há ${diasAtraso} dias`;
+            }
         } else if (diferencaDias === 0) {
-            return "Vence hoje!";
+            return "Vence hoje";
         } else if (diferencaDias === 1) {
             return "Vence amanhã";
         } else {
@@ -375,10 +392,10 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("📢 Alertas recebidos:", alertas);
 
             // ============================================
-            // POP-UP 1: Ordens próximas do vencimento (COM PRIORIDADE DINÂMICA)
+            // POP-UP 1: Ordens próximas do vencimento (APENAS MENSAGENS)
             // ============================================
             if (alertas.prazo && alertas.prazo.length > 0) {
-                // Filtrar apenas ordens que vencem em até 7 dias ou já venceram
+                // Filtrar apenas ordens que vencem em até 7 dias (COM TOLERÂNCIA) ou já venceram
                 const ordensFiltradas = alertas.prazo.filter(ordem => {
                     if (!ordem.data_limite) return false;
                     const prioridade = calcularPrioridadePorData(ordem.data_limite);
@@ -403,7 +420,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (ordensFiltradas.length > 0) {
                     alertBodyVencimento.innerHTML = ordensFiltradas.map(ordem => {
-                        // Calcular prioridade dinamicamente
+                        // Calcular prioridade dinamicamente COM TOLERÂNCIA
                         const prioridade = calcularPrioridadePorData(ordem.data_limite);
                         const textoPrioridade = getTextoPrioridade(prioridade);
                         const iconePrioridade = getIconePrioridade(prioridade);
@@ -431,7 +448,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     `}).join('');
 
-                    console.log(`📊 Mostrando ${ordensFiltradas.length} ordens com vencimento próximo`);
+                    console.log(`📊 Mostrando ${ordensFiltradas.length} ordens com vencimento próximo (com tolerância)`);
 
                     // Mostrar pop-up com delay para melhor UX
                     alertPopupVencimento.classList.remove("hidden");
@@ -491,7 +508,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <p>${ordem.titulo || 'Sem título'}</p>
                             <small>
                                 <i class="far fa-calendar"></i> 
-                                Criada: ${formatarData(ordem.data_criacao)}
+                                Criada há ${calcularDiasDesdeCriacao(ordem.data_criacao)}
                             </small>
                             <span class="badge">
                                 ${textoPrioridade}
@@ -523,11 +540,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // ✅ Função auxiliar: Formatar data simples
-    function formatarData(data) {
-        if (!data) return "N/A";
-        const d = new Date(data);
-        return d.toLocaleDateString("pt-BR");
+    // ✅ Função auxiliar: Calcular dias desde a criação
+    function calcularDiasDesdeCriacao(dataCriacao) {
+        if (!dataCriacao) return "N/A";
+
+        const hoje = new Date();
+        const data = new Date(dataCriacao);
+
+        // Resetar horas para comparar apenas datas
+        hoje.setHours(0, 0, 0, 0);
+        data.setHours(0, 0, 0, 0);
+
+        const diferencaMs = hoje - data;
+        const diferencaDias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
+
+        if (diferencaDias === 0) {
+            return "hoje";
+        } else if (diferencaDias === 1) {
+            return "1 dia";
+        } else {
+            return `${diferencaDias} dias`;
+        }
     }
 
     // ✅ Carregar alertas ao abrir a página (apenas para suporte - UMA VEZ)
@@ -535,6 +568,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Aguardar 1 segundo antes de mostrar os alertas para a página carregar completamente
         setTimeout(carregarAlertas, 1000);
 
-        console.log("🔔 Alertas configurados para aparecer apenas uma vez");
+        console.log("🔔 Alertas configurados para aparecer apenas uma vez (com tolerância de +1 dia)");
     }
 });

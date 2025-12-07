@@ -685,6 +685,81 @@ export async function assumirOrdem(req, res) {
 }
 
 /* ===========================================================
+    AtribuirOrdem (GerenciarUsuários)
+=========================================================== */
+// ===================================================
+// BACKEND: Adicionar no ordemController.js
+// ===================================================
+
+export const atribuirOrdem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { responsavel_id } = req.body;
+
+    console.log('📋 [ATRIBUIR] Ordem:', id, '→ Responsável:', responsavel_id);
+
+    if (!responsavel_id) {
+      return res.status(400).json({
+        success: false,
+        message: "ID do responsável é obrigatório"
+      });
+    }
+
+    // Verificar se o novo responsável existe e é suporte
+    const userCheck = await pool.query(
+      'SELECT id, role FROM users WHERE id = $1 AND deletado_em IS NULL',
+      [responsavel_id]
+    );
+
+    if (userCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuário não encontrado"
+      });
+    }
+
+    if (userCheck.rows[0].role !== 'suporte') {
+      return res.status(400).json({
+        success: false,
+        message: "Apenas usuários de suporte podem ser responsáveis"
+      });
+    }
+
+    // Atualizar ordem
+    const result = await pool.query(
+      `UPDATE ordens 
+       SET responsavel_id = $1, data_atualizacao = NOW() 
+       WHERE id = $2 
+       RETURNING *`,
+      [responsavel_id, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Ordem não encontrada"
+      });
+    }
+
+    console.log('✅ [ATRIBUIR] Ordem reatribuída com sucesso');
+
+    res.status(200).json({
+      success: true,
+      message: "Ordem reatribuída com sucesso",
+      ordem: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error("❌ [ATRIBUIR] Erro:", error);
+    res.status(500).json({
+      success: false,
+      message: "Erro ao atribuir ordem"
+    });
+  }
+};
+
+
+/* ===========================================================
     Listar alertas de ordens pendentes (função obsoleta)
 =========================================================== */
 export async function listarAlertasOrdensPendentes(req, res) {

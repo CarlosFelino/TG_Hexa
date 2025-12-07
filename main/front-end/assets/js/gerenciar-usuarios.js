@@ -412,6 +412,375 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10);
     }
 
+    // Adicione esta função ANTES da função confirmDelete no gerenciar-usuarios.js
+
+    function showReassignmentModal(userId, data) {
+        console.log('📋 [REASSIGN] Mostrando modal de reatribuição:', data);
+
+        const alertOverlay = document.createElement('div');
+        alertOverlay.className = 'alert-overlay alert-warning';
+
+        const ordensHTML = data.ordens.map(ordem => `
+            <div class="ordem-item" style="background: #f8f9fa; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                <strong>${ordem.codigo}</strong> - ${ordem.titulo}
+                <select class="select-responsavel" data-ordem-id="${ordem.id}" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                    <option value="">Selecione um técnico...</option>
+                    ${data.suporteDisponiveis.map(s => `
+                        <option value="${s.id}">${s.nome} (${s.matricula})</option>
+                    `).join('')}
+                </select>
+            </div>
+        `).join('');
+
+        alertOverlay.innerHTML = `
+            <div class="alert-modal" style="max-width: 600px;">
+                <div class="alert-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="alert-title">Reatribuir Ordens em Andamento</h3>
+                <div class="alert-message" style="text-align: left;">
+                    <p style="text-align: center; margin-bottom: 1rem;">
+                        ${data.message}
+                    </p>
+                    <div id="ordens-list" style="max-height: 300px; overflow-y: auto;">
+                        ${ordensHTML}
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="alert-btn alert-btn-secondary" id="cancel-reassign-btn">
+                        Cancelar
+                    </button>
+                    <button class="alert-btn alert-btn-primary" id="confirm-reassign-btn">
+                        <i class="fas fa-check"></i> Confirmar Reatribuição
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(alertOverlay);
+
+        const cancelBtn = alertOverlay.querySelector('#cancel-reassign-btn');
+        const confirmBtn = alertOverlay.querySelector('#confirm-reassign-btn');
+
+        // Botão cancelar
+        cancelBtn.addEventListener('click', () => {
+            console.log('📋 [REASSIGN] Cancelado');
+            alertOverlay.remove();
+        });
+
+        // Botão confirmar
+        confirmBtn.addEventListener('click', async () => {
+            const selects = alertOverlay.querySelectorAll('.select-responsavel');
+            const reatribuicoes = [];
+            let todosPreenchidos = true;
+
+            selects.forEach(select => {
+                const ordemId = select.dataset.ordemId;
+                const novoResponsavelId = select.value;
+
+                if (!novoResponsavelId) {
+                    todosPreenchidos = false;
+                    select.style.borderColor = '#F44336';
+                } else {
+                    select.style.borderColor = '#ddd';
+                    reatribuicoes.push({
+                        ordemId: parseInt(ordemId),
+                        novoResponsavelId: parseInt(novoResponsavelId)
+                    });
+                }
+            });
+
+            if (!todosPreenchidos) {
+                showCustomAlert('warning', 'Atenção', 'Por favor, selecione um técnico para todas as ordens.');
+                return;
+            }
+
+            console.log('📋 [REASSIGN] Reatribuições:', reatribuicoes);
+
+            try {
+                // Reatribuir cada ordem
+                for (const { ordemId, novoResponsavelId } of reatribuicoes) {
+                    const res = await fetch(`${API_URL}/api/ordens/${ordemId}/atribuir`, {
+                        method: 'PUT',
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ responsavel_id: novoResponsavelId })
+                    });
+
+                    if (!res.ok) {
+                        throw new Error(`Erro ao reatribuir ordem ${ordemId}`);
+                    }
+                }
+
+                alertOverlay.remove();
+                console.log('✅ [REASSIGN] Ordens reatribuídas, tentando deletar novamente...');
+
+                // Agora tentar deletar o usuário novamente
+                const user = usersData.find(u => u.id == userId);
+                if (user.role === 'admin' || user.role === 'suporte') {
+                    showPasswordConfirmation(userId, user);
+                } else {
+                    confirmDelete(userId, null);
+                }
+
+            } catch (error) {
+                console.error('❌ [REASSIGN] Erro:', error);
+                showCustomAlert('error', 'Erro', 'Erro ao reatribuir ordens. Tente novamente.');
+            }
+        });
+
+        // ESC para cancelar
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                alertOverlay.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+
+        // Mostrar com animação
+        setTimeout(() => {
+            alertOverlay.classList.add('visible');
+        }, 10);
+    }
+
+    // ====================================================
+    // FUNÇÃO 1: Mostrar modal de reatribuição de ordens
+    // ====================================================
+    function showReassignmentModal(userId, data) {
+        console.log('📋 [REASSIGN] Mostrando modal de reatribuição:', data);
+
+        const alertOverlay = document.createElement('div');
+        alertOverlay.className = 'alert-overlay alert-warning visible'; // ← já adiciona visible
+
+        const ordensHTML = data.ordens.map(ordem => `
+            <div class="ordem-item" style="background: #f8f9fa; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid #ddd;">
+                <div style="margin-bottom: 0.5rem;">
+                    <strong style="color: var(--secondary);">${ordem.codigo}</strong>
+                    <p style="margin: 0.25rem 0; color: var(--text-medium); font-size: 0.9rem;">${ordem.titulo}</p>
+                </div>
+                <select class="select-responsavel" data-ordem-id="${ordem.id}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; background: white;">
+                    <option value="">Selecione um técnico...</option>
+                    ${data.suporteDisponiveis.map(s => `
+                        <option value="${s.id}">${s.nome} (Mat: ${s.matricula})</option>
+                    `).join('')}
+                </select>
+            </div>
+        `).join('');
+
+        alertOverlay.innerHTML = `
+            <div class="alert-modal" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+                <div class="alert-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="alert-title">Reatribuir Ordens em Andamento</h3>
+                <div class="alert-message" style="text-align: left;">
+                    <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text-medium);">
+                        ${data.message}
+                    </p>
+                    <div id="ordens-list" style="max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+                        ${ordensHTML}
+                    </div>
+                </div>
+                <div class="alert-actions" style="margin-top: 1.5rem;">
+                    <button class="alert-btn alert-btn-secondary" id="cancel-reassign-btn">
+                        Cancelar
+                    </button>
+                    <button class="alert-btn alert-btn-primary" id="confirm-reassign-btn">
+                        <i class="fas fa-check"></i> Reatribuir e Excluir
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(alertOverlay);
+
+        const cancelBtn = alertOverlay.querySelector('#cancel-reassign-btn');
+        const confirmBtn = alertOverlay.querySelector('#confirm-reassign-btn');
+
+        // Botão cancelar
+        cancelBtn.addEventListener('click', () => {
+            console.log('📋 [REASSIGN] Cancelado');
+            alertOverlay.remove();
+        });
+
+        // Botão confirmar
+        confirmBtn.addEventListener('click', async () => {
+            const selects = alertOverlay.querySelectorAll('.select-responsavel');
+            const reatribuicoes = [];
+            let todosPreenchidos = true;
+
+            selects.forEach(select => {
+                const ordemId = select.dataset.ordemId;
+                const novoResponsavelId = select.value;
+
+                if (!novoResponsavelId) {
+                    todosPreenchidos = false;
+                    select.style.borderColor = '#F44336';
+                    select.style.background = 'rgba(244, 67, 54, 0.05)';
+                } else {
+                    select.style.borderColor = '#4CAF50';
+                    select.style.background = 'rgba(76, 175, 80, 0.05)';
+                    reatribuicoes.push({
+                        ordemId: parseInt(ordemId),
+                        novoResponsavelId: parseInt(novoResponsavelId)
+                    });
+                }
+            });
+
+            if (!todosPreenchidos) {
+                showCustomAlert('warning', 'Atenção', 'Por favor, selecione um técnico para todas as ordens.');
+                return;
+            }
+
+            console.log('📋 [REASSIGN] Reatribuições:', reatribuicoes);
+
+            // Desabilitar botão e mostrar loading
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Reatribuindo...';
+
+            try {
+                // Reatribuir cada ordem
+                for (const { ordemId, novoResponsavelId } of reatribuicoes) {
+                    const res = await fetch(`${API_URL}/api/ordens/${ordemId}/atribuir`, {
+                        method: 'PUT',
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ responsavel_id: novoResponsavelId })
+                    });
+
+                    if (!res.ok) {
+                        const error = await res.json();
+                        throw new Error(error.message || `Erro ao reatribuir ordem ${ordemId}`);
+                    }
+                }
+
+                alertOverlay.remove();
+                console.log('✅ [REASSIGN] Ordens reatribuídas com sucesso!');
+
+                // Agora tentar deletar o usuário novamente
+                const user = usersData.find(u => u.id == userId);
+                if (user.role === 'admin' || user.role === 'suporte') {
+                    showPasswordConfirmation(userId, user);
+                } else {
+                    confirmDelete(userId, null);
+                }
+
+            } catch (error) {
+                console.error('❌ [REASSIGN] Erro:', error);
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<i class="fas fa-check"></i> Reatribuir e Excluir';
+                showCustomAlert('error', 'Erro', error.message || 'Erro ao reatribuir ordens. Tente novamente.');
+            }
+        });
+
+        // ESC para cancelar
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                alertOverlay.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+
+    // ====================================================
+    // FUNÇÃO 2: Modificar confirmDelete para detectar reatribuição
+    // ====================================================
+    // SUBSTITUA a função confirmDelete existente por esta:
+
+    async function confirmDelete(userId, senhaAdmin) {
+        console.log('🗑️ [DELETE] Iniciando exclusão do usuário ID:', userId);
+
+        try {
+            const requestBody = {};
+
+            if (senhaAdmin) {
+                requestBody.senhaAdmin = senhaAdmin;
+            }
+
+            const res = await fetch(`${API_URL}/api/admin/usuarios/${userId}`, {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                console.log('✅ [DELETE] Usuário deletado com sucesso!');
+                showCustomAlert('success', 'Usuário Excluído', data.message);
+                await fetchAllUsers();
+            } else {
+                // ✅ VERIFICAR SE PRECISA REATRIBUIR ORDENS
+                if (data.requireReassignment) {
+                    console.log('📋 [DELETE] Precisa reatribuir ordens');
+                    showReassignmentModal(userId, data);
+                } else if (data.message && data.message.includes('Senha incorreta')) {
+                    showCustomAlert('error', 'Senha Incorreta', 'A senha fornecida está incorreta. Tente novamente.');
+                } else {
+                    showCustomAlert('error', 'Erro', data.message || 'Não foi possível excluir o usuário.');
+                }
+            }
+
+        } catch (error) {
+            console.error('❌ [DELETE] Erro ao excluir usuário:', error);
+            showCustomAlert('error', 'Erro', 'Erro ao excluir usuário. Tente novamente.');
+        }
+    }
+
+    // Agora modifique a função confirmDelete para tratar o erro de reatribuição:
+
+    async function confirmDelete(userId, senhaAdmin) {
+        console.log('🗑️ [DELETE] Iniciando exclusão do usuário ID:', userId);
+
+        try {
+            const requestBody = {};
+
+            if (senhaAdmin) {
+                requestBody.senhaAdmin = senhaAdmin;
+            }
+
+            const res = await fetch(`${API_URL}/api/admin/usuarios/${userId}`, {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                console.log('✅ [DELETE] Usuário deletado com sucesso!');
+                showCustomAlert('success', 'Usuário Excluído', data.message);
+                await fetchAllUsers();
+            } else {
+                // ✅ VERIFICAR SE PRECISA REATRIBUIR ORDENS
+                if (data.requireReassignment) {
+                    console.log('📋 [DELETE] Precisa reatribuir ordens');
+                    showReassignmentModal(userId, data);
+                } else if (data.message && data.message.includes('Senha incorreta')) {
+                    showCustomAlert('error', 'Senha Incorreta', 'A senha fornecida está incorreta. Tente novamente.');
+                } else {
+                    showCustomAlert('error', 'Erro', data.message || 'Não foi possível excluir o usuário.');
+                }
+            }
+
+        } catch (error) {
+            console.error('❌ [DELETE] Erro ao excluir usuário:', error);
+            showCustomAlert('error', 'Erro', 'Erro ao excluir usuário. Tente novamente.');
+        }
+    }
+
     async function confirmDelete(userId, senhaAdmin) {
         console.log('🗑️ [DELETE] Iniciando exclusão do usuário ID:', userId);
 
