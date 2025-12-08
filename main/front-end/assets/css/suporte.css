@@ -398,7 +398,7 @@
 .modal-close:hover { color: var(--text-dark); }
 
 /* =======================
-   ALERTAS FLUTUANTES - Estilo Minimalista (CORRIGIDO)
+   ALERTAS FLUTUANTES - NOVA VERSÃO (UM POR VEZ)
    ======================= */
 .alert-popup {
     position: fixed; 
@@ -493,13 +493,18 @@
     display: none;
 }
 
+.alert-popup.closing {
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+}
+
 /* Corpo do alerta minimalista */
 .alert-body {
     max-height: 300px;
     overflow-y: auto;
 }
 
-/* Item de alerta minimalista - CORRIGIDO */
+/* Item de alerta minimalista */
 .alert-item {
     display: flex;
     align-items: flex-start;
@@ -619,7 +624,7 @@
     to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* Badge de prioridade minimalista - CORRIGIDO */
+/* Badge de prioridade minimalista */
 .badge {
     display: inline-block;
     padding: 0.2rem 0.6rem;
@@ -654,7 +659,7 @@
     border: 1px solid rgba(255, 87, 34, 0.3) !important;
 }
 
-.priority-4 .badge { /* VENCIDO - NOVA COR */
+.priority-4 .badge { /* VENCIDO */
     background: rgba(244, 67, 54, 0.2) !important;
     color: #c62828 !important;
     border: 1px solid rgba(244, 67, 54, 0.4) !important;
@@ -668,7 +673,7 @@
     100% { opacity: 1; }
 }
 
-/* CORREÇÃO: Indicadores de prioridade atualizados */
+/* Indicadores de prioridade */
 .priority-0 .priority-indicator {
     background: #9E9E9E !important;
     box-shadow: 0 0 0 2px rgba(158, 158, 158, 0.2) !important;
@@ -685,11 +690,11 @@
 }
 
 .priority-3 .priority-indicator {
-    background: #FF5722 !important; /* Laranja mais forte */
+    background: #FF5722 !important;
     box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2) !important;
 }
 
-.priority-4 .priority-indicator { /* VENCIDO - VERMELHO PISCANTE */
+.priority-4 .priority-indicator {
     background: #F44336 !important;
     box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.3) !important;
     animation: blink-vencido 1.5s infinite;
@@ -698,47 +703,6 @@
 @keyframes blink-vencido {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
-}
-
-/* Estilo especial para itens vencidos */
-.priority-4.alert-item {
-    border-left: 3px solid #F44336 !important;
-    background: linear-gradient(to right, rgba(244, 67, 54, 0.05), #f8f9fa) !important;
-    border-color: rgba(244, 67, 54, 0.3) !important;
-}
-
-.priority-4 .alert-icon-wrap {
-    background: rgba(244, 67, 54, 0.15) !important;
-    color: #F44336 !important;
-    animation: shake-vencido 2s infinite;
-}
-
-@keyframes shake-vencido {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
-    20%, 40%, 60%, 80% { transform: translateX(1px); }
-}
-
-/* Destacar texto de vencido */
-.priority-4 small {
-    color: #c62828 !important;
-    font-weight: 600;
-}
-
-/* CORREÇÃO: Garantir que os indicadores funcionem para todas as classes */
-.priority-1 .priority-indicator {
-    background: #4CAF50 !important;
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
-}
-
-.priority-2 .priority-indicator {
-    background: #FF9800 !important;
-    box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2) !important;
-}
-
-.priority-3 .priority-indicator {
-    background: #F44336 !important;
-    box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2) !important;
 }
 
 /* Estilo para quando não há alertas */
@@ -797,7 +761,7 @@
     .quick-actions { grid-template-columns: 1fr; gap: 1rem; }
     .orders-grid { grid-template-columns: 1fr; }
 
-    /* Alertas no topo em mobile */
+    /* Alertas no mobile */
     .alert-popup {
         width: 90%;
         right: 5%;

@@ -262,3 +262,401 @@
 2025-12-07 07:45:38.515 UTC [358] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
 2025-12-07 07:45:38.534 UTC [361] LOG:  database system was shut down at 2025-12-06 18:44:58 UTC
 2025-12-07 07:45:38.551 UTC [358] LOG:  database system is ready to accept connections
+2025-12-07 07:50:38.629 UTC [359] LOG:  checkpoint starting: time
+2025-12-07 07:50:42.630 UTC [359] LOG:  checkpoint complete: wrote 42 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.938 s, sync=0.037 s, total=4.001 s; sync files=19, longest=0.004 s, average=0.002 s; distance=49 kB, estimate=49 kB; lsn=0/217F3D0, redo lsn=0/217F378
+2025-12-07 07:58:23.168 UTC [1130] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 07:58:23.169 UTC [1130] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 07:58:23.171 UTC [1130] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 07:58:23.177 UTC [1130] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 07:58:23.184 UTC [1133] LOG:  database system was interrupted; last known up at 2025-12-07 07:50:42 UTC
+2025-12-07 07:58:23.212 UTC [1133] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 07:58:23.219 UTC [1133] LOG:  redo starts at 0/217F378
+2025-12-07 07:58:23.219 UTC [1133] LOG:  invalid record length at 0/217F480: expected at least 24, got 0
+2025-12-07 07:58:23.219 UTC [1133] LOG:  redo done at 0/217F448 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 07:58:23.225 UTC [1131] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 07:58:23.354 UTC [1131] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.133 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/217F480, redo lsn=0/217F480
+2025-12-07 07:58:23.360 UTC [1130] LOG:  database system is ready to accept connections
+2025-12-07 08:03:23.455 UTC [1131] LOG:  checkpoint starting: time
+2025-12-07 08:03:25.662 UTC [1131] LOG:  checkpoint complete: wrote 22 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.122 s, sync=0.043 s, total=2.208 s; sync files=22, longest=0.006 s, average=0.002 s; distance=56 kB, estimate=56 kB; lsn=0/218D530, redo lsn=0/218D4D8
+2025-12-07 08:08:23.761 UTC [1131] LOG:  checkpoint starting: time
+2025-12-07 08:08:25.259 UTC [1131] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.404 s, sync=0.061 s, total=1.498 s; sync files=12, longest=0.041 s, average=0.006 s; distance=66 kB, estimate=66 kB; lsn=0/21A3170, redo lsn=0/219DFD0
+2025-12-07 08:13:23.358 UTC [1131] LOG:  checkpoint starting: time
+2025-12-07 08:13:25.460 UTC [1131] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.955 s, sync=0.087 s, total=2.102 s; sync files=20, longest=0.027 s, average=0.005 s; distance=50 kB, estimate=65 kB; lsn=0/21AAA00, redo lsn=0/21AA9A8
+2025-12-07 08:16:05.611 UTC [1484] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:16:05.611 UTC [1484] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:23:06.905 UTC [1492] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:23:06.905 UTC [1492] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:23:31.500 UTC [1494] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:23:31.500 UTC [1494] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:23:39.401 UTC [1495] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:23:39.401 UTC [1495] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:24:18.595 UTC [1496] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:24:18.595 UTC [1496] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:24:29.385 UTC [1498] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:24:29.385 UTC [1498] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:28:42.512 UTC [1505] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:28:42.512 UTC [1505] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:29:03.874 UTC [1506] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:29:03.874 UTC [1506] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:34:33.599 UTC [1518] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:34:33.599 UTC [1518] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:37:02.890 UTC [1526] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:37:02.890 UTC [1526] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:37:07.554 UTC [1527] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:37:07.554 UTC [1527] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:37:14.165 UTC [1528] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:37:14.165 UTC [1528] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:44:57.408 UTC [1561] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:44:57.408 UTC [1561] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:57:05.614 UTC [1130] LOG:  received fast shutdown request
+2025-12-07 08:57:05.629 UTC [1130] LOG:  aborting any active transactions
+2025-12-07 08:57:05.631 UTC [1130] LOG:  background worker "logical replication launcher" (PID 1136) exited with exit code 1
+2025-12-07 08:57:05.632 UTC [1131] LOG:  shutting down
+2025-12-07 08:57:05.701 UTC [1131] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 08:57:05.716 UTC [1131] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.085 s; sync files=1, longest=0.003 s, average=0.003 s; distance=0 kB, estimate=58 kB; lsn=0/21AAAB0, redo lsn=0/21AAAB0
+2025-12-07 08:57:05.808 UTC [1130] LOG:  database system is shut down
+2025-12-07 08:57:09.801 UTC [1736] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 08:57:09.807 UTC [1736] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 08:57:09.808 UTC [1736] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 08:57:09.813 UTC [1736] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 08:57:09.903 UTC [1739] LOG:  database system was shut down at 2025-12-07 08:57:05 UTC
+2025-12-07 08:57:09.913 UTC [1736] LOG:  database system is ready to accept connections
+2025-12-07 08:58:02.208 UTC [1921] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:02.208 UTC [1921] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:58:25.703 UTC [1979] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:25.703 UTC [1979] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:58:42.455 UTC [2036] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:42.455 UTC [2036] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:58:50.900 UTC [2061] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:50.900 UTC [2061] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:59:50.851 UTC [2095] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:59:50.851 UTC [2095] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:02:10.002 UTC [1737] LOG:  checkpoint starting: time
+2025-12-07 09:02:10.239 UTC [1737] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.013 s, total=0.237 s; sync files=4, longest=0.007 s, average=0.004 s; distance=4 kB, estimate=4 kB; lsn=0/21ABED0, redo lsn=0/21ABE78
+2025-12-07 09:09:49.823 UTC [2441] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:09:49.824 UTC [2441] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:09:49.825 UTC [2441] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:09:49.900 UTC [2441] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:09:49.908 UTC [2444] LOG:  database system was interrupted; last known up at 2025-12-07 09:02:10 UTC
+2025-12-07 09:09:50.022 UTC [2444] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 09:09:50.100 UTC [2444] LOG:  redo starts at 0/21ABE78
+2025-12-07 09:09:50.100 UTC [2444] LOG:  invalid record length at 0/21ABF80: expected at least 24, got 0
+2025-12-07 09:09:50.100 UTC [2444] LOG:  redo done at 0/21ABF48 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.07 s
+2025-12-07 09:09:50.107 UTC [2442] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 09:09:50.209 UTC [2442] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.089 s, total=0.106 s; sync files=2, longest=0.087 s, average=0.045 s; distance=0 kB, estimate=0 kB; lsn=0/21ABF80, redo lsn=0/21ABF80
+2025-12-07 09:09:50.216 UTC [2441] LOG:  database system is ready to accept connections
+2025-12-07 09:10:50.677 UTC [2565] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:10:50.677 UTC [2565] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:11:09.852 UTC [2622] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:11:09.852 UTC [2622] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:20:14.761 UTC [472] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:20:14.763 UTC [472] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:20:14.764 UTC [472] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:20:14.769 UTC [472] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:20:14.781 UTC [475] LOG:  database system was interrupted; last known up at 2025-12-07 09:09:50 UTC
+2025-12-07 09:20:14.809 UTC [475] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 09:20:14.834 UTC [475] LOG:  redo starts at 0/21ABFF8
+2025-12-07 09:20:14.840 UTC [475] LOG:  invalid record length at 0/21AD668: expected at least 24, got 0
+2025-12-07 09:20:14.840 UTC [475] LOG:  redo done at 0/21AD630 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 09:20:14.849 UTC [473] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 09:20:14.886 UTC [473] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.017 s, total=0.041 s; sync files=4, longest=0.010 s, average=0.005 s; distance=5 kB, estimate=5 kB; lsn=0/21AD668, redo lsn=0/21AD668
+2025-12-07 09:20:14.892 UTC [472] LOG:  database system is ready to accept connections
+2025-12-07 09:20:48.231 UTC [571] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:20:48.231 UTC [571] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:21:13.472 UTC [573] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:21:13.472 UTC [573] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:21:56.246 UTC [575] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:21:56.246 UTC [575] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:22:20.592 UTC [577] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:22:20.592 UTC [577] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:02.633 UTC [578] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:02.633 UTC [578] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:23.382 UTC [580] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:23.382 UTC [580] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:35.047 UTC [581] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:35.047 UTC [581] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:50.056 UTC [582] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:50.056 UTC [582] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:08.478 UTC [583] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:08.478 UTC [583] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:18.681 UTC [585] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:18.681 UTC [585] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:40.138 UTC [586] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:40.138 UTC [586] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:55.572 UTC [587] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:55.572 UTC [587] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:25:14.986 UTC [473] LOG:  checkpoint starting: time
+2025-12-07 09:25:15.226 UTC [473] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.013 s, total=0.241 s; sync files=3, longest=0.010 s, average=0.005 s; distance=6 kB, estimate=6 kB; lsn=0/21AF078, redo lsn=0/21AF020
+2025-12-07 09:25:46.122 UTC [593] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:25:46.122 UTC [593] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:26:07.648 UTC [594] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:26:07.648 UTC [594] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:47:04.103 UTC [472] LOG:  received fast shutdown request
+2025-12-07 09:47:04.121 UTC [472] LOG:  aborting any active transactions
+2025-12-07 09:47:04.121 UTC [568] FATAL:  terminating connection due to administrator command
+2025-12-07 09:47:04.124 UTC [472] LOG:  background worker "logical replication launcher" (PID 478) exited with exit code 1
+2025-12-07 09:47:04.141 UTC [473] LOG:  shutting down
+2025-12-07 09:47:04.150 UTC [473] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 09:47:04.169 UTC [473] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.028 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=5 kB; lsn=0/21AF128, redo lsn=0/21AF128
+2025-12-07 09:47:04.179 UTC [472] LOG:  database system is shut down
+2025-12-07 09:47:08.476 UTC [942] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:47:08.491 UTC [942] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:47:08.507 UTC [942] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:47:08.513 UTC [942] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:47:08.568 UTC [945] LOG:  database system was shut down at 2025-12-07 09:47:04 UTC
+2025-12-07 09:47:08.652 UTC [942] LOG:  database system is ready to accept connections
+2025-12-07 09:52:08.667 UTC [943] LOG:  checkpoint starting: time
+2025-12-07 09:52:08.913 UTC [943] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.016 s, total=0.246 s; sync files=4, longest=0.008 s, average=0.004 s; distance=7 kB, estimate=7 kB; lsn=0/21B0E40, redo lsn=0/21B0DE8
+2025-12-07 09:55:25.358 UTC [1574] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:55:25.359 UTC [1574] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:55:25.360 UTC [1574] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:55:25.365 UTC [1574] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:55:25.373 UTC [1577] LOG:  database system was interrupted; last known up at 2025-12-07 09:52:08 UTC
+2025-12-07 09:55:25.406 UTC [1577] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 09:55:25.419 UTC [1577] LOG:  redo starts at 0/21B0DE8
+2025-12-07 09:55:25.419 UTC [1577] LOG:  invalid record length at 0/21B0EF0: expected at least 24, got 0
+2025-12-07 09:55:25.419 UTC [1577] LOG:  redo done at 0/21B0EB8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 09:55:25.427 UTC [1575] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 09:55:25.453 UTC [1575] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.012 s, total=0.031 s; sync files=2, longest=0.008 s, average=0.006 s; distance=0 kB, estimate=0 kB; lsn=0/21B0EF0, redo lsn=0/21B0EF0
+2025-12-07 09:55:25.463 UTC [1574] LOG:  database system is ready to accept connections
+2025-12-07 10:06:41.766 UTC [1999] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:06:41.769 UTC [1999] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:06:41.772 UTC [1999] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:06:41.854 UTC [1999] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:06:41.861 UTC [2012] LOG:  database system was interrupted; last known up at 2025-12-07 09:55:25 UTC
+2025-12-07 10:06:41.963 UTC [2012] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:06:41.974 UTC [2012] LOG:  redo starts at 0/21B0F68
+2025-12-07 10:06:41.974 UTC [2012] LOG:  invalid record length at 0/21B0FA0: expected at least 24, got 0
+2025-12-07 10:06:41.974 UTC [2012] LOG:  redo done at 0/21B0F68 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:06:41.992 UTC [2010] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:06:42.079 UTC [2010] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.015 s, total=0.102 s; sync files=2, longest=0.009 s, average=0.008 s; distance=0 kB, estimate=0 kB; lsn=0/21B0FA0, redo lsn=0/21B0FA0
+2025-12-07 10:06:42.168 UTC [1999] LOG:  database system is ready to accept connections
+2025-12-07 10:13:51.783 UTC [2911] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:13:51.785 UTC [2911] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:13:51.786 UTC [2911] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:13:51.791 UTC [2911] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:13:51.799 UTC [2914] LOG:  database system was interrupted; last known up at 2025-12-07 10:06:42 UTC
+2025-12-07 10:13:51.826 UTC [2914] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:13:51.835 UTC [2914] LOG:  redo starts at 0/21B1018
+2025-12-07 10:13:51.835 UTC [2914] LOG:  invalid record length at 0/21B2FA0: expected at least 24, got 0
+2025-12-07 10:13:51.835 UTC [2914] LOG:  redo done at 0/21B2F68 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:13:51.844 UTC [2912] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:13:51.872 UTC [2912] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.012 s, total=0.033 s; sync files=4, longest=0.006 s, average=0.003 s; distance=8 kB, estimate=8 kB; lsn=0/21B2FA0, redo lsn=0/21B2FA0
+2025-12-07 10:13:51.879 UTC [2911] LOG:  database system is ready to accept connections
+2025-12-07 10:27:46.779 UTC [3505] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:27:46.780 UTC [3505] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:27:46.781 UTC [3505] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:27:46.785 UTC [3505] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:27:46.793 UTC [3508] LOG:  database system was interrupted; last known up at 2025-12-07 10:13:51 UTC
+2025-12-07 10:27:46.823 UTC [3508] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:27:47.059 UTC [3508] LOG:  redo starts at 0/21B3018
+2025-12-07 10:27:47.059 UTC [3508] LOG:  invalid record length at 0/21B3050: expected at least 24, got 0
+2025-12-07 10:27:47.059 UTC [3508] LOG:  redo done at 0/21B3018 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:27:47.076 UTC [3506] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:27:47.103 UTC [3506] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.005 s, total=0.032 s; sync files=2, longest=0.003 s, average=0.003 s; distance=0 kB, estimate=0 kB; lsn=0/21B3050, redo lsn=0/21B3050
+2025-12-07 10:27:47.117 UTC [3505] LOG:  database system is ready to accept connections
+2025-12-07 10:32:47.202 UTC [3506] LOG:  checkpoint starting: time
+2025-12-07 10:32:47.435 UTC [3506] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.012 s, total=0.234 s; sync files=3, longest=0.009 s, average=0.004 s; distance=8 kB, estimate=8 kB; lsn=0/21B53C8, redo lsn=0/21B5370
+2025-12-07 10:34:00.520 UTC [3505] LOG:  received fast shutdown request
+2025-12-07 10:34:00.531 UTC [3505] LOG:  aborting any active transactions
+2025-12-07 10:34:00.532 UTC [3603] FATAL:  terminating connection due to administrator command
+2025-12-07 10:34:00.535 UTC [3505] LOG:  background worker "logical replication launcher" (PID 3511) exited with exit code 1
+2025-12-07 10:34:00.541 UTC [3506] LOG:  shutting down
+2025-12-07 10:34:00.549 UTC [3506] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 10:34:00.560 UTC [3506] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.020 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=7 kB; lsn=0/21B5478, redo lsn=0/21B5478
+2025-12-07 10:34:00.568 UTC [3505] LOG:  database system is shut down
+2025-12-07 10:35:32.457 UTC [3950] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:35:32.461 UTC [3950] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:35:32.465 UTC [3950] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:35:32.469 UTC [3950] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:35:32.477 UTC [3953] LOG:  database system was shut down at 2025-12-07 10:34:00 UTC
+2025-12-07 10:35:32.490 UTC [3950] LOG:  database system is ready to accept connections
+2025-12-07 10:40:56.930 UTC [4286] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:40:56.931 UTC [4286] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:40:56.932 UTC [4286] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:40:56.936 UTC [4286] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:40:56.943 UTC [4289] LOG:  database system was interrupted; last known up at 2025-12-07 10:35:32 UTC
+2025-12-07 10:40:56.967 UTC [4289] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:40:56.975 UTC [4289] LOG:  redo starts at 0/21B54F0
+2025-12-07 10:40:56.976 UTC [4289] LOG:  invalid record length at 0/21B7BC0: expected at least 24, got 0
+2025-12-07 10:40:56.976 UTC [4289] LOG:  redo done at 0/21B7B88 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:40:56.982 UTC [4287] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:40:57.015 UTC [4287] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.017 s, total=0.036 s; sync files=5, longest=0.006 s, average=0.004 s; distance=9 kB, estimate=9 kB; lsn=0/21B7BC0, redo lsn=0/21B7BC0
+2025-12-07 10:40:57.024 UTC [4286] LOG:  database system is ready to accept connections
+2025-12-07 10:42:20.052 UTC [4286] LOG:  received fast shutdown request
+2025-12-07 10:42:20.063 UTC [4286] LOG:  aborting any active transactions
+2025-12-07 10:42:20.065 UTC [4286] LOG:  background worker "logical replication launcher" (PID 4292) exited with exit code 1
+2025-12-07 10:42:20.081 UTC [4287] LOG:  shutting down
+2025-12-07 10:42:20.091 UTC [4287] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 10:42:20.108 UTC [4287] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.007 s, total=0.028 s; sync files=3, longest=0.004 s, average=0.003 s; distance=4 kB, estimate=9 kB; lsn=0/21B8F40, redo lsn=0/21B8F40
+2025-12-07 10:42:20.117 UTC [4286] LOG:  database system is shut down
+2025-12-07 10:42:23.482 UTC [4472] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:42:23.553 UTC [4472] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:42:23.561 UTC [4472] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:42:23.567 UTC [4472] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:42:23.670 UTC [4475] LOG:  database system was shut down at 2025-12-07 10:42:20 UTC
+2025-12-07 10:42:23.765 UTC [4472] LOG:  database system is ready to accept connections
+2025-12-07 10:47:23.675 UTC [4473] LOG:  checkpoint starting: time
+2025-12-07 10:47:23.917 UTC [4473] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.016 s, total=0.242 s; sync files=4, longest=0.011 s, average=0.004 s; distance=5 kB, estimate=5 kB; lsn=0/21BA658, redo lsn=0/21BA600
+2025-12-07 10:50:17.009 UTC [4472] LOG:  received fast shutdown request
+2025-12-07 10:50:17.030 UTC [4472] LOG:  aborting any active transactions
+2025-12-07 10:50:17.042 UTC [4472] LOG:  background worker "logical replication launcher" (PID 4478) exited with exit code 1
+2025-12-07 10:50:17.043 UTC [4473] LOG:  shutting down
+2025-12-07 10:50:17.048 UTC [4473] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 10:50:17.063 UTC [4473] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.021 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=5 kB; lsn=0/21BA708, redo lsn=0/21BA708
+2025-12-07 10:50:17.069 UTC [4472] LOG:  database system is shut down
+2025-12-07 17:24:36.014 UTC [801] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 17:24:36.019 UTC [801] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 17:24:36.020 UTC [801] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 17:24:36.024 UTC [801] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 17:24:36.037 UTC [804] LOG:  database system was shut down at 2025-12-07 10:50:17 UTC
+2025-12-07 17:24:36.067 UTC [801] LOG:  database system is ready to accept connections
+2025-12-07 17:29:36.136 UTC [802] LOG:  checkpoint starting: time
+2025-12-07 17:29:36.981 UTC [802] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.024 s, total=0.846 s; sync files=8, longest=0.012 s, average=0.003 s; distance=40 kB, estimate=40 kB; lsn=0/21C4B20, redo lsn=0/21C4AC8
+2025-12-07 17:34:37.081 UTC [802] LOG:  checkpoint starting: time
+2025-12-07 17:34:37.415 UTC [802] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.013 s, total=0.335 s; sync files=4, longest=0.009 s, average=0.004 s; distance=12 kB, estimate=38 kB; lsn=0/21C7EE0, redo lsn=0/21C7E88
+2025-12-07 17:59:37.903 UTC [802] LOG:  checkpoint starting: time
+2025-12-07 17:59:38.349 UTC [802] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.025 s, total=0.446 s; sync files=5, longest=0.016 s, average=0.005 s; distance=26 kB, estimate=36 kB; lsn=0/21CE868, redo lsn=0/21CE810
+2025-12-07 18:07:44.244 UTC [801] LOG:  received fast shutdown request
+2025-12-07 18:07:44.257 UTC [801] LOG:  aborting any active transactions
+2025-12-07 18:07:44.261 UTC [801] LOG:  background worker "logical replication launcher" (PID 807) exited with exit code 1
+2025-12-07 18:07:44.272 UTC [802] LOG:  shutting down
+2025-12-07 18:07:44.278 UTC [802] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 18:07:44.290 UTC [802] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.018 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=33 kB; lsn=0/21CE918, redo lsn=0/21CE918
+2025-12-07 18:07:44.298 UTC [801] LOG:  database system is shut down

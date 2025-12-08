@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Badge 2: Minhas ordens CRIADAS e EM ABERTO (do usuário logado)
-            if (badgeMinhas || document.getElementById("recentOrders")) {
+            if (badgeMinhas) {
                 const resMinhas = await fetch("/api/minhas-ordens", {
                     headers: { Authorization: "Bearer " + token },
                 });
@@ -120,19 +120,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     const minhasOrdens = await resMinhas.json();
                     const ordensArray = Array.isArray(minhasOrdens) ? minhasOrdens : minhasOrdens.ordens || [];
 
-                    console.log("📦 Dados recebidos da API:", minhasOrdens);
-                    console.log("📊 Total de ordens recebidas:", ordensArray.length);
-                    console.log("👤 Usuário logado:", user);
+                    console.log("📦 Minhas ordens recebidas:", minhasOrdens);
+                    console.log("📊 Total de minhas ordens:", ordensArray.length);
 
-                    // Debug: Mostrar estrutura das primeiras ordens
-                    if (ordensArray.length > 0) {
-                        console.log("🔍 Estrutura da primeira ordem:", ordensArray[0]);
-                        console.log("🔍 Campos disponíveis:", Object.keys(ordensArray[0]));
-                    }
-
-                    // ✅ FILTRO: Apenas ordens PENDENTES criadas pelo usuário
+                    // ✅ FILTRO: Apenas ordens PENDENTES criadas pelo usuário (para o badge)
                     const ordensPendentes = ordensArray.filter(ordem => {
-                        // Verifica múltiplos campos possíveis para identificar o criador
                         const isCriador = 
                             ordem.solicitante_id === user.id || 
                             ordem.criado_por === user.id ||
@@ -142,34 +134,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const isPendente = ordem.status === "Pendente";
 
-                        // Debug individual
-                        if (ordem.status === "Pendente") {
-                            console.log(`🔍 Ordem ${ordem.id || ordem.codigo}:`, {
-                                status: ordem.status,
-                                solicitante_id: ordem.solicitante_id,
-                                criado_por: ordem.criado_por,
-                                usuario_id: ordem.usuario_id,
-                                user_id_logado: user.id,
-                                user_usuario_id: user.usuario_id,
-                                isCriador: isCriador
-                            });
-                        }
-
                         return isCriador && isPendente;
                     });
 
-                    console.log(`⏳ Ordens pendentes criadas pelo usuário: ${ordensPendentes.length}`);
+                    console.log(`⏳ Minhas ordens pendentes: ${ordensPendentes.length}`);
 
                     // Atualiza badge com total de ordens PENDENTES criadas pelo usuário
-                    if (badgeMinhas) {
-                        badgeMinhas.textContent = ordensPendentes.length;
-                    }
+                    badgeMinhas.textContent = ordensPendentes.length;
+                }
+            }
 
-                    // Atualiza ordens recentes (também filtra apenas as PENDENTES)
-                    const recentOrdersContainer = document.getElementById("recentOrders");
-                    if (recentOrdersContainer) {
-                        renderRecentOrders(ordensPendentes, recentOrdersContainer);
-                    }
+            // ✅ CORREÇÃO: Card de Ordens Recentes - Buscar TODAS as ordens do sistema
+            const recentOrdersContainer = document.getElementById("recentOrders");
+            if (recentOrdersContainer) {
+                const resAll = await fetch("/api/ordens", {
+                    headers: { Authorization: "Bearer " + token },
+                });
+
+                if (resAll.ok) {
+                    const todasOrdens = await resAll.json();
+                    console.log("📦 Todas as ordens do sistema:", todasOrdens.length);
+
+                    // Filtrar apenas ordens pendentes
+                    const ordensPendentes = todasOrdens.filter(o => o.status === "Pendente");
+                    console.log(`⏳ Total de ordens pendentes no sistema: ${ordensPendentes.length}`);
+
+                    renderRecentOrders(ordensPendentes, recentOrdersContainer);
                 }
             }
 
@@ -242,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // 6. POP-UPS DE ALERTAS (APENAS MENSAGENS, SEM DATAS)
+    // 6. POP-UPS DE ALERTAS (APARECER UM DE CADA VEZ)
     // =========================
 
     // Elementos dos pop-ups
@@ -254,121 +244,91 @@ document.addEventListener("DOMContentLoaded", function () {
     const alertBodySemResp = document.getElementById("alertBodySemResp");
     const closeSemResp = document.getElementById("closeSemResp");
 
-    // Variável para controlar se já carregou os alertas
+    // Variáveis para controlar os alertas
     let alertasCarregados = false;
+    let alertasQueue = []; // Fila de alertas para mostrar
+    let currentAlert = null; // Alerta atual sendo mostrado
 
     // Botões de fechar
     if (closeVencimento) {
         closeVencimento.addEventListener("click", () => {
-            alertPopupVencimento.classList.add("hidden");
-            alertPopupVencimento.classList.remove("active");
+            closeCurrentAlert();
         });
     }
 
     if (closeSemResp) {
         closeSemResp.addEventListener("click", () => {
-            alertPopupSemResp.classList.add("hidden");
-            alertPopupSemResp.classList.remove("active");
+            closeCurrentAlert();
         });
     }
 
-    // ✅ FUNÇÃO: Adicionar +1 dia à data de vencimento (TOLERÂNCIA)
-    function adicionarDiaTolerancia(dataLimite) {
-        if (!dataLimite) return null;
+    // ✅ FUNÇÃO: Fechar alerta atual e mostrar o próximo
+    function closeCurrentAlert() {
+        if (currentAlert) {
+            // Adiciona classe de animação de saída
+            currentAlert.classList.add('closing');
 
-        const data = new Date(dataLimite);
-        data.setDate(data.getDate() + 1); // Adiciona 1 dia
-        return data;
-    }
+            // Remove as classes ativas após a animação
+            setTimeout(() => {
+                currentAlert.classList.remove('active', 'closing');
+                currentAlert.classList.add('hidden');
 
-    // ✅ FUNÇÃO: Calcular prioridade baseada na data de vencimento COM TOLERÂNCIA
-    function calcularPrioridadePorData(dataLimite) {
-        if (!dataLimite) return 2; // Prioridade média se não tiver data
+                // Remove o alerta atual da fila
+                const index = alertasQueue.indexOf(currentAlert);
+                if (index > -1) {
+                    alertasQueue.splice(index, 1);
+                }
 
-        // Adiciona +1 dia de tolerância à data original
-        const dataComTolerancia = adicionarDiaTolerancia(dataLimite);
-
-        const hoje = new Date();
-
-        // Resetar horas para comparar apenas datas
-        hoje.setHours(0, 0, 0, 0);
-        dataComTolerancia.setHours(0, 0, 0, 0);
-
-        // Calcular diferença em dias (com tolerância)
-        const diferencaMs = dataComTolerancia - hoje;
-        const diferencaDias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
-
-        // Lógica de prioridade COM TOLERÂNCIA:
-        if (diferencaDias < 0) {
-            return 4; // Vencido (com tolerância já aplicada)
-        } else if (diferencaDias <= 1) {
-            return 3; // Alta - vence hoje/amanhã (considerando tolerância)
-        } else if (diferencaDias <= 3) {
-            return 2; // Média - vence em 2-3 dias
-        } else if (diferencaDias <= 7) {
-            return 1; // Baixa - vence em 4-7 dias
-        } else {
-            return 0; // Muito baixa - mais de 7 dias (não aparece no alerta)
+                // Mostra o próximo alerta da fila
+                currentAlert = null;
+                showNextAlert();
+            }, 300);
         }
     }
 
-    // ✅ FUNÇÃO: Obter texto da prioridade
-    function getTextoPrioridade(nivel) {
-        switch(nivel) {
-            case 4: return "Vencido";
-            case 3: return "Alta";
-            case 2: return "Média";
-            case 1: return "Baixa";
-            default: return "Normal";
+    // ✅ FUNÇÃO: Mostrar próximo alerta da fila
+    function showNextAlert() {
+        if (alertasQueue.length > 0 && !currentAlert) {
+            currentAlert = alertasQueue[0];
+
+            // Remove o hidden e mostra com animação
+            setTimeout(() => {
+                currentAlert.classList.remove('hidden');
+                setTimeout(() => {
+                    currentAlert.classList.add('active');
+                }, 10);
+            }, 500); // Delay para transição suave
         }
     }
 
-    // ✅ FUNÇÃO: Obter ícone da prioridade
-    function getIconePrioridade(nivel) {
-        switch(nivel) {
-            case 4: return "fas fa-exclamation-circle"; // Vencido
-            case 3: return "fas fa-exclamation-triangle"; // Alta
-            case 2: return "fas fa-info-circle"; // Média
-            case 1: return "fas fa-clock"; // Baixa
-            default: return "fas fa-info-circle";
+    // ✅ FUNÇÃO: Adicionar alerta à fila
+    function addAlertToQueue(alertElement, hasContent) {
+        if (hasContent) {
+            alertasQueue.push(alertElement);
+            console.log(`📋 Alerta adicionado à fila: ${alertElement.id}`);
         }
     }
 
-    // ✅ FUNÇÃO: Formatar mensagem de vencimento (APENAS MENSAGEM, SEM DATA)
-    function formatarMensagemVencimento(dataLimite) {
-        if (!dataLimite) return "Sem data limite";
+    // ✅ FUNÇÃO: Formatar data para exibição (para ordens sem responsável)
+    function formatarDataParaExibicao(dataString) {
+        if (!dataString) return "Data não informada";
 
-        // Adicionar tolerância de +1 dia
-        const dataComTolerancia = adicionarDiaTolerancia(dataLimite);
+        try {
+            const data = new Date(dataString);
 
-        const hoje = new Date();
+            // Formatar como "DD/MM/YYYY"
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const ano = data.getFullYear();
 
-        // Resetar horas para comparar apenas datas
-        hoje.setHours(0, 0, 0, 0);
-        dataComTolerancia.setHours(0, 0, 0, 0);
-
-        const diferencaMs = dataComTolerancia - hoje;
-        const diferencaDias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
-
-        if (diferencaDias < 0) {
-            const diasAtraso = Math.abs(diferencaDias);
-            if (diasAtraso === 0) {
-                return "Venceu ontem";
-            } else if (diasAtraso === 1) {
-                return "Venceu hoje";
-            } else {
-                return `Venceu há ${diasAtraso} dias`;
-            }
-        } else if (diferencaDias === 0) {
-            return "Vence hoje";
-        } else if (diferencaDias === 1) {
-            return "Vence amanhã";
-        } else {
-            return `Vence em ${diferencaDias} dias`;
+            return `${dia}/${mes}/${ano}`;
+        } catch (err) {
+            console.error("Erro ao formatar data:", err);
+            return "Data inválida";
         }
     }
 
-    // ✅ FUNÇÃO PRINCIPAL: Carregar e exibir alertas (APENAS UMA VEZ)
+    // ✅ FUNÇÃO PRINCIPAL: Carregar e exibir alertas (UM DE CADA VEZ)
     async function carregarAlertas() {
         // Verifica se já carregou os alertas para não repetir
         if (alertasCarregados) {
@@ -391,36 +351,36 @@ document.addEventListener("DOMContentLoaded", function () {
             const alertas = await res.json();
             console.log("📢 Alertas recebidos:", alertas);
 
+            // Resetar fila
+            alertasQueue = [];
+
             // ============================================
-            // POP-UP 1: Ordens próximas do vencimento (APENAS MENSAGENS)
+            // POP-UP 1: Ordens próximas do vencimento
             // ============================================
+            let hasVencimentoContent = false;
             if (alertas.prazo && alertas.prazo.length > 0) {
-                // Filtrar apenas ordens que vencem em até 7 dias (COM TOLERÂNCIA) ou já venceram
+                // Filtrar apenas ordens que vencem em até 7 dias ou já venceram
                 const ordensFiltradas = alertas.prazo.filter(ordem => {
                     if (!ordem.data_limite) return false;
                     const prioridade = calcularPrioridadePorData(ordem.data_limite);
-                    return prioridade > 0; // Mostrar apenas prioridade 1-4 (exclui "Muito baixa")
+                    return prioridade > 0; // Mostrar apenas prioridade 1-4
                 });
 
-                // Ordenar por prioridade (vencidos primeiro, depois por data mais próxima)
+                // Ordenar por prioridade
                 ordensFiltradas.sort((a, b) => {
                     const prioridadeA = calcularPrioridadePorData(a.data_limite);
                     const prioridadeB = calcularPrioridadePorData(b.data_limite);
-
-                    // Ordenar por prioridade (maior primeiro)
                     if (prioridadeB !== prioridadeA) {
                         return prioridadeB - prioridadeA;
                     }
-
-                    // Se mesma prioridade, ordenar por data mais próxima
                     const dataA = a.data_limite ? new Date(a.data_limite) : new Date(9999, 11, 31);
                     const dataB = b.data_limite ? new Date(b.data_limite) : new Date(9999, 11, 31);
                     return dataA - dataB;
                 });
 
                 if (ordensFiltradas.length > 0) {
+                    hasVencimentoContent = true;
                     alertBodyVencimento.innerHTML = ordensFiltradas.map(ordem => {
-                        // Calcular prioridade dinamicamente COM TOLERÂNCIA
                         const prioridade = calcularPrioridadePorData(ordem.data_limite);
                         const textoPrioridade = getTextoPrioridade(prioridade);
                         const iconePrioridade = getIconePrioridade(prioridade);
@@ -447,43 +407,25 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>
                     `}).join('');
-
-                    console.log(`📊 Mostrando ${ordensFiltradas.length} ordens com vencimento próximo (com tolerância)`);
-
-                    // Mostrar pop-up com delay para melhor UX
-                    alertPopupVencimento.classList.remove("hidden");
-                    setTimeout(() => {
-                        alertPopupVencimento.classList.add("active");
-                    }, 500);
-                } else {
-                    alertBodyVencimento.innerHTML = `
-                        <div class="alert-empty">
-                            <i class="fas fa-check-circle"></i>
-                            <p>Nenhuma ordem com vencimento crítico</p>
-                            <small style="font-size: 0.75rem; margin-top: 0.5rem;">
-                                Ordens com mais de 7 dias não são mostradas
-                            </small>
-                        </div>
-                    `;
-                    alertPopupVencimento.classList.add("hidden");
-                    alertPopupVencimento.classList.remove("active");
                 }
-            } else {
+            }
+
+            if (!hasVencimentoContent) {
                 alertBodyVencimento.innerHTML = `
                     <div class="alert-empty">
                         <i class="fas fa-check-circle"></i>
                         <p>Nenhuma ordem com vencimento crítico</p>
                     </div>
                 `;
-                alertPopupVencimento.classList.add("hidden");
-                alertPopupVencimento.classList.remove("active");
             }
 
             // ============================================
-            // POP-UP 2: Ordens sem responsável
+            // POP-UP 2: Ordens sem responsável (COM DATA FORMATADA)
             // ============================================
+            let hasSemRespContent = false;
             if (alertas.sem_responsavel && alertas.sem_responsavel.length > 0) {
-                // Ordenar por data de criação (mais antigas primeiro)
+                hasSemRespContent = true;
+                // Ordenar por data de criação
                 const ordensOrdenadas = [...alertas.sem_responsavel].sort((a, b) => {
                     const dataA = a.data_criacao ? new Date(a.data_criacao) : new Date(0);
                     const dataB = b.data_criacao ? new Date(b.data_criacao) : new Date(0);
@@ -491,9 +433,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 alertBodySemResp.innerHTML = ordensOrdenadas.map(ordem => {
-                    // Para ordens sem responsável, usar prioridade média como padrão
                     const prioridade = 2; // Média
                     const textoPrioridade = "Sem responsável";
+                    const dataFormatada = formatarDataParaExibicao(ordem.data_criacao);
 
                     return `
                     <div class="alert-item priority-${prioridade}">
@@ -508,7 +450,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <p>${ordem.titulo || 'Sem título'}</p>
                             <small>
                                 <i class="far fa-calendar"></i> 
-                                Criada há ${calcularDiasDesdeCriacao(ordem.data_criacao)}
+                                ${dataFormatada}
                             </small>
                             <span class="badge">
                                 ${textoPrioridade}
@@ -516,12 +458,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
                 `}).join('');
-
-                // Mostrar pop-up com delay para melhor UX
-                alertPopupSemResp.classList.remove("hidden");
-                setTimeout(() => {
-                    alertPopupSemResp.classList.add("active");
-                }, 800); // Delay maior para o segundo pop-up
             } else {
                 alertBodySemResp.innerHTML = `
                     <div class="alert-empty">
@@ -529,45 +465,79 @@ document.addEventListener("DOMContentLoaded", function () {
                         <p>Todas as ordens têm responsável</p>
                     </div>
                 `;
-                alertPopupSemResp.classList.add("hidden");
-                alertPopupSemResp.classList.remove("active");
             }
+
+            // Adicionar alertas à fila (apenas os que têm conteúdo)
+            addAlertToQueue(alertPopupVencimento, hasVencimentoContent);
+            addAlertToQueue(alertPopupSemResp, hasSemRespContent);
+
+            // Começar a mostrar os alertas
+            setTimeout(() => {
+                showNextAlert();
+            }, 1000);
 
         } catch (err) {
             console.error("Erro ao carregar alertas:", err);
-            // Resetar flag em caso de erro para tentar novamente
             alertasCarregados = false;
         }
     }
 
-    // ✅ Função auxiliar: Calcular dias desde a criação
-    function calcularDiasDesdeCriacao(dataCriacao) {
-        if (!dataCriacao) return "N/A";
-
+    // ✅ Funções auxiliares (mantidas do código anterior)
+    function calcularPrioridadePorData(dataLimite) {
+        if (!dataLimite) return 2;
         const hoje = new Date();
-        const data = new Date(dataCriacao);
-
-        // Resetar horas para comparar apenas datas
+        const data = new Date(dataLimite);
         hoje.setHours(0, 0, 0, 0);
         data.setHours(0, 0, 0, 0);
-
-        const diferencaMs = hoje - data;
+        const diferencaMs = data - hoje;
         const diferencaDias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
+        if (diferencaDias < 0) return 4;
+        if (diferencaDias <= 1) return 3;
+        if (diferencaDias <= 3) return 2;
+        if (diferencaDias <= 7) return 1;
+        return 0;
+    }
 
-        if (diferencaDias === 0) {
-            return "hoje";
-        } else if (diferencaDias === 1) {
-            return "1 dia";
-        } else {
-            return `${diferencaDias} dias`;
+    function getTextoPrioridade(nivel) {
+        switch(nivel) {
+            case 4: return "Vencido"; case 3: return "Alta"; 
+            case 2: return "Média"; case 1: return "Baixa";
+            default: return "Normal";
         }
     }
 
-    // ✅ Carregar alertas ao abrir a página (apenas para suporte - UMA VEZ)
-    if (user && user.role === "suporte" && alertPopupVencimento && alertPopupSemResp) {
-        // Aguardar 1 segundo antes de mostrar os alertas para a página carregar completamente
-        setTimeout(carregarAlertas, 1000);
+    function getIconePrioridade(nivel) {
+        switch(nivel) {
+            case 4: return "fas fa-exclamation-circle";
+            case 3: return "fas fa-exclamation-triangle";
+            case 2: return "fas fa-info-circle";
+            case 1: return "fas fa-clock";
+            default: return "fas fa-info-circle";
+        }
+    }
 
-        console.log("🔔 Alertas configurados para aparecer apenas uma vez (com tolerância de +1 dia)");
+    function formatarMensagemVencimento(dataLimite) {
+        if (!dataLimite) return "Sem data limite";
+        const hoje = new Date();
+        const data = new Date(dataLimite);
+        hoje.setHours(0, 0, 0, 0);
+        data.setHours(0, 0, 0, 0);
+        const diferencaMs = data - hoje;
+        const diferencaDias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
+        if (diferencaDias < 0) {
+            const diasAtraso = Math.abs(diferencaDias);
+            if (diasAtraso === 0) return "Venceu hoje";
+            if (diasAtraso === 1) return "Venceu ontem";
+            return `Venceu há ${diasAtraso} dias`;
+        }
+        if (diferencaDias === 0) return "Vence hoje";
+        if (diferencaDias === 1) return "Vence amanhã";
+        return `Vence em ${diferencaDias} dias`;
+    }
+
+    // ✅ Carregar alertas ao abrir a página
+    if (user && user.role === "suporte" && alertPopupVencimento && alertPopupSemResp) {
+        setTimeout(carregarAlertas, 1000);
+        console.log("🔔 Alertas configurados para aparecer um de cada vez");
     }
 });

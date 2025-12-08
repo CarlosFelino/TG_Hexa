@@ -14,9 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterStatus = document.getElementById('filter-status');
     const filterType = document.getElementById('filter-type');
     const resetFiltersBtn = document.getElementById('reset-filters');
-    const exportBtn = document.getElementById('export-orders');
     const modal = document.getElementById('order-details-modal');
-    const modalCloseBtns = document.querySelectorAll('.modal-close, .modal-close-btn');
 
     // Elementos de estatísticas
     const totalPendingEl = document.getElementById('total-pending');
@@ -34,6 +32,41 @@ document.addEventListener('DOMContentLoaded', function() {
     let ordersData = [];
     let currentPage = 1;
     const itemsPerPage = 10;
+
+    // =========================
+    // Funções de Modal - CORRIGIDAS
+    // =========================
+    function setupModalCloseListeners() {
+        // Fechar com botão X
+        const modalCloseBtn = document.querySelector('.modal-close');
+        if (modalCloseBtn) {
+            modalCloseBtn.addEventListener('click', closeModal);
+        }
+
+        // Fechar com botão "Fechar"
+        const modalCloseButton = document.querySelector('.modal-close-btn');
+        if (modalCloseButton) {
+            modalCloseButton.addEventListener('click', closeModal);
+        }
+
+        // Fechar clicando fora do modal
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Fechar com tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+    }
 
     // =========================
     // Buscar ordens do backend
@@ -310,10 +343,13 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         modal.classList.add('active');
+
+        // Configurar os event listeners para fechar o modal
+        setupModalCloseListeners();
     }
 
     // =========================
-    // Editar ordem
+    // Editar ordem - VERSÃO SIMPLIFICADA E FUNCIONAL
     // =========================
     function editOrder(orderId) {
         const order = ordersData.find(o => o.id === orderId);
@@ -323,6 +359,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (order.status === 'not-completed') {
             showCustomAlert('warning', 'Edição Bloqueada', 'Ordens com status "Não Concluída" não podem ser editadas.');
             return;
+        }
+
+        // Remover modal de edição anterior se existir
+        const existingEditModal = document.getElementById('edit-order-modal');
+        if (existingEditModal) {
+            existingEditModal.remove();
         }
 
         // Criar modal de edição
@@ -415,18 +457,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.body.appendChild(editModal);
 
-        // Event listeners
-        editModal.querySelector('.modal-close').addEventListener('click', () => {
-            editModal.remove();
-        });
+        // Configurar listeners para fechar o modal de edição - VERSÃO SIMPLIFICADA
+        const closeEditModal = function() {
+            if (editModal && editModal.parentNode) {
+                editModal.remove();
+            }
+        };
 
-        editModal.querySelector('#cancel-edit').addEventListener('click', () => {
-            editModal.remove();
-        });
+        // Event listeners específicos - MANTENDO SIMPLES
+        const closeBtn = editModal.querySelector('.modal-close');
+        const cancelBtn = editModal.querySelector('#cancel-edit');
+        const saveBtn = editModal.querySelector('#save-edit');
 
-        editModal.querySelector('#save-edit').addEventListener('click', async () => {
+        // Adicionar listeners de forma simples e direta
+        closeBtn.addEventListener('click', closeEditModal);
+        cancelBtn.addEventListener('click', closeEditModal);
+
+        // Listener para salvar
+        saveBtn.addEventListener('click', async () => {
             await saveOrderEdit(orderId, editModal);
         });
+
+        // Fechar clicando fora do modal (no overlay)
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeEditModal();
+            }
+        });
+
+        // Fechar com tecla ESC
+        const handleEsc = (e) => {
+            if (e.key === 'Escape' && editModal.classList.contains('active')) {
+                closeEditModal();
+            }
+        };
+
+        document.addEventListener('keydown', handleEsc);
+
+        // Remover listener do ESC quando o modal for fechado
+        editModal.addEventListener('click', function handleClose(e) {
+            if (e.target === closeBtn || e.target === cancelBtn || e.target === editModal) {
+                document.removeEventListener('keydown', handleEsc);
+            }
+        }, { once: true });
     }
 
     // =========================
@@ -623,17 +696,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================
     // Otimização de tabelas no mobile
     // =========================
-
     function optimizeTableForMobile() {
         const table = document.querySelector('.orders-table');
         const tableContainer = document.querySelector('.table-responsive');
-        
+
         if (!table || !tableContainer) return;
 
         // Adiciona indicador visual de scroll horizontal
         if (window.innerWidth <= 576) {
             tableContainer.style.position = 'relative';
-            
+
             // Adiciona sombra indicadora de scroll
             if (!tableContainer.querySelector('.scroll-indicator')) {
                 const indicator = document.createElement('div');
@@ -659,7 +731,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 tableContainer.style.position = 'relative';
                 tableContainer.appendChild(indicator);
-                
+
                 // Remove o indicador após primeiro scroll
                 tableContainer.addEventListener('scroll', function() {
                     indicator.style.display = 'none';
@@ -667,27 +739,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(-50%) translateX(0); }
-            40% { transform: translateY(-50%) translateX(-5px); }
-            60% { transform: translateY(-50%) translateX(-3px); }
-        }
-        
-        .scroll-indicator {
-            pointer-events: none;
-        }
-        
-        @media (max-width: 576px) {
-            .table-responsive {
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-        }
-    `;
-    document.head.appendChild(style);
-
 
     // =========================
     // Utilitários
@@ -733,30 +784,30 @@ document.addEventListener('DOMContentLoaded', function() {
             renderOrders();
         });
 
-        exportBtn.addEventListener('click', () => {
-            showCustomAlert('info', 'Exportar Ordens', 'A funcionalidade de exportação será implementada em breve.');
-        });
-
-        modalCloseBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-        });
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
+        // Adicione o estilo CSS para o indicador de scroll
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(-50%) translateX(0); }
+                40% { transform: translateY(-50%) translateX(-5px); }
+                60% { transform: translateY(-50%) translateX(-3px); }
             }
-        });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                modal.classList.remove('active');
+            .scroll-indicator {
+                pointer-events: none;
             }
-        });
+
+            @media (max-width: 576px) {
+                .table-responsive {
+                    border-radius: 8px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('✅ Gerenciar Ordens - Admin inicializado com sucesso!');
     }
 
     init();
-
-    console.log('✅ Gerenciar Ordens - Admin inicializado com sucesso!');
 });

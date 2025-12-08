@@ -1,3 +1,4 @@
+// routes/adminDashboardRoutes.js
 import express from "express";
 import pool from "../config/db.js";
 
@@ -10,10 +11,12 @@ router.get("/dashboard", async (req, res) => {
         const ordensPendentes = await pool.query("SELECT COUNT(*) FROM ordens WHERE status = 'Pendente'");
         const ordensConcluidas = await pool.query("SELECT COUNT(*) FROM ordens WHERE status = 'Concluída'");
 
-        // USUÁRIOS
-        const totalUsuarios = await pool.query("SELECT COUNT(*) FROM users");
+        // USUÁRIOS - ✅ CORRIGIDO: Agora filtra apenas usuários ativos (deletado_em IS NULL)
+        const totalUsuarios = await pool.query(
+            "SELECT COUNT(*) FROM users WHERE deletado_em IS NULL"
+        );
         const novosUsuarios = await pool.query(
-            "SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL '7 days'"
+            "SELECT COUNT(*) FROM users WHERE criado_em >= NOW() - INTERVAL '7 days' AND deletado_em IS NULL"
         );
 
         // PATRIMÔNIO
@@ -28,7 +31,6 @@ router.get("/dashboard", async (req, res) => {
             equipamentosCadastrados: equipamentosCadastrados.rows[0].count,
             recentActivity: []
         });
-
     } catch (err) {
         console.error("Erro ao buscar dados do dashboard:", err);
         res.status(500).json({ error: "Erro ao buscar dados do dashboard" });

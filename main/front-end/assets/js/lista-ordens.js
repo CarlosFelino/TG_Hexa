@@ -176,10 +176,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error(erro.erro || "Erro ao assumir ordem.");
             }
 
-            await showNotification("✅ Ordem assumida com sucesso!");
+            await showNotification(" Ordem assumida com sucesso!");
             await loadOrders();
         } catch (err) {
-            await showNotification(`❌ ${err.message}`, "error");
+            await showNotification(` ${err.message}`, "error");
         }
     }
 

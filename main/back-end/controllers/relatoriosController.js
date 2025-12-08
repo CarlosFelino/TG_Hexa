@@ -1,5 +1,5 @@
 // ============================================
-// 📊 CONTROLLER DE RELATÓRIOS - SUPPORT NEXUS (CORRIGIDO)
+// 📊 CONTROLLER DE RELATÓRIOS - SUPPORT NEXUS (CORRIGIDO V3 - FINAL)
 // ============================================
 
 import PDFDocument from 'pdfkit';
@@ -23,7 +23,7 @@ if (!fs.existsSync(RELATORIOS_DIR)) {
 // 🎨 FUNÇÕES AUXILIARES PARA PDF
 // ============================================
 
-// Cabeçalho padrão dos relatórios
+// Cabeçalho padrão dos relatórios (COM ACENTOS, SEM EMOJIS)
 function addHeader(doc, titulo, subtitulo = '') {
   doc.fontSize(20)
      .fillColor('#1a1a2e')
@@ -63,7 +63,56 @@ function addFooter(doc, pageNumber, totalPages) {
      );
 }
 
-// Criar tabela no PDF
+// Criar tabela com larguras CUSTOMIZADAS
+function addTableWithCustomWidths(doc, headers, rows, columnWidths, startY = 160) {
+  let currentY = startY;
+  const totalWidth = columnWidths.reduce((sum, w) => sum + w, 0);
+
+  // Cabeçalhos
+  doc.fontSize(9).fillColor('#fff');
+  doc.rect(50, currentY, totalWidth, 25).fill('#7a04eb');
+
+  let xPos = 50;
+  headers.forEach((header, i) => {
+    doc.fillColor('#fff')
+       .text(header, xPos + 5, currentY + 8, {
+         width: columnWidths[i] - 10,
+         align: 'left'
+       });
+    xPos += columnWidths[i];
+  });
+
+  currentY += 25;
+
+  // Linhas
+  rows.forEach((row, rowIndex) => {
+    if (currentY > 700) {
+      doc.addPage();
+      currentY = 50;
+    }
+
+    const bgColor = rowIndex % 2 === 0 ? '#f8f9fa' : '#ffffff';
+    doc.rect(50, currentY, totalWidth, 20).fill(bgColor);
+
+    xPos = 50;
+    row.forEach((cell, i) => {
+      doc.fillColor('#333')
+         .fontSize(8)
+         .text(String(cell || '-'), xPos + 5, currentY + 6, {
+           width: columnWidths[i] - 10,
+           align: 'left',
+           ellipsis: true
+         });
+      xPos += columnWidths[i];
+    });
+
+    currentY += 20;
+  });
+
+  return currentY;
+}
+
+// Criar tabela no PDF (larguras iguais)
 function addTable(doc, headers, rows, startY = 160) {
   const tableTop = startY;
   const colWidth = 500 / headers.length;
@@ -100,7 +149,8 @@ function addTable(doc, headers, rows, startY = 160) {
          .fontSize(8)
          .text(String(cell || '-'), 55 + (i * colWidth), currentY + 6, {
            width: colWidth - 10,
-           align: 'left'
+           align: 'left',
+           ellipsis: true
          });
     });
 
@@ -162,7 +212,6 @@ export const gerarRelatorioOrdens = async (req, res) => {
     const fileName = `ordens_${Date.now()}.pdf`;
     const filePath = path.join(RELATORIOS_DIR, fileName);
 
-    // ✅ FIX: Usar array de buffers para calcular tamanho correto
     const buffers = [];
     doc.on('data', buffers.push.bind(buffers));
 
@@ -178,11 +227,13 @@ export const gerarRelatorioOrdens = async (req, res) => {
        .fillColor('#333')
        .text(`Total de Ordens: ${ordens.length}`, 50, 155);
 
-    // Tabela
-    const headers = ['Código', 'Título', 'Tipo', 'Status', 'Prioridade', 'Criador', 'Data'];
+    // Tabela com larguras customizadas
+    const headers = ['Código', 'Título', 'Tipo', 'Status', 'Prior.', 'Criador', 'Data'];
+    const columnWidths = [55, 130, 70, 70, 40, 100, 55]; // Total = 520 | Criador: 80 → 100px
+
     const rows = ordens.map(o => [
       o.codigo,
-      o.titulo.substring(0, 30) + (o.titulo.length > 30 ? '...' : ''),
+      o.titulo,
       o.tipo_solicitacao,
       o.status,
       `P${o.prioridade}`,
@@ -190,23 +241,18 @@ export const gerarRelatorioOrdens = async (req, res) => {
       new Date(o.data_criacao).toLocaleDateString('pt-BR')
     ]);
 
-    addTable(doc, headers, rows, 180);
+    addTableWithCustomWidths(doc, headers, rows, columnWidths, 180);
     addFooter(doc, 1, 1);
 
     doc.end();
 
-    // ✅ FIX: Aguardar finalização e calcular tamanho correto
     doc.on('end', async () => {
       const pdfBuffer = Buffer.concat(buffers);
       const tamanhoBytes = pdfBuffer.length;
 
-      // Salvar arquivo
       fs.writeFileSync(filePath, pdfBuffer);
-
-      // Salvar histórico com tamanho correto
       await salvarHistorico(userId, 'Ordens de Serviço', 'ordens', 'PDF', fileName, tamanhoBytes);
 
-      // ✅ FIX: Enviar como PDF inline para abrir no navegador
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
       res.send(pdfBuffer);
@@ -219,12 +265,13 @@ export const gerarRelatorioOrdens = async (req, res) => {
 };
 
 // ============================================
-// 👥 GERAR RELATÓRIO DE USUÁRIOS
+// 👥 GERAR RELATÓRIO DE USUÁRIOS (COM SEPARAÇÃO ATIVOS/DELETADOS)
 // ============================================
 export const gerarRelatorioUsuarios = async (req, res) => {
   try {
     const userId = req.user.userId;
 
+    // Buscar TODOS os usuários (ativos e deletados)
     const result = await pool.query(`
       SELECT 
         id,
@@ -232,12 +279,15 @@ export const gerarRelatorioUsuarios = async (req, res) => {
         email,
         matricula,
         role,
-        criado_em
+        criado_em,
+        deletado_em
       FROM users
-      ORDER BY criado_em DESC
+      ORDER BY deletado_em NULLS FIRST, criado_em DESC
     `);
 
     const usuarios = result.rows;
+    const ativos = usuarios.filter(u => !u.deletado_em);
+    const deletados = usuarios.filter(u => u.deletado_em);
 
     const doc = new PDFDocument({ margin: 50 });
     const fileName = `usuarios_${Date.now()}.pdf`;
@@ -246,10 +296,18 @@ export const gerarRelatorioUsuarios = async (req, res) => {
     const buffers = [];
     doc.on('data', buffers.push.bind(buffers));
 
-    addHeader(doc, 'Relatório de Usuários do Sistema', `Total: ${usuarios.length} usuários`);
+    addHeader(doc, 'Relatório de Usuários do Sistema', 
+      `Total: ${usuarios.length} usuários (${ativos.length} ativos, ${deletados.length} deletados)`);
 
     const headers = ['ID', 'Nome', 'Email', 'Matrícula', 'Função', 'Cadastro'];
-    const rows = usuarios.map(u => [
+    const columnWidths = [30, 100, 140, 70, 60, 70];
+
+    // SEÇÃO 1: Usuários Ativos
+    doc.fontSize(12)
+       .fillColor('#1a1a2e')
+       .text(`Usuários Ativos (${ativos.length})`, 50, 160);
+
+    const rowsAtivos = ativos.map(u => [
       u.id,
       u.nome,
       u.email,
@@ -258,7 +316,48 @@ export const gerarRelatorioUsuarios = async (req, res) => {
       new Date(u.criado_em).toLocaleDateString('pt-BR')
     ]);
 
-    addTable(doc, headers, rows, 160);
+    const endYAtivos = addTableWithCustomWidths(doc, headers, rowsAtivos, columnWidths, 180);
+
+    // SEÇÃO 2: Usuários Deletados (se houver)
+    if (deletados.length > 0) {
+      const startYDeletados = endYAtivos + 30;
+
+      if (startYDeletados > 650) {
+        doc.addPage();
+        doc.fontSize(12)
+           .fillColor('#f44336')
+           .text(`Usuários Deletados (${deletados.length})`, 50, 50);
+
+        const rowsDeletados = deletados.map(u => [
+          u.id,
+          u.nome,
+          u.email,
+          u.matricula,
+          u.role,
+          new Date(u.deletado_em).toLocaleDateString('pt-BR')
+        ]);
+
+        addTableWithCustomWidths(doc, ['ID', 'Nome', 'Email', 'Matrícula', 'Função', 'Deletado em'], 
+                                 rowsDeletados, columnWidths, 70);
+      } else {
+        doc.fontSize(12)
+           .fillColor('#f44336')
+           .text(`Usuários Deletados (${deletados.length})`, 50, startYDeletados);
+
+        const rowsDeletados = deletados.map(u => [
+          u.id,
+          u.nome,
+          u.email,
+          u.matricula,
+          u.role,
+          new Date(u.deletado_em).toLocaleDateString('pt-BR')
+        ]);
+
+        addTableWithCustomWidths(doc, ['ID', 'Nome', 'Email', 'Matrícula', 'Função', 'Deletado em'], 
+                                 rowsDeletados, columnWidths, startYDeletados + 20);
+      }
+    }
+
     addFooter(doc, 1, 1);
 
     doc.end();
@@ -401,38 +500,39 @@ export const gerarRelatorioMatriculas = async (req, res) => {
 };
 
 // ============================================
-// 📈 GERAR RELATÓRIO DE DESEMPENHO
+// 📈 GERAR RELATÓRIO DE DESEMPENHO (CORRIGIDO - SÓ SUPORTE)
 // ============================================
 export const gerarRelatorioDesempenho = async (req, res) => {
   try {
     const { data_inicio, data_fim, tecnico_id } = req.query;
     const userId = req.user.userId;
 
-    // Query base
+    // Query base - APENAS SUPORTE (SEM ADMIN)
     let query = `
       SELECT 
         u.id as tecnico_id,
         u.nome as tecnico_nome,
+        u.deletado_em,
         COUNT(CASE WHEN o.status = 'Concluída' THEN 1 END) as concluidas,
         COUNT(CASE WHEN o.status = 'Não Concluída' THEN 1 END) as nao_concluidas,
         COUNT(*) as total_ordens,
         ROUND(AVG(CASE WHEN o.avaliacao IS NOT NULL THEN o.avaliacao END), 1) as avaliacao_media
       FROM users u
       LEFT JOIN ordens o ON u.id = o.responsavel_id
-      WHERE u.role IN ('suporte', 'admin')
+      WHERE u.role = 'suporte'
     `;
 
     const params = [];
     let paramCount = 1;
 
     if (data_inicio) {
-      query += ` AND o.data_criacao >= $${paramCount}`;
+      query += ` AND (o.data_criacao >= $${paramCount} OR o.data_criacao IS NULL)`;
       params.push(data_inicio);
       paramCount++;
     }
 
     if (data_fim) {
-      query += ` AND o.data_criacao <= $${paramCount}`;
+      query += ` AND (o.data_criacao <= $${paramCount} OR o.data_criacao IS NULL)`;
       params.push(data_fim);
       paramCount++;
     }
@@ -443,17 +543,24 @@ export const gerarRelatorioDesempenho = async (req, res) => {
       paramCount++;
     }
 
-    query += ` GROUP BY u.id, u.nome ORDER BY concluidas DESC`;
+    // Se tem filtro de data, filtrar usuários deletados ANTES da data de início
+    if (data_inicio) {
+      query += ` AND (u.deletado_em IS NULL OR u.deletado_em >= $1)`;
+    }
+
+    query += ` GROUP BY u.id, u.nome, u.deletado_em ORDER BY concluidas DESC`;
 
     const result = await pool.query(query, params);
     const desempenho = result.rows;
 
-    // Calcular totais gerais
-    const totais = desempenho.reduce((acc, curr) => ({
-      concluidas: acc.concluidas + parseInt(curr.concluidas),
-      nao_concluidas: acc.nao_concluidas + parseInt(curr.nao_concluidas),
-      total_ordens: acc.total_ordens + parseInt(curr.total_ordens)
-    }), { concluidas: 0, nao_concluidas: 0, total_ordens: 0 });
+    // Calcular totais (TODAS as ordens do período, incluindo de usuários deletados)
+    const totais = desempenho
+      .filter(d => d.total_ordens > 0)
+      .reduce((acc, curr) => ({
+        concluidas: acc.concluidas + parseInt(curr.concluidas || 0),
+        nao_concluidas: acc.nao_concluidas + parseInt(curr.nao_concluidas || 0),
+        total_ordens: acc.total_ordens + parseInt(curr.total_ordens || 0)
+      }), { concluidas: 0, nao_concluidas: 0, total_ordens: 0 });
 
     const taxaSucesso = totais.total_ordens > 0 
       ? ((totais.concluidas / totais.total_ordens) * 100).toFixed(1)
@@ -473,10 +580,10 @@ export const gerarRelatorioDesempenho = async (req, res) => {
 
     addHeader(doc, 'Relatório de Desempenho da Equipe', periodo);
 
-    // Cards de estatísticas
+    // Estatísticas Gerais (SEM EMOJI)
     doc.fontSize(12)
        .fillColor('#1a1a2e')
-       .text('📊 Estatísticas Gerais', 50, 160);
+       .text('Estatísticas Gerais', 50, 160);
 
     doc.rect(50, 180, 150, 60).fillAndStroke('#f0f2f5', '#ddd');
     doc.fillColor('#7a04eb')
@@ -505,10 +612,12 @@ export const gerarRelatorioDesempenho = async (req, res) => {
     // Gráfico simples de barras
     doc.fontSize(12)
        .fillColor('#1a1a2e')
-       .text('📊 Desempenho por Técnico', 50, 260);
+       .text('Desempenho por Técnico', 50, 260);
 
     let chartY = 290;
-    desempenho.forEach((tec) => {
+    const tecnicosComOrdens = desempenho.filter(t => t.total_ordens > 0);
+
+    tecnicosComOrdens.forEach((tec) => {
       if (chartY > 650) {
         doc.addPage();
         chartY = 50;
@@ -519,16 +628,22 @@ export const gerarRelatorioDesempenho = async (req, res) => {
         ? (tec.concluidas / tec.total_ordens) * maxWidth 
         : 0;
 
-      doc.fontSize(9)
-         .fillColor('#333')
-         .text(`${tec.tecnico_nome}`, 50, chartY);
+      const nomeExibido = tec.deletado_em 
+        ? `${tec.tecnico_nome} (deletado)`
+        : tec.tecnico_nome;
 
-      doc.rect(50, chartY + 15, concluidasWidth, 15)
-         .fill('#7a04eb');
+      doc.fontSize(9)
+         .fillColor(tec.deletado_em ? '#999' : '#333')
+         .text(nomeExibido, 50, chartY);
+
+      if (concluidasWidth > 0) {
+        doc.rect(50, chartY + 15, concluidasWidth, 15)
+           .fill(tec.deletado_em ? '#ccc' : '#7a04eb');
+      }
 
       doc.fillColor('#666')
          .fontSize(8)
-         .text(`${tec.concluidas}/${tec.total_ordens} (${tec.total_ordens > 0 ? ((tec.concluidas/tec.total_ordens)*100).toFixed(0) : 0}%)`, 
+         .text(`${tec.concluidas}/${tec.total_ordens} (${((tec.concluidas/tec.total_ordens)*100).toFixed(0)}%)`, 
                360, chartY + 17);
 
       chartY += 40;
@@ -539,12 +654,12 @@ export const gerarRelatorioDesempenho = async (req, res) => {
     addHeader(doc, 'Detalhamento por Técnico', '');
 
     const headers = ['Técnico', 'Concluídas', 'Não Concluídas', 'Total', 'Taxa %', 'Aval. Média'];
-    const rows = desempenho.map(t => [
-      t.tecnico_nome,
+    const rows = tecnicosComOrdens.map(t => [
+      t.deletado_em ? `${t.tecnico_nome} (deletado)` : t.tecnico_nome,
       t.concluidas,
       t.nao_concluidas,
       t.total_ordens,
-      t.total_ordens > 0 ? `${((t.concluidas/t.total_ordens)*100).toFixed(1)}%` : '0%',
+      `${((t.concluidas/t.total_ordens)*100).toFixed(1)}%`,
       t.avaliacao_media || '-'
     ]);
 
@@ -604,7 +719,7 @@ export const obterHistorico = async (req, res) => {
 };
 
 // ============================================
-// 📊 OBTER ESTATÍSTICAS
+// 📊 OBTER ESTATÍSTICAS (SÓ USUÁRIOS ATIVOS)
 // ============================================
 export const obterEstatisticas = async (req, res) => {
   try {
@@ -612,8 +727,8 @@ export const obterEstatisticas = async (req, res) => {
     const ordensResult = await pool.query('SELECT COUNT(*) as total FROM ordens');
     const totalOrdens = parseInt(ordensResult.rows[0].total);
 
-    // Total de usuários ativos
-    const usuariosResult = await pool.query('SELECT COUNT(*) as total FROM users');
+    // Total de usuários ATIVOS (não deletados)
+    const usuariosResult = await pool.query('SELECT COUNT(*) as total FROM users WHERE deletado_em IS NULL');
     const totalUsuarios = parseInt(usuariosResult.rows[0].total);
 
     // Total de patrimônio
@@ -648,6 +763,7 @@ export const obterEstatisticas = async (req, res) => {
   }
 };
 
+// ============================================
 // ============================================
 // 💾 SALVAR HISTÓRICO
 // ============================================
