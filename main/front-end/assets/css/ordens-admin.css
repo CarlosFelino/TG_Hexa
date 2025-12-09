@@ -27,7 +27,7 @@
 }
 
 /* =======================
-   Filtros - PADRONIZADO
+   Filtros - RESPONSIVO
    ======================= */
 
 .filters-section {
@@ -65,6 +65,8 @@
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-medium);
+    font-size: 1rem;
+    z-index: 1;
 }
 
 .search-box input {
@@ -74,6 +76,7 @@
     width: 100%;
     font-size: 0.95rem;
     transition: all 0.3s;
+    background: white;
 }
 
 .search-box input:focus {
@@ -90,6 +93,7 @@
     font-size: 0.95rem;
     min-width: 180px;
     transition: all 0.3s;
+    cursor: pointer;
 }
 
 .filters-container select:focus {
@@ -99,7 +103,7 @@
 }
 
 /* =======================
-   Estatísticas - PADRONIZADO
+   Estatísticas - RESPONSIVO
    ======================= */
 
 .stats-cards {
@@ -116,6 +120,7 @@
     background: #f8f9fa;
     border-radius: 8px;
     transition: all 0.3s;
+    min-height: 80px;
 }
 
 .stat-card:hover {
@@ -131,6 +136,7 @@
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
+    flex-shrink: 0;
 }
 
 .stat-icon.pending {
@@ -158,16 +164,18 @@
     font-weight: 700;
     color: var(--primary-dark);
     margin-bottom: 0.2rem;
+    line-height: 1;
 }
 
 .stat-info p {
     color: var(--text-medium);
     font-size: 0.9rem;
     margin: 0;
+    line-height: 1.3;
 }
 
 /* =======================
-   Tabela - PADRONIZADO
+   Tabela - RESPONSIVO
    ======================= */
 
 .orders-container {
@@ -183,6 +191,8 @@
     align-items: center;
     padding: 1.5rem;
     border-bottom: 1px solid var(--border-light);
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .table-header h3 {
@@ -194,15 +204,18 @@
 .table-actions {
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 .table-responsive {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .orders-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 1000px; /* Largura mínima para desktop */
 }
 
 .orders-table th {
@@ -215,12 +228,14 @@
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .orders-table td {
     padding: 1rem;
     border-bottom: 1px solid var(--border-light);
     font-size: 0.95rem;
+    vertical-align: middle;
 }
 
 .orders-table tbody tr {
@@ -235,7 +250,7 @@
     border-bottom: none;
 }
 
-/* Status na tabela - PADRONIZADO */
+/* Status na tabela - RESPONSIVO */
 .status-badge {
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
@@ -245,6 +260,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
+    white-space: nowrap;
 }
 
 .status-badge.pending {
@@ -267,10 +283,11 @@
     color: #F44336;
 }
 
-/* Ações na tabela - PADRONIZADO */
+/* Ações na tabela - RESPONSIVO (REMOVIDA AÇÃO DE EDITAR) */
 .actions-cell {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: nowrap;
 }
 
 .btn-table {
@@ -283,16 +300,14 @@
     align-items: center;
     justify-content: center;
     font-size: 0.9rem;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
 }
 
 .btn-table.view {
     background: rgba(122, 4, 235, 0.1);
     color: var(--secondary);
-}
-
-.btn-table.edit {
-    background: rgba(33, 150, 243, 0.1);
-    color: #2196F3;
 }
 
 .btn-table.delete {
@@ -309,26 +324,23 @@
     color: white;
 }
 
-.btn-table.edit:hover {
-    background: #2196F3;
-    color: white;
-}
-
 .btn-table.delete:hover {
     background: #F44336;
     color: white;
 }
 
 /* =======================
-   Paginação - PADRONIZADO
+   Paginação - RESPONSIVO
    ======================= */
 
 .pagination {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 0.5rem;
     padding: 1.5rem;
     border-top: 1px solid var(--border-light);
+    flex-wrap: wrap;
 }
 
 .pagination-btn {
@@ -343,6 +355,8 @@
     justify-content: center;
     font-weight: 500;
     transition: all 0.3s;
+    font-size: 0.95rem;
+    flex-shrink: 0;
 }
 
 .pagination-btn.active {
@@ -362,7 +376,7 @@
 }
 
 /* =======================
-   Modal - PADRONIZADO
+   Modal - RESPONSIVO
    ======================= */
 
 .modal {
@@ -377,6 +391,7 @@
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
 }
 
 .modal.active {
@@ -386,7 +401,7 @@
 .modal-content {
     background: white;
     border-radius: 10px;
-    width: 90%;
+    width: 100%;
     max-width: 700px;
     max-height: 90vh;
     overflow-y: auto;
@@ -399,6 +414,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
 }
 
 .modal-header h3 {
@@ -414,10 +433,17 @@
     cursor: pointer;
     color: var(--text-medium);
     transition: color 0.3s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
 }
 
 .modal-close:hover {
     color: var(--accent);
+    background: #f8f9fa;
 }
 
 .modal-body {
@@ -430,6 +456,9 @@
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+    position: sticky;
+    bottom: 0;
+    background: white;
 }
 
 /* Grid de detalhes no modal */
@@ -459,6 +488,7 @@
 .detail-item p {
     color: var(--text-medium);
     margin: 0;
+    word-break: break-word;
 }
 
 .detail-item p {
@@ -466,7 +496,7 @@
 }
 
 /* =======================
-   Botões - PADRONIZADO
+   Botões - RESPONSIVO
    ======================= */
 
 .btn {
@@ -480,6 +510,7 @@
     gap: 0.5rem;
     border: none;
     font-size: 0.95rem;
+    min-height: 44px;
 }
 
 .btn-primary {
@@ -500,517 +531,14 @@
 
 .btn-secondary:hover {
     background: #e6e9f0;
+    transform: translateY(-2px);
 }
 
 /* =======================
-   Responsividade - OTIMIZADA
+   ESTILOS ADICIONAIS
    ======================= */
 
-@media (max-width: 1200px) {
-    .filters-container {
-        gap: 1rem;
-    }
-    
-    .search-box {
-        min-width: 250px;
-    }
-    
-    .stats-cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 992px) {
-    .page-header h1 {
-        font-size: clamp(1.5rem, 4vw, 2rem);
-    }
-    
-    .filters-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .filter-group {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .search-box {
-        min-width: auto;
-        flex: 1;
-    }
-    
-    .filters-container select {
-        min-width: 150px;
-        flex: 1;
-    }
-}
-
-@media (max-width: 768px) {
-    .admin-content {
-        padding: 1rem;
-    }
-    
-    .filters-section {
-        padding: 1.25rem;
-    }
-    
-    .filter-group {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .search-box,
-    .filters-container select {
-        width: 100%;
-        min-width: auto;
-    }
-    
-    .stats-cards {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-    }
-    
-    .stat-card {
-        padding: 0.875rem;
-        gap: 0.75rem;
-    }
-    
-    .stat-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-    
-    .stat-info h3 {
-        font-size: 1.3rem;
-    }
-    
-    .stat-info p {
-        font-size: 0.85rem;
-    }
-    
-    .table-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-        padding: 1.25rem;
-    }
-    
-    .table-actions {
-        width: 100%;
-        justify-content: flex-end;
-    }
-    
-    .orders-table {
-        font-size: 0.85rem;
-    }
-    
-    .orders-table th,
-    .orders-table td {
-        padding: 0.75rem 0.5rem;
-        white-space: nowrap;
-    }
-    
-    .orders-table th:nth-child(4), /* Descrição */
-    .orders-table td:nth-child(4) {
-        max-width: 150px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .status-badge {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.6rem;
-    }
-    
-    .actions-cell {
-        flex-direction: row;
-        gap: 0.3rem;
-    }
-    
-    .btn-table {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
-    }
-    
-    .modal-content {
-        width: 95%;
-        margin: 1rem;
-        max-width: none;
-    }
-    
-    .detail-grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-    
-    .detail-item {
-        gap: 0.3rem;
-    }
-    
-    .detail-item label {
-        font-size: 0.85rem;
-    }
-    
-    .detail-item span,
-    .detail-item p {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .filters-section {
-        padding: 1rem;
-        border-radius: 8px;
-    }
-    
-    .stats-cards {
-        grid-template-columns: 1fr;
-    }
-    
-    .stat-card {
-        flex-direction: row;
-        text-align: left;
-        justify-content: flex-start;
-    }
-    
-    .table-header h3 {
-        font-size: 1.1rem;
-    }
-    
-    .btn {
-        padding: 0.7rem 1rem;
-        font-size: 0.9rem;
-    }
-    
-    /* Otimização da tabela para mobile */
-    .orders-table {
-        min-width: 800px; /* Força scroll horizontal */
-    }
-    
-    .orders-table thead th:nth-child(2), /* Solicitante */
-    .orders-table thead th:nth-child(5), /* Data */
-    .orders-table thead th:nth-child(6) { /* Técnico */
-        display: none;
-    }
-    
-    .orders-table tbody td:nth-child(2),
-    .orders-table tbody td:nth-child(5),
-    .orders-table tbody td:nth-child(6) {
-        display: none;
-    }
-    
-    .orders-table th,
-    .orders-table td {
-        padding: 0.6rem 0.4rem;
-    }
-    
-    .pagination {
-        padding: 1rem;
-        gap: 0.3rem;
-    }
-    
-    .pagination-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 0.85rem;
-    }
-    
-    .modal-content {
-        width: 98%;
-        margin: 0.5rem;
-    }
-    
-    .modal-header,
-    .modal-body,
-    .modal-footer {
-        padding: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .filter-group:last-child {
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    
-    .btn {
-        flex: 1;
-        justify-content: center;
-    }
-    
-    .table-actions {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .table-actions .btn {
-        width: 100%;
-    }
-    
-    .orders-table {
-        min-width: 700px;
-    }
-    
-    /* Esconde mais colunas em telas muito pequenas */
-    .orders-table thead th:nth-child(3), /* Local */
-    .orders-table tbody td:nth-child(3) {
-        display: none;
-    }
-    
-    .actions-cell {
-        flex-direction: column;
-        gap: 0.2rem;
-    }
-    
-    .btn-table {
-        width: 100%;
-        height: 32px;
-    }
-    
-    .modal-content {
-        border-radius: 8px;
-    }
-    
-    .alert-modal {
-        padding: 1.25rem;
-    }
-    
-    .alert-title {
-        font-size: 1.3rem;
-    }
-    
-    .alert-message {
-        font-size: 0.9rem;
-    }
-    
-    .alert-actions {
-        flex-direction: column;
-    }
-    
-    .alert-btn {
-        width: 100%;
-    }
-}
-
-@media (max-width: 360px) {
-    .admin-content {
-        padding: 0.75rem;
-    }
-    
-    .stat-card {
-        padding: 0.75rem;
-    }
-    
-    .stat-icon {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-    }
-    
-    .stat-info h3 {
-        font-size: 1.2rem;
-    }
-    
-    .orders-table {
-        min-width: 650px;
-        font-size: 0.8rem;
-    }
-    
-    .pagination-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 0.8rem;
-    }
-}
-
-/* =======================
-   Melhorias de Usabilidade Mobile
-   ======================= */
-
-/* Scroll horizontal suave para a tabela */
-.table-responsive {
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-}
-
-/* Indicador visual de scroll horizontal */
-.table-responsive::-webkit-scrollbar {
-    height: 6px;
-}
-
-.table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb {
-    background: var(--secondary);
-    border-radius: 3px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb:hover {
-    background: var(--accent);
-}
-
-/* Touch-friendly para botões de ação */
-.btn-table {
-    min-height: 44px;
-    min-width: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Feedback visual para toques */
-.btn-table:active {
-    transform: scale(0.95);
-}
-
-/* Loading overlay mobile */
-@media (max-width: 768px) {
-    #loading-overlay .spinner {
-        width: 40px;
-        height: 40px;
-        border-width: 3px;
-    }
-}
-
-/* Ajustes para formulário de edição em mobile */
-@media (max-width: 768px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        padding: 0.75rem;
-        font-size: 16px; /* Previne zoom no iOS */
-    }
-}
-
-/* Melhorias para lista de anexos em mobile */
-@media (max-width: 768px) {
-    .anexo-item {
-        padding: 0.75rem;
-        min-height: 44px;
-    }
-    
-    .anexo-item i {
-        font-size: 1rem;
-    }
-}
-
-/* =======================
-   High Contrast Mode Mobile
-   ======================= */
-@media (max-width: 768px) and (prefers-contrast: high) {
-    .orders-table {
-        border: 2px solid #000;
-    }
-    
-    .orders-table th {
-        background: #000;
-        color: #fff;
-    }
-    
-    .table-responsive::-webkit-scrollbar-thumb {
-        background: #000;
-    }
-}
-
-/* =======================
-   Reduced Motion Support
-   ======================= */
-@media (prefers-reduced-motion: reduce) {
-    .table-responsive {
-        scroll-behavior: auto;
-    }
-    
-    .btn-table,
-    .stat-card,
-    .action-card {
-        transition: none;
-    }
-    
-    .btn-table:hover,
-    .stat-card:hover {
-        transform: none;
-    }
-}
-
-/* =======================
-   Estado Vazio Melhorado para Mobile
-   ======================= */
-@media (max-width: 768px) {
-    .orders-table tbody td[colspan] {
-        padding: 2rem 1rem;
-        text-align: center;
-    }
-    
-    .orders-table tbody td[colspan] i {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
-}
-
-
-/* =======================
-   ESTILOS ADICIONAIS - Edição e Anexos
-   Adicione isso ao final do ordens-admin.css
-   ======================= */
-
-/* Formulário de Edição */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
-
-.form-group label {
-    font-weight: 600;
-    color: var(--primary-dark);
-    font-size: 0.9rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    padding: 0.8rem;
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    transition: all 0.3s;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--secondary);
-    box-shadow: 0 0 0 3px rgba(122, 4, 235, 0.1);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 80px;
-}
+/* Formulário de Edição (REMOVENDO REFERÊNCIAS DESNECESSÁRIAS) */
 
 /* Lista de Anexos */
 .anexos-list {
@@ -1031,6 +559,7 @@
     color: var(--text-dark);
     transition: all 0.3s;
     border: 1px solid var(--border-light);
+    min-height: 44px;
 }
 
 .anexo-item:hover {
@@ -1043,10 +572,18 @@
 .anexo-item i {
     font-size: 1.1rem;
     color: var(--secondary);
+    flex-shrink: 0;
 }
 
 .anexo-item:hover i {
     color: white;
+}
+
+.anexo-item span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Loading Overlay */
@@ -1076,7 +613,7 @@
     to { transform: rotate(360deg); }
 }
 
-/* Sistema de Alertas Customizado */
+/* Sistema de Alertas */
 .alert-overlay {
     position: fixed;
     top: 0;
@@ -1091,6 +628,7 @@
     z-index: 10000;
     opacity: 0;
     transition: opacity 0.3s;
+    padding: 1rem;
 }
 
 .alert-overlay.visible {
@@ -1102,7 +640,7 @@
     padding: 2rem;
     border-radius: 12px;
     max-width: 500px;
-    width: 90%;
+    width: 100%;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     text-align: center;
     animation: slideDown 0.3s ease-out;
@@ -1128,6 +666,7 @@
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
+    flex-shrink: 0;
 }
 
 .alert-overlay.alert-success .alert-icon {
@@ -1154,6 +693,7 @@
     font-size: 1.5rem;
     color: var(--primary-dark);
     margin-bottom: 1rem;
+    line-height: 1.3;
 }
 
 .alert-message {
@@ -1177,6 +717,11 @@
     cursor: pointer;
     transition: all 0.3s;
     font-size: 0.95rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
 }
 
 .alert-btn-primary {
@@ -1199,10 +744,167 @@
     background: #e6e9f0;
 }
 
-/* Responsividade para Formulário */
+/* =======================
+   RESPONSIVIDADE AVANÇADA
+   ======================= */
+
+/* Tablets (768px - 992px) */
+@media (max-width: 1200px) {
+    .filters-container {
+        gap: 1rem;
+    }
+
+    .search-box {
+        min-width: 250px;
+    }
+
+    .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .page-header h1 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    .page-header p {
+        font-size: 1rem;
+    }
+
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .search-box {
+        min-width: auto;
+        flex: 1;
+    }
+
+    .filters-container select {
+        min-width: 150px;
+        flex: 1;
+    }
+
+    .orders-table {
+        min-width: 900px;
+    }
+}
+
+/* Smartphones grandes (576px - 768px) */
 @media (max-width: 768px) {
-    .form-grid {
+    .admin-content {
+        padding: 1.25rem;
+    }
+
+    .filters-section {
+        padding: 1.25rem;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .search-box,
+    .filters-container select {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 0.875rem;
+        gap: 0.75rem;
+        min-height: 70px;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.3rem;
+    }
+
+    .stat-info p {
+        font-size: 0.85rem;
+    }
+
+    .table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1.25rem;
+    }
+
+    .table-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .orders-table {
+        min-width: 800px;
+        font-size: 0.85rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .actions-cell {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .btn-table {
+        width: 100%;
+        height: 36px;
+    }
+
+    .pagination {
+        padding: 1.25rem;
+        gap: 0.4rem;
+    }
+
+    .pagination-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1.25rem;
+    }
+
+    .detail-grid {
         grid-template-columns: 1fr;
+        gap: 0.75rem;
     }
 
     .alert-modal {
@@ -1215,5 +917,361 @@
 
     .alert-btn {
         width: 100%;
+    }
+}
+
+/* Smartphones pequenos (480px - 576px) */
+@media (max-width: 576px) {
+    .filters-section {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .stats-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
+    }
+
+    .table-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        min-height: 42px;
+    }
+
+    .orders-table {
+        min-width: 700px;
+    }
+
+    /* Otimização da tabela para mobile */
+    .orders-table thead th:nth-child(2), /* Solicitante */
+    .orders-table thead th:nth-child(5), /* Data */
+    .orders-table thead th:nth-child(6) { /* Técnico */
+        display: none;
+    }
+
+    .orders-table tbody td:nth-child(2),
+    .orders-table tbody td:nth-child(5),
+    .orders-table tbody td:nth-child(6) {
+        display: none;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.6rem 0.4rem;
+    }
+
+    .pagination {
+        padding: 1rem;
+        gap: 0.3rem;
+    }
+
+    .pagination-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+
+    .modal-content {
+        width: 98%;
+        margin: 0.5rem;
+        max-height: 80vh;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .alert-modal {
+        padding: 1.25rem;
+    }
+
+    .alert-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+
+    .alert-title {
+        font-size: 1.3rem;
+    }
+
+    .alert-message {
+        font-size: 0.9rem;
+    }
+}
+
+/* Smartphones muito pequenos (até 480px) */
+@media (max-width: 480px) {
+    .filter-group:last-child {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .table-actions .btn {
+        width: 100%;
+    }
+
+    .orders-table {
+        min-width: 650px;
+    }
+
+    /* Esconde mais colunas em telas muito pequenas */
+    .orders-table thead th:nth-child(3), /* Local */
+    .orders-table tbody td:nth-child(3) {
+        display: none;
+    }
+
+    .actions-cell {
+        flex-direction: row;
+        gap: 0.2rem;
+    }
+
+    .btn-table {
+        width: 32px;
+        height: 32px;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+        max-height: 75vh;
+    }
+
+    .modal-header {
+        padding: 0.875rem 1rem;
+    }
+
+    .modal-body {
+        padding: 0.875rem;
+    }
+
+    .modal-footer {
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+}
+
+/* Smartphones muito pequenos (até 360px) */
+@media (max-width: 360px) {
+    .admin-content {
+        padding: 0.75rem;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .stat-card {
+        padding: 0.75rem;
+        gap: 0.5rem;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.2rem;
+    }
+
+    .orders-table {
+        min-width: 600px;
+        font-size: 0.8rem;
+    }
+
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .pagination-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+
+    .anexo-item {
+        padding: 0.6rem 0.8rem;
+        gap: 0.5rem;
+    }
+
+    .anexo-item i {
+        font-size: 1rem;
+    }
+
+    .anexo-item span {
+        font-size: 0.85rem;
+    }
+}
+
+/* =======================
+   MELHORIAS DE USABILIDADE
+   ======================= */
+
+/* Scroll horizontal com visual melhor */
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Touch-friendly para botões */
+.btn-table:active {
+    transform: scale(0.95);
+}
+
+/* Feedback visual para botões desabilitados */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Estado de loading em botões */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.btn-secondary.loading::after {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top: 2px solid var(--text-dark);
+}
+
+/* Mensagem de tabela vazia */
+.orders-table tbody tr[data-empty="true"] td {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-medium);
+    font-size: 1rem;
+}
+
+.orders-table tbody tr[data-empty="true"] td i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--border-light);
+    display: block;
+}
+
+/* =======================
+   ACESSIBILIDADE
+   ======================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .stat-card,
+    .btn-table,
+    .btn,
+    .alert-modal,
+    .anexo-item {
+        transition: none;
+        animation: none;
+    }
+
+    .stat-card:hover,
+    .btn-table:hover,
+    .btn:hover,
+    .anexo-item:hover {
+        transform: none;
+    }
+
+    .table-responsive {
+        scroll-behavior: auto;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .orders-table {
+        border: 2px solid #000;
+    }
+
+    .orders-table th {
+        background: #000;
+        color: #fff;
+    }
+
+    .modal-content,
+    .alert-modal {
+        border: 2px solid #000;
+    }
+}
+
+/* Suporte a orientação paisagem */
+@media (max-height: 500px) and (max-width: 768px) {
+    .modal-content {
+        max-height: 80vh;
+    }
+
+    .admin-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+}
+
+/* Ajuste para telas muito altas */
+@media (min-height: 1000px) {
+    .modal-content {
+        max-height: 70vh;
     }
 }

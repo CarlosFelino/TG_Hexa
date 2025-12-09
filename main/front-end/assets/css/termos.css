@@ -4,20 +4,33 @@
 
 /* Container Principal */
 
-/* Botão de fechar */
+/* Estilos específicos para o botão fechar */
 .close-btn {
-    font-size: 1.5rem;
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    text-decoration: none;
     color: var(--text-light);
-    text-decoration: none; 
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s, color 0.2s;
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 10;
 }
 
 .close-btn:hover {
-    color: var(--accent);
-    transform: scale(1.2);
+    background: var(--accent);
+    color: var(--text-light);
+    transform: translateY(-50%) scale(1.1);
+    border-color: var(--accent);
 }
 
 .termos-container {
@@ -156,6 +169,21 @@ h2::before {
    Responsividade Avançada
    ======================= */
 @media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
+
+    .close-btn {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
     .termos-container {
         padding: 1rem;
         min-height: calc(100vh - 120px);
@@ -176,6 +204,56 @@ h2::before {
         width: 60%;
     }
 }
+
+/* Telas pequenas (smartphones) */
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0.75rem var(--spacing-small);
+    }
+
+    /* Esconde o texto do logo */
+    .logo-text {
+        display: none !important;
+    }
+
+    /* Centraliza a logo */
+    .logo-container {
+        justify-content: center;
+    }
+
+    .logo {
+        height: 35px;
+    }
+
+    /* Remove efeitos hover em mobile */
+    .logo-container:hover {
+        transform: none;
+        gap: 0;
+    }
+
+    /* Botão fechar menor em mobile */
+    .close-btn {
+        font-size: 1.2rem;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Ajuste no container da navbar para incluir o botão */
+    .nav-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Ajusta a altura do container de termos */
+    .termos-container {
+        min-height: calc(100vh - 110px);
+    }
+}
+
 
 @media (max-width: 480px) {
     .termos-container {
@@ -216,6 +294,31 @@ h2::before {
         margin-top: 2rem;
     }
 }
+
+/* Telas muito pequenas */
+@media (max-width: 400px) {
+    .logo {
+        height: 30px;
+    }
+
+    .navbar {
+        padding: 0.5rem;
+    }
+
+    .close-btn {
+        right: 0.75rem;
+        font-size: 1.1rem;
+    }
+
+    .termos-title {
+        font-size: 1.6rem;
+    }
+
+    .termos-container {
+        padding: 0.5rem;
+    }
+}
+
 
 @media (max-width: 360px) {
     .termos-content {

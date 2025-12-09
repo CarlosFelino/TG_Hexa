@@ -276,39 +276,631 @@
 .order-card.concluida .status { background: rgba(76,175,80,0.1); color: #4CAF50; }
 
 /* =======================
-   RESPONSIVIDADE
+   RESPONSIVIDADE PAINEL PROFESSOR
    ======================= */
 
-/* Tablet e Mobile (até 992px) */
+/* =======================
+   BREAKPOINTS CONSISTENTES
+   ======================= */
+
+/* Tablets (768px - 992px) - PADRÃO */
 @media (max-width: 992px) {
     .professor-dashboard {
-        grid-template-areas: "navbar" "content";
+        grid-template-areas:
+            "navbar navbar"
+            "content content";
         grid-template-columns: 1fr;
         grid-template-rows: 70px 1fr;
     }
 
-    /* Navbar */
-    .professor-navbar { padding: 0 1rem; }
-    .menu-toggle { display: flex; } /* Mostra botão */
-    
-    .logo-text { display: none; } /* Esconde texto do logo para ganhar espaço */
-    .profile-info { display: none; } /* Esconde nome */
+    .professor-navbar {
+        padding: 0 1rem;
+    }
 
-    /* Sidebar Gaveta */
+    .menu-toggle {
+        display: flex !important;
+        margin-right: 0.5rem;
+    }
+
+    .logo-text {
+        display: block !important;
+        font-size: 1.1rem;
+    }
+
+    .profile-info {
+        display: flex !important;
+        flex-direction: column;
+        text-align: right;
+    }
+
+    .user-name {
+        font-size: 0.9rem;
+    }
+
+    .user-email {
+        font-size: 0.75rem;
+    }
+
     .sidebar {
         position: fixed;
         top: 70px;
-        left: -260px; /* Escondido */
+        left: -280px;
         bottom: 0;
-        width: 260px;
-        z-index: 999; /* Acima do overlay */
-        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        width: 280px;
+        z-index: 999;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+        transition: left 0.3s ease;
     }
-    .sidebar.active { left: 0; } /* Aparece */
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .professor-content {
+        padding: 1.5rem;
+        min-height: calc(100vh - 70px);
+    }
+
+    .welcome-banner {
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.8rem;
+    }
+
+    .quick-actions {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .orders-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
 }
 
+/* Smartphones grandes (576px - 768px) - PADRÃO */
 @media (max-width: 768px) {
-    .professor-content { padding: 1rem; }
-    .quick-actions { grid-template-columns: 1fr; gap: 1rem; }
-    .orders-grid { grid-template-columns: 1fr; }
+    .professor-navbar {
+        padding: 0 0.75rem;
+    }
+
+    .logo-text {
+        font-size: 1rem;
+    }
+
+    .profile-info {
+        display: flex !important;
+        text-align: right;
+    }
+
+    .user-name {
+        font-size: 0.9rem;
+    }
+
+    .user-email {
+        font-size: 0.75rem;
+    }
+
+    .professor-content {
+        padding: 1.25rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.6rem;
+        line-height: 1.3;
+    }
+
+    .welcome-banner p {
+        font-size: 1rem;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .action-card {
+        padding: 1.5rem;
+        min-height: 140px;
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+
+    .card-icon i {
+        font-size: 1.3rem;
+    }
+
+    .action-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .action-card p {
+        font-size: 0.9rem;
+    }
+
+    .card-badge {
+        top: 15px;
+        right: 15px;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+    }
+
+    .recent-orders {
+        padding: 1.5rem;
+    }
+
+    .recent-orders h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .orders-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .order-card {
+        padding: 1.25rem;
+    }
+
+    .order-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .order-card p {
+        font-size: 0.9rem;
+    }
+
+    .order-card .status {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+    }
+
+    .order-card .date {
+        font-size: 0.75rem;
+        margin-top: 1rem;
+    }
+}
+
+/* Smartphones pequenos (480px - 576px) - PADRÃO */
+@media (max-width: 576px) {
+    .professor-navbar {
+        padding: 0 0.5rem;
+    }
+
+    .navbar-content {
+        gap: 0.5rem;
+    }
+
+    /* IMPORTANTE: Esconde o texto do logo em telas pequenas */
+    .logo-text {
+        display: none !important;
+    }
+
+    .profile-info {
+        max-width: 140px;
+    }
+
+    .user-name {
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-email {
+        font-size: 0.7rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .menu-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+        margin-right: 0;
+    }
+
+    .professor-content {
+        padding: 1rem;
+    }
+
+    .welcome-banner {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .welcome-banner p {
+        font-size: 0.95rem;
+    }
+
+    .action-card {
+        padding: 1.25rem;
+        min-height: 130px;
+    }
+
+    .card-icon {
+        width: 45px;
+        height: 45px;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-badge {
+        top: 12px;
+        right: 12px;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .recent-orders {
+        padding: 1.25rem;
+    }
+
+    .recent-orders h2 {
+        font-size: 1.2rem;
+    }
+
+    .dropdown-content {
+        position: fixed;
+        top: 70px;
+        right: 0.5rem;
+        left: 0.5rem;
+        min-width: auto;
+        transform: none !important;
+    }
+
+    .dropdown-content.active {
+        transform: translateY(0) !important;
+    }
+}
+
+/* Smartphones muito pequenos (até 480px) - PADRÃO */
+@media (max-width: 480px) {
+    .professor-navbar {
+        padding: 0 0.375rem;
+    }
+
+    .profile-info {
+        display: none !important;
+    }
+
+    .profile-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .menu-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+    }
+
+    .logo {
+        height: 30px;
+    }
+
+    .professor-content {
+        padding: 0.875rem;
+    }
+
+    .welcome-banner {
+        padding: 0.875rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.3rem;
+    }
+
+    .action-card {
+        padding: 1rem;
+        min-height: 120px;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-icon i {
+        font-size: 1.1rem;
+    }
+
+    .action-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .action-card p {
+        font-size: 0.85rem;
+    }
+
+    .sidebar {
+        width: 260px;
+    }
+
+    .sidebar-nav a {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-nav a i {
+        font-size: 1rem;
+        margin-right: 10px;
+    }
+
+    .recent-orders {
+        padding: 1rem;
+    }
+
+    .order-card {
+        padding: 1rem;
+    }
+
+    .order-card h3 {
+        font-size: 1rem;
+    }
+}
+
+/* Telas muito pequenas (até 360px) - PADRÃO */
+@media (max-width: 360px) {
+    .professor-navbar {
+        padding: 0 0.25rem;
+    }
+
+    .logo {
+        height: 28px;
+    }
+
+    .menu-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+
+    .profile-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .professor-content {
+        padding: 0.75rem;
+    }
+
+    .welcome-banner {
+        padding: 0.75rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.2rem;
+    }
+
+    .action-card {
+        padding: 0.875rem;
+        min-height: 110px;
+    }
+
+    .card-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .card-icon i {
+        font-size: 1rem;
+    }
+
+    .action-card h3 {
+        font-size: 1rem;
+    }
+
+    .sidebar {
+        width: 240px;
+    }
+
+    .sidebar-nav a {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
+    .sidebar-nav a i {
+        font-size: 0.9rem;
+        margin-right: 8px;
+    }
+
+    .orders-grid {
+        gap: 0.75rem;
+    }
+
+    .order-card {
+        padding: 0.875rem;
+    }
+}
+
+/* =======================
+   MELHORIAS DE ACESSIBILIDADE
+   ======================= */
+
+/* Melhor touch target para mobile */
+@media (max-width: 768px) {
+    .menu-toggle,
+    .profile-avatar,
+    .sidebar-nav a,
+    .action-card {
+        min-height: 44px;
+    }
+
+    .menu-toggle,
+    .profile-avatar {
+        cursor: pointer;
+    }
+}
+
+/* Scroll suave para mobile */
+@media (max-width: 768px) {
+    .professor-content {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .action-card,
+    .recent-orders {
+        border: 2px solid #333;
+    }
+
+    .sidebar {
+        border-right: 2px solid #333;
+    }
+
+    .professor-navbar {
+        border-bottom: 2px solid #333;
+    }
+
+    .order-card {
+        border: 2px solid #333;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .sidebar,
+    .action-card,
+    .order-card,
+    .menu-toggle,
+    .profile-avatar,
+    .dropdown-content {
+        transition: none;
+        animation: none;
+    }
+
+    .action-card:hover,
+    .order-card:hover,
+    .profile-avatar:hover {
+        transform: none;
+    }
+}
+
+/* Melhorias para orientação paisagem em mobile */
+@media (max-height: 500px) and (max-width: 992px) {
+    .sidebar {
+        overflow-y: auto;
+        max-height: calc(100vh - 70px);
+    }
+
+    .professor-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+}
+
+/* Ajuste para telas altas */
+@media (min-height: 1000px) {
+    .sidebar {
+        height: calc(100vh - 70px);
+    }
+
+    .professor-content {
+        min-height: calc(100vh - 70px);
+    }
+}
+
+/* Estados de loading para cards */
+.action-card.loading {
+    position: relative;
+    min-height: 140px;
+    overflow: hidden;
+}
+
+.action-card.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0) 100%);
+    animation: loadingShimmer 1.5s infinite;
+}
+
+@keyframes loadingShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Melhorias visuais para cards vazios */
+.orders-grid:empty::before {
+    content: 'Nenhuma ordem recente encontrada';
+    display: block;
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-medium);
+    font-style: italic;
+    background: var(--primary-bg);
+    border-radius: 8px;
+    border: 2px dashed var(--border-light);
+}
+
+/* Indicador visual para scroll em mobile */
+@media (max-width: 768px) {
+    .professor-content::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .professor-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .professor-content::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 2px;
+    }
+}
+
+/* Feedback visual para botões ativos */
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+}
+
+/* Otimização para performance em mobile */
+@media (max-width: 768px) {
+    .action-card,
+    .order-card {
+        will-change: transform;
+        backface-visibility: hidden;
+    }
 }

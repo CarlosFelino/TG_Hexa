@@ -518,41 +518,646 @@ button[type="submit"]:hover {
 }
 
 /* =======================
-   RESPONSIVIDADE
+   RESPONSIVIDADE CRIAR ORDEM
    ======================= */
+
+/* =======================
+   BREAKPOINTS CONSISTENTES
+   ======================= */
+
+/* Tablets (768px - 992px) - PADRÃO */
+@media (max-width: 992px) {
+    .suporte-dashboard {
+        grid-template-areas:
+            "navbar navbar"
+            "content content";
+        grid-template-columns: 1fr;
+    }
+
+    .order-header {
+        margin-bottom: 2rem;
+    }
+
+    .order-header h1 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    .order-header p {
+        font-size: 1rem;
+    }
+
+    .card-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        max-width: 95%;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+        padding: 2rem;
+        max-height: 85vh;
+    }
+}
+
+/* Smartphones grandes (576px - 768px) - PADRÃO */
 @media (max-width: 768px) {
     .suporte-content {
-        padding: 1.5rem 1rem;
+        padding: 1.25rem;
+    }
+
+    .order-header {
+        margin-bottom: 1.5rem;
+        text-align: left;
     }
 
     .order-header h1 {
         font-size: 1.6rem;
+        line-height: 1.3;
     }
 
+    .order-header p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    /* CARDS RESPONSIVOS */
     .card-container {
-        grid-template-columns: 1fr; /* Cards empilhados no mobile */
-        gap: 1.5rem;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        max-width: 100%;
     }
 
     .card {
         padding: 2rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+    }
+
+    .card-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .card h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* MODAIS RESPONSIVOS */
+    .modal-overlay {
+        padding: 1rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+
+    .modal-overlay.active {
+        display: flex;
     }
 
     .modal-content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
         padding: 1.5rem;
-        width: 95%;
-        margin: 1rem;
+        border-radius: 10px;
+        max-height: 80vh;
+        overflow-y: auto;
     }
 
     .modal-content h2 {
         font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
     }
 
-    /* Responsividade para modais de notificação */
+    .close {
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+    }
+
+    /* FORMULÁRIOS RESPONSIVOS */
+    form label {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.75rem;
+        font-size: 16px; /* Previne zoom no iOS */
+        margin-bottom: 1.25rem;
+        border-radius: 6px;
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+
+    button[type="submit"] {
+        padding: 0.875rem;
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+    }
+
+    /* UPLOAD DE ARQUIVOS RESPONSIVO */
+    .file-upload-section {
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .file-upload-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    #file-list-problema {
+        justify-content: flex-start;
+        margin-top: 0.75rem;
+    }
+
+    .file-item {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    .preview-thumb {
+        width: 25px;
+        height: 25px;
+    }
+
+    /* NOTIFICAÇÕES RESPONSIVAS */
+    .modal {
+        padding: 1rem;
+        align-items: flex-start;
+        padding-top: 3rem;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+        margin: 0.5rem;
+        border-radius: 8px;
+    }
+
+    .modal-header {
+        margin: -1.5rem -1.5rem 1rem -1.5rem;
+        padding: 1rem 1.5rem;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .modal-body {
+        font-size: 1rem;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding-top: 1rem;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.875rem;
+    }
+
     .confirm-modal,
     .notification-modal {
-        width: 95%;
+        width: 100%;
         max-width: none;
-        margin: 1rem;
+    }
+}
+
+/* Smartphones pequenos (480px - 576px) - PADRÃO */
+@media (max-width: 576px) {
+    .suporte-content {
+        padding: 1rem;
+    }
+
+    .order-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .order-header p {
+        font-size: 0.95rem;
+    }
+
+    .card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .card h2 {
+        font-size: 1.2rem;
+    }
+
+    .card p {
+        font-size: 0.9rem;
+    }
+
+    .modal-content {
+        padding: 1.25rem;
+    }
+
+    .modal-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .file-upload-section {
+        padding: 1rem;
+    }
+
+    .file-label {
+        font-size: 0.9rem;
+    }
+
+    .file-upload-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Smartphones muito pequenos (até 480px) - PADRÃO */
+@media (max-width: 480px) {
+    .order-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .card {
+        padding: 1.25rem 1rem;
+        border-width: 1px;
+    }
+
+    .card-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+    }
+
+    .modal-content {
+        padding: 1rem;
+    }
+
+    .modal-content h2 {
+        font-size: 1.2rem;
+        gap: 0.5rem;
+    }
+
+    .close {
+        top: 0.75rem;
+        right: 0.75rem;
+        font-size: 1.3rem;
+    }
+
+    form label {
+        font-size: 0.85rem;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.7rem;
+        font-size: 15px;
+        margin-bottom: 1rem;
+    }
+
+    button[type="submit"] {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .file-item {
+        flex: 0 0 calc(50% - 5px);
+        flex-direction: column;
+        text-align: center;
+        padding: 0.5rem;
+    }
+
+    .file-item span {
+        font-size: 0.8rem;
+        word-break: break-all;
+    }
+
+    /* NOTIFICAÇÕES MOBILE PEQUENO */
+    .modal {
+        padding: 0.5rem;
+        padding-top: 2rem;
+    }
+
+    .modal-content {
+        padding: 1rem;
+        margin: 0.25rem;
+    }
+
+    .modal-header {
+        margin: -1rem -1rem 0.75rem -1rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .modal-body p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Smartphones extremamente pequenos (até 360px) - PADRÃO */
+@media (max-width: 360px) {
+    .order-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .order-header p {
+        font-size: 0.9rem;
+    }
+
+    .card {
+        padding: 1rem 0.875rem;
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .card h2 {
+        font-size: 1.1rem;
+    }
+
+    .card p {
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        padding: 0.875rem;
+    }
+
+    .modal-content h2 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.6rem;
+        font-size: 14px;
+    }
+
+    button[type="submit"] {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .file-item {
+        flex: 0 0 100%;
+    }
+}
+
+/* =======================
+   MELHORIAS DE USABILIDADE
+   ======================= */
+
+/* Animações suaves para cards */
+@keyframes pulseSelect {
+    0% { box-shadow: 0 0 0 0 rgba(122, 4, 235, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(122, 4, 235, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(122, 4, 235, 0); }
+}
+
+.card:hover {
+    animation: pulseSelect 1.5s infinite;
+}
+
+/* Feedback visual para selects */
+select:focus {
+    animation: pulseSelect 1.5s;
+}
+
+/* Estado de loading para botões */
+button[type="submit"].loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+button[type="submit"].loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Validação visual de formulários */
+input:invalid:not(:focus):not(:placeholder-shown),
+select:invalid:not(:focus),
+textarea:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: var(--danger);
+    background-color: rgba(244, 67, 54, 0.05);
+}
+
+input:valid:not(:focus):not(:placeholder-shown),
+select:valid:not(:focus),
+textarea:valid:not(:focus):not(:placeholder-shown) {
+    border-color: var(--success);
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+/* Scrollbar personalizada para modais mobile */
+@media (max-width: 768px) {
+    .modal-content::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .modal-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .modal-content::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 2px;
+    }
+}
+
+/* Indicador de campos obrigatórios */
+form label:has(+ input[required])::after,
+form label:has(+ select[required])::after,
+form label:has(+ textarea[required])::after {
+    content: ' *';
+    color: var(--danger);
+    font-weight: bold;
+}
+
+/* =======================
+   ACESSIBILIDADE
+   ======================= */
+
+/* Focus states para acessibilidade */
+.card:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .card,
+    .modal-content,
+    .modal,
+    .confirm-modal,
+    .notification-modal {
+        border: 2px solid #000;
+    }
+
+    .card:hover {
+        border: 2px solid var(--accent);
+    }
+
+    .modal-header {
+        background: #000;
+        color: #fff;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .modal-content,
+    button,
+    input,
+    select,
+    textarea {
+        transition: none;
+        animation: none;
+    }
+
+    .card:hover,
+    button:hover {
+        transform: none;
+    }
+
+    button[type="submit"].loading::after {
+        animation: none;
+        border: none;
+        content: '...';
+        color: white;
+        margin: 0;
+        position: static;
+    }
+}
+
+/* Suporte a orientação paisagem em mobile */
+@media (max-height: 500px) and (max-width: 768px) {
+    .suporte-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .modal-overlay {
+        padding-top: 1rem;
+        align-items: flex-start;
+    }
+
+    .modal-content {
+        max-height: 90vh;
+    }
+}
+
+/* Ajuste para telas muito altas */
+@media (min-height: 1000px) {
+    .suporte-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .card-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+}
+
+/* Touch-friendly para mobile */
+@media (max-width: 768px) {
+    .card,
+    button,
+    .file-upload-btn,
+    .close,
+    .modal-close {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px; /* Evita zoom automático no iOS */
+    }
+}
+
+/* Indicador visual para scroll em modais longos */
+@media (max-width: 768px) {
+    .modal-content:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30px;
+        background: linear-gradient(to bottom, transparent, white);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .modal-content.scrolled:after {
+        opacity: 1;
     }
 }

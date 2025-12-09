@@ -1,4 +1,4 @@
-// ordens-admin.js - VERSÃO COMPLETA COM EDIÇÃO E ANEXOS
+// ordens-admin.js - VERSÃO ATUALIZADA SEM EDIÇÃO
 document.addEventListener('DOMContentLoaded', function() {
     // =========================
     // Inicialização
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const itemsPerPage = 10;
 
     // =========================
-    // Funções de Modal - CORRIGIDAS
+    // Funções de Modal
     // =========================
     function setupModalCloseListeners() {
         // Fechar com botão X
@@ -178,11 +178,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button class="btn-table view" data-id="${order.id}" title="Ver detalhes">
                             <i class="fas fa-eye"></i>
                         </button>
-                        ${order.status !== 'not-completed' ? `
-                        <button class="btn-table edit" data-id="${order.id}" title="Editar ordem">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        ` : ''}
                         <button class="btn-table delete" data-id="${order.id}" title="Excluir ordem">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -211,14 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Botão Editar
-        document.querySelectorAll('.btn-table.edit').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const orderId = e.currentTarget.dataset.id;
-                editOrder(orderId);
-            });
-        });
-
         // Botão Excluir
         document.querySelectorAll('.btn-table.delete').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -229,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
-    // Mostrar detalhes da ordem (COM ANEXOS)
+    // Mostrar detalhes da ordem
     // =========================
     async function showOrderDetails(orderId) {
         const order = ordersData.find(o => o.id === orderId);
@@ -346,199 +333,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Configurar os event listeners para fechar o modal
         setupModalCloseListeners();
-    }
-
-    // =========================
-    // Editar ordem - VERSÃO SIMPLIFICADA E FUNCIONAL
-    // =========================
-    function editOrder(orderId) {
-        const order = ordersData.find(o => o.id === orderId);
-        if (!order) return;
-
-        // Verificar se pode editar
-        if (order.status === 'not-completed') {
-            showCustomAlert('warning', 'Edição Bloqueada', 'Ordens com status "Não Concluída" não podem ser editadas.');
-            return;
-        }
-
-        // Remover modal de edição anterior se existir
-        const existingEditModal = document.getElementById('edit-order-modal');
-        if (existingEditModal) {
-            existingEditModal.remove();
-        }
-
-        // Criar modal de edição
-        const editModal = document.createElement('div');
-        editModal.className = 'modal active';
-        editModal.id = 'edit-order-modal';
-
-        editModal.innerHTML = `
-            <div class="modal-content" style="max-width: 800px;">
-                <div class="modal-header">
-                    <h3>Editar Ordem ${order.id}</h3>
-                    <button class="modal-close">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form id="edit-order-form">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Título*</label>
-                                <input type="text" name="titulo" value="${order.titulo || ''}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Tipo de Local*</label>
-                                <select name="local_tipo" required>
-                                    <option value="sala" ${order.local_tipo === 'sala' ? 'selected' : ''}>Sala</option>
-                                    <option value="laboratorio" ${order.local_tipo === 'laboratorio' ? 'selected' : ''}>Laboratório</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Detalhe do Local*</label>
-                                <input type="text" name="local_detalhe" value="${order.local_detalhe || ''}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Status*</label>
-                                <select name="status" required>
-                                    <option value="Pendente" ${order.status_original === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                                    <option value="Em Andamento" ${order.status_original === 'Em Andamento' ? 'selected' : ''}>Em Andamento</option>
-                                    <option value="Concluída" ${order.status_original === 'Concluída' ? 'selected' : ''}>Concluída</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group full-width">
-                                <label>Descrição*</label>
-                                <textarea name="descricao" rows="4" required>${order.descricao_completa || order.descricao}</textarea>
-                            </div>
-
-                            ${order.tipo === 'problema' ? `
-                            <div class="form-group">
-                                <label>Equipamento</label>
-                                <input type="text" name="equipamento" value="${order.equipamento || ''}">
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo do Problema</label>
-                                <input type="text" name="tipo_problema" value="${order.tipo_problema || ''}">
-                            </div>
-                            ` : ''}
-
-                            ${order.tipo === 'instalacao' ? `
-                            <div class="form-group">
-                                <label>Nome do Aplicativo</label>
-                                <input type="text" name="app_nome" value="${order.app_nome || ''}">
-                            </div>
-                            <div class="form-group">
-                                <label>Versão</label>
-                                <input type="text" name="app_versao" value="${order.app_versao || ''}">
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Link</label>
-                                <input type="url" name="app_link" value="${order.app_link || ''}">
-                            </div>
-                            ` : ''}
-
-                            <div class="form-group full-width">
-                                <label>Observações</label>
-                                <textarea name="observacoes" rows="3">${order.observacoes || ''}</textarea>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancel-edit">Cancelar</button>
-                    <button class="btn btn-primary" id="save-edit">
-                        <i class="fas fa-save"></i> Salvar Alterações
-                    </button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(editModal);
-
-        // Configurar listeners para fechar o modal de edição - VERSÃO SIMPLIFICADA
-        const closeEditModal = function() {
-            if (editModal && editModal.parentNode) {
-                editModal.remove();
-            }
-        };
-
-        // Event listeners específicos - MANTENDO SIMPLES
-        const closeBtn = editModal.querySelector('.modal-close');
-        const cancelBtn = editModal.querySelector('#cancel-edit');
-        const saveBtn = editModal.querySelector('#save-edit');
-
-        // Adicionar listeners de forma simples e direta
-        closeBtn.addEventListener('click', closeEditModal);
-        cancelBtn.addEventListener('click', closeEditModal);
-
-        // Listener para salvar
-        saveBtn.addEventListener('click', async () => {
-            await saveOrderEdit(orderId, editModal);
-        });
-
-        // Fechar clicando fora do modal (no overlay)
-        editModal.addEventListener('click', (e) => {
-            if (e.target === editModal) {
-                closeEditModal();
-            }
-        });
-
-        // Fechar com tecla ESC
-        const handleEsc = (e) => {
-            if (e.key === 'Escape' && editModal.classList.contains('active')) {
-                closeEditModal();
-            }
-        };
-
-        document.addEventListener('keydown', handleEsc);
-
-        // Remover listener do ESC quando o modal for fechado
-        editModal.addEventListener('click', function handleClose(e) {
-            if (e.target === closeBtn || e.target === cancelBtn || e.target === editModal) {
-                document.removeEventListener('keydown', handleEsc);
-            }
-        }, { once: true });
-    }
-
-    // =========================
-    // Salvar edição da ordem
-    // =========================
-    async function saveOrderEdit(orderId, modalElement) {
-        const form = modalElement.querySelector('#edit-order-form');
-        const formData = new FormData(form);
-
-        const data = {};
-        formData.forEach((value, key) => {
-            if (value) data[key] = value;
-        });
-
-        try {
-            const res = await fetch(`/api/admin/ordens/${orderId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(data)
-            });
-
-            if (!res.ok) {
-                const error = await res.json();
-                throw new Error(error.message || 'Erro ao atualizar ordem');
-            }
-
-            modalElement.remove();
-            showCustomAlert('success', 'Sucesso', 'Ordem atualizada com sucesso!');
-
-            // Recarregar ordens
-            await fetchAllOrders();
-
-        } catch (err) {
-            console.error('Erro ao atualizar ordem:', err);
-            showCustomAlert('error', 'Erro', err.message || 'Não foi possível atualizar a ordem.');
-        }
     }
 
     // =========================
@@ -806,7 +600,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.head.appendChild(style);
 
-        console.log('✅ Gerenciar Ordens - Admin inicializado com sucesso!');
+        console.log('✅ Gerenciar Ordens - Admin inicializado com sucesso! (Sem ação de edição)');
     }
 
     init();

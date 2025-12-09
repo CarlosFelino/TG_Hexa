@@ -296,4 +296,65 @@ document.addEventListener("DOMContentLoaded", function () {
         showAlert("success", "Cadastro Realizado!", "Usuário cadastrado com sucesso! Agora você pode fazer login no sistema.");
         localStorage.removeItem("showRegistrationSuccess");
     }
+    // Função para ajustar o comportamento do logo em mobile
+    function adjustLogoForMobile() {
+        const logoText = document.querySelector('.logo-text');
+        const logoContainer = document.querySelector('.logo-container');
+
+        if (window.innerWidth <= 576) {
+            // Remove efeitos hover que não funcionam bem em mobile
+            if (logoContainer) {
+                logoContainer.style.transition = 'none';
+            }
+
+            // Ajusta o tamanho da logo se necessário
+            const logo = document.querySelector('.logo');
+            if (logo) {
+                logo.style.height = '35px';
+            }
+        } else {
+            // Restaura efeitos em desktop
+            if (logoContainer) {
+                logoContainer.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            }
+        }
+    }
+
+    // Executa ao carregar e redimensionar
+    window.addEventListener('load', adjustLogoForMobile);
+    window.addEventListener('resize', adjustLogoForMobile);
+
+    // Otimização para touch devices
+    document.addEventListener('DOMContentLoaded', function() {
+        // Melhora a experiência em dispositivos touch
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('touchstart', function() {
+                this.style.fontSize = '16px'; // Previne zoom no iOS
+            });
+        });
+
+        // Log de carregamento
+        console.log('Página de cadastro carregada com responsividade otimizada');
+    });
+
+    // Previne envio duplo do formulário em mobile
+    let isSubmitting = false;
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            if (isSubmitting) {
+                e.preventDefault();
+                return;
+            }
+
+            if (window.innerWidth <= 576) {
+                // Em mobile, adiciona um pequeno delay para evitar toques acidentais
+                isSubmitting = true;
+                setTimeout(() => {
+                    isSubmitting = false;
+                }, 2000);
+            }
+        });
+    }
 });

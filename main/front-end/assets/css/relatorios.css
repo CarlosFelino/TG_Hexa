@@ -8,6 +8,7 @@
     --primary-dark: #101728;
     --secondary: #7a04eb;
     --accent: #ff00e2;
+    --text-dark: #333;
     --text-medium: #666;
     --text-light: #999;
     --border-light: #e1e5eb;
@@ -30,6 +31,7 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 0.5rem;
+    line-height: 1.2;
 }
 
 .page-header h1 i {
@@ -39,10 +41,11 @@
 .page-header p {
     color: var(--text-medium);
     font-size: 1.1rem;
+    line-height: 1.4;
 }
 
 /* =======================
-   Filtros - PADRONIZADO
+   Filtros - RESPONSIVO
    ======================= */
 
 .filters-section {
@@ -72,12 +75,14 @@
     flex-direction: column;
     gap: 0.5rem;
     flex-grow: 1;
+    min-width: 0; /* Permite que o flex shrink funcione */
 }
 
 .form-group label {
     font-weight: 600;
     color: var(--primary-dark);
     font-size: 0.9rem;
+    line-height: 1.3;
 }
 
 .form-group select,
@@ -89,6 +94,7 @@
     transition: all 0.3s;
     width: 100%;
     background: white;
+    min-height: 44px;
 }
 
 .form-group select:focus,
@@ -99,7 +105,7 @@
 }
 
 /* =======================
-   Estatísticas
+   Estatísticas - RESPONSIVO
    ======================= */
 
 .stats-section {
@@ -117,29 +123,31 @@
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
+    line-height: 1.3;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .stat-card {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.5rem;
+    padding: 1rem;
     background: #f8f9fa;
     border-radius: 12px;
     transition: all 0.3s;
     border: 1px solid transparent;
+    min-height: 90px;
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     background: white;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     border-color: var(--border-light);
 }
 
@@ -153,10 +161,11 @@
     justify-content: center;
     font-size: 1.3rem;
     color: var(--secondary);
+    flex-shrink: 0;
 }
 
 .stat-info h3 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-dark);
     margin-bottom: 0.3rem;
@@ -168,18 +177,19 @@
     font-size: 0.9rem;
     margin: 0;
     font-weight: 500;
+    line-height: 1.3;
 }
 
 /* =======================
-   Cards de Relatórios
+   Cards de Relatórios - RESPONSIVO
    ======================= */
 
 .reports-section {
     background: white;
     border-radius: 10px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .section-header {
@@ -193,11 +203,13 @@
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
+    line-height: 1.3;
 }
 
 .section-header p {
     color: var(--text-medium);
     margin: 0;
+    line-height: 1.4;
 }
 
 .reports-grid {
@@ -216,6 +228,7 @@
     border: 1px solid transparent;
     position: relative;
     overflow: hidden;
+    min-height: 140px;
 }
 
 .report-card:hover {
@@ -240,6 +253,7 @@
 
 .report-content {
     flex: 1;
+    min-width: 0; /* Permite que o texto quebre corretamente */
 }
 
 .report-content h4 {
@@ -247,6 +261,7 @@
     color: var(--primary-dark);
     margin-bottom: 0.5rem;
     font-weight: 600;
+    line-height: 1.3;
 }
 
 .report-content p {
@@ -268,6 +283,7 @@
     display: flex;
     align-items: center;
     gap: 0.3rem;
+    white-space: nowrap;
 }
 
 .report-actions {
@@ -275,28 +291,31 @@
     flex-direction: column;
     gap: 0.5rem;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 /* =======================
-   Histórico
+   Histórico - RESPONSIVO
    ======================= */
 
 .history-section {
     background: white;
     border-radius: 10px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
 }
 
 .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
 }
 
 .reports-history-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px; /* Garante estrutura no mobile */
+    min-width: 800px;
 }
 
 .reports-history-table th {
@@ -309,6 +328,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .reports-history-table td {
@@ -316,6 +336,7 @@
     border-bottom: 1px solid var(--border-light);
     font-size: 0.95rem;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .reports-history-table tbody tr {
@@ -326,15 +347,20 @@
     background: #f9faff;
 }
 
-/* Ações Tabela */
+.reports-history-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Ações Tabela - RESPONSIVO */
 .actions-cell {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: nowrap;
 }
 
 .btn-table {
-    width: 35px;
-    height: 35px;
+    width: 36px;
+    height: 36px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -343,16 +369,31 @@
     align-items: center;
     justify-content: center;
     font-size: 0.9rem;
+    flex-shrink: 0;
 }
 
-.btn-table.preview { background: rgba(122, 4, 235, 0.1); color: var(--secondary); }
-.btn-table.preview:hover { background: var(--secondary); color: white; }
+.btn-table.preview { 
+    background: rgba(122, 4, 235, 0.1); 
+    color: var(--secondary); 
+}
 
-.btn-table.download { background: rgba(76, 175, 80, 0.1); color: var(--success); }
-.btn-table.download:hover { background: var(--success); color: white; }
+.btn-table.preview:hover { 
+    background: var(--secondary); 
+    color: white; 
+}
+
+.btn-table.download { 
+    background: rgba(76, 175, 80, 0.1); 
+    color: var(--success); 
+}
+
+.btn-table.download:hover { 
+    background: var(--success); 
+    color: white; 
+}
 
 /* =======================
-   Botões
+   Botões - RESPONSIVO
    ======================= */
 
 .btn {
@@ -368,6 +409,7 @@
     border: none;
     font-size: 0.95rem;
     min-height: 44px;
+    white-space: nowrap;
 }
 
 .btn-primary {
@@ -384,6 +426,8 @@
 .btn-primary:disabled {
     background: #ccc;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .btn-secondary {
@@ -393,11 +437,12 @@
 
 .btn-secondary:hover {
     background: #d1d5db;
-    color: var(--primary-dark);
+    color: var(--text-dark);
+    transform: translateY(-2px);
 }
 
 /* =======================
-   ALERTAS CUSTOMIZADOS (Faltava no original)
+   ALERTAS CUSTOMIZADOS
    ======================= */
 
 .alert-overlay {
@@ -406,7 +451,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(16, 23, 40, 0.7); /* Backdrop escuro */
+    background: rgba(16, 23, 40, 0.7);
     backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
@@ -415,6 +460,7 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     visibility: hidden;
+    padding: 1rem;
 }
 
 .alert-overlay.visible {
@@ -427,7 +473,7 @@
     padding: 2rem;
     border-radius: 16px;
     max-width: 450px;
-    width: 90%;
+    width: 100%;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     text-align: center;
     transform: translateY(20px);
@@ -447,19 +493,36 @@
     align-items: center;
     justify-content: center;
     font-size: 2rem;
+    flex-shrink: 0;
 }
 
 /* Cores dos Ícones de Alerta */
-.alert-success .alert-icon { background: rgba(76, 175, 80, 0.1); color: var(--success); }
-.alert-error .alert-icon { background: rgba(244, 67, 54, 0.1); color: var(--danger); }
-.alert-warning .alert-icon { background: rgba(255, 152, 0, 0.1); color: var(--warning); }
-.alert-info .alert-icon { background: rgba(33, 150, 243, 0.1); color: var(--info); }
+.alert-success .alert-icon { 
+    background: rgba(76, 175, 80, 0.1); 
+    color: var(--success); 
+}
+
+.alert-error .alert-icon { 
+    background: rgba(244, 67, 54, 0.1); 
+    color: var(--danger); 
+}
+
+.alert-warning .alert-icon { 
+    background: rgba(255, 152, 0, 0.1); 
+    color: var(--warning); 
+}
+
+.alert-info .alert-icon { 
+    background: rgba(33, 150, 243, 0.1); 
+    color: var(--info); 
+}
 
 .alert-title {
     font-size: 1.4rem;
     color: var(--primary-dark);
     margin-bottom: 0.8rem;
     font-weight: 700;
+    line-height: 1.3;
 }
 
 .alert-message {
@@ -467,6 +530,7 @@
     font-size: 1rem;
     line-height: 1.5;
     margin-bottom: 2rem;
+    word-break: break-word;
 }
 
 .alert-actions {
@@ -484,19 +548,60 @@
     transition: all 0.3s;
     font-size: 0.95rem;
     min-width: 120px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
 }
 
-.alert-btn-primary { background: var(--secondary); color: white; }
-.alert-btn-primary:hover { background: var(--accent); box-shadow: 0 4px 15px rgba(122, 4, 235, 0.3); }
+.alert-btn-primary { 
+    background: var(--secondary); 
+    color: white; 
+}
 
-.alert-btn-secondary { background: #f0f2f5; color: var(--text-medium); }
-.alert-btn-secondary:hover { background: #e1e5eb; color: var(--text-dark); }
+.alert-btn-primary:hover { 
+    background: var(--accent); 
+    box-shadow: 0 4px 15px rgba(122, 4, 235, 0.3); 
+    transform: translateY(-2px);
+}
+
+.alert-btn-secondary { 
+    background: #f0f2f5; 
+    color: var(--text-medium); 
+}
+
+.alert-btn-secondary:hover { 
+    background: #e1e5eb; 
+    color: var(--text-dark); 
+    transform: translateY(-2px);
+}
 
 /* =======================
-   Responsividade
+   RESPONSIVIDADE AVANÇADA
    ======================= */
 
+/* Tablets (768px - 992px) */
+@media (max-width: 1200px) {
+    .filters-container {
+        gap: 1rem;
+    }
+
+    .reports-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+}
+
 @media (max-width: 992px) {
+    .page-header h1 { 
+        font-size: clamp(1.5rem, 4vw, 2rem); 
+    }
+
+    .page-header p {
+        font-size: 1rem;
+    }
+
     .filters-container {
         flex-direction: column;
         align-items: stretch;
@@ -506,16 +611,84 @@
         width: 100%;
         flex-wrap: wrap;
     }
+
+    .form-group {
+        min-width: 200px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
+/* Smartphones grandes (576px - 768px) */
 @media (max-width: 768px) {
-    .page-header h1 { font-size: 1.6rem; }
+    .admin-content {
+        padding: 1.25rem;
+    }
+
+    .filters-section,
+    .stats-section,
+    .reports-section,
+    .history-section {
+        padding: 1.25rem;
+    }
+
+    .stat-card {
+        padding: 0.875rem;
+        gap: 0.75rem;
+        min-height: 80px;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.3rem;
+    }
+
+    .stat-info p {
+        font-size: 0.85rem;
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .report-card {
+        padding: 1.25rem;
+        min-height: 130px;
+    }
+
+    .report-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+
+    .report-content h4 {
+        font-size: 1rem;
+    }
+
+    .report-content p {
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .report-meta {
+        gap: 0.75rem;
+        font-size: 0.75rem;
+    }
 
     /* Ajustes na Tabela Mobile */
     .reports-history-table {
-        min-width: 100%;
+        min-width: 700px;
     }
-    
+
     .reports-history-table th, 
     .reports-history-table td {
         padding: 0.8rem 0.5rem;
@@ -523,29 +696,52 @@
     }
 
     /* ESCONDER Colunas menos importantes no mobile */
-    .reports-history-table th:nth-child(1), .reports-history-table td:nth-child(1), /* ID */
-    .reports-history-table th:nth-child(4), .reports-history-table td:nth-child(4), /* Formato */
-    .reports-history-table th:nth-child(6), .reports-history-table td:nth-child(6)  /* Tamanho */
+    .reports-history-table th:nth-child(1), 
+    .reports-history-table td:nth-child(1), /* ID */
+    .reports-history-table th:nth-child(4), 
+    .reports-history-table td:nth-child(4), /* Formato */
+    .reports-history-table th:nth-child(6), 
+    .reports-history-table td:nth-child(6)  /* Tamanho */
     {
         display: none;
     }
 
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .btn-table {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
     }
 
-    .reports-grid {
-        grid-template-columns: 1fr;
+    .alert-modal {
+        padding: 1.5rem;
     }
 
-    .report-card {
-        padding: 1.2rem;
+    .alert-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+    }
+
+    .alert-title {
+        font-size: 1.3rem;
+    }
+
+    .alert-message {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
     }
 }
 
+/* Smartphones pequenos (480px - 576px) */
 @media (max-width: 576px) {
     .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
     }
 
     .filter-group {
@@ -554,20 +750,331 @@
         gap: 0.8rem;
     }
 
+    .form-group {
+        min-width: 100%;
+    }
+
+    .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        min-height: 42px;
+    }
+
     .actions-cell {
         justify-content: flex-end;
     }
 
+    /* Ajuste nos cards de relatório para mobile pequeno */
+    .report-card {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .report-icon {
+        margin: 0 auto;
+    }
+
+    .report-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+
     /* Ajuste no alerta mobile */
     .alert-modal {
-        padding: 1.5rem;
+        padding: 1.25rem;
     }
-    
+
     .alert-actions {
         flex-direction: column;
     }
-    
+
     .alert-btn {
         width: 100%;
+        min-width: auto;
     }
+
+    /* Scrollbar visível para tabelas */
+    .table-responsive::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border-radius: 2px;
+    }
+}
+
+/* Smartphones muito pequenos (até 480px) */
+@media (max-width: 480px) {
+    .admin-content {
+        padding: 1rem;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .page-header p {
+        font-size: 0.95rem;
+    }
+
+    .filters-section,
+    .stats-section,
+    .reports-section,
+    .history-section {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .section-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .section-header p {
+        font-size: 0.9rem;
+    }
+
+    .stat-card {
+        padding: 0.75rem;
+        gap: 0.5rem;
+        min-height: 70px;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.2rem;
+    }
+
+    .report-card {
+        padding: 1rem;
+        min-height: 120px;
+    }
+
+    .reports-history-table {
+        min-width: 600px;
+        font-size: 0.85rem;
+    }
+
+    /* Esconder mais colunas em telas muito pequenas */
+    .reports-history-table th:nth-child(2),
+    .reports-history-table td:nth-child(2) { /* Nome */
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* Smartphones extremamente pequenos (até 360px) */
+@media (max-width: 360px) {
+    .admin-content {
+        padding: 0.75rem;
+    }
+
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .report-content h4 {
+        font-size: 0.95rem;
+    }
+
+    .report-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    .reports-history-table {
+        min-width: 550px;
+        font-size: 0.8rem;
+    }
+
+    .btn-table {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+}
+
+/* =======================
+   MELHORIAS DE ACESSIBILIDADE
+   ======================= */
+
+/* Focus visível para acessibilidade */
+.btn:focus,
+.form-group select:focus,
+.form-group input[type="date"]:focus,
+.btn-table:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Estados de loading */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.btn-secondary.loading::after {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top: 2px solid var(--text-dark);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Mensagem de tabela vazia */
+.reports-history-table tbody tr[data-empty="true"] td {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-medium);
+    font-size: 1rem;
+}
+
+.reports-history-table tbody tr[data-empty="true"] td i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--border-light);
+    display: block;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .reports-history-table {
+        border: 2px solid #000;
+    }
+
+    .reports-history-table th {
+        background: #000;
+        color: #fff;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #000;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .stat-card,
+    .report-card,
+    .btn,
+    .btn-table,
+    .alert-modal {
+        transition: none;
+        animation: none;
+    }
+
+    .stat-card:hover,
+    .report-card:hover,
+    .btn:hover,
+    .btn-table:hover {
+        transform: none;
+    }
+
+    .table-responsive {
+        scroll-behavior: auto;
+    }
+}
+
+/* Suporte a orientação paisagem */
+@media (max-height: 500px) and (max-width: 768px) {
+    .admin-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .alert-modal {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* Ajuste para telas muito altas */
+@media (min-height: 1000px) {
+    .admin-content {
+        max-height: calc(100vh - 70px);
+    }
+}
+
+/* Indicador de scroll para tabela mobile */
+@media (max-width: 768px) {
+    .table-responsive {
+        position: relative;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .table-responsive::after {
+        content: '→';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--secondary);
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        opacity: 0.7;
+        animation: bounce 2s infinite;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(-50%) translateX(0); }
+        40% { transform: translateY(-50%) translateX(-5px); }
+        60% { transform: translateY(-50%) translateX(-3px); }
+    }
+}
+
+/* Estados de validação do formulário */
+.form-group input:invalid:not(:focus):not(:placeholder-shown),
+.form-group select:invalid:not(:focus) {
+    border-color: #F44336;
+    background-color: rgba(244, 67, 54, 0.05);
+}
+
+.form-group input:valid:not(:focus):not(:placeholder-shown),
+.form-group select:valid:not(:focus) {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.05);
 }

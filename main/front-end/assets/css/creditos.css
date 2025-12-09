@@ -1,20 +1,33 @@
 /* =======================
    Página de Créditos - OTIMIZADO
    ======================= */
-/* Botão de fechar */
+/* Estilos específicos para o botão fechar */
 .close-btn {
-    font-size: 1.5rem;
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    text-decoration: none;
     color: var(--text-light);
-    text-decoration: none; 
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s, color 0.2s;
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 10;
 }
 
 .close-btn:hover {
-    color: var(--accent);
-    transform: scale(1.2);
+    background: var(--accent);
+    color: var(--text-light);
+    transform: translateY(-50%) scale(1.1);
+    border-color: var(--accent);
 }
 
 .creditos-container {
@@ -244,6 +257,18 @@
 /* =======================
    Responsividade Avançada
    ======================= */
+/* Melhorias para telas muito grandes */
+@media (min-width: 1400px) {
+    .creditos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .credito-card {
+        padding: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .creditos-container {
         padding: 1rem;
@@ -288,6 +313,72 @@
     .creditos-title::after {
         left: 20%;
         width: 60%;
+    }
+    
+    .credito-card:hover {
+        transform: none;
+    }
+
+    .credito-card:hover .credito-image img {
+        transform: none;
+    }
+}
+
+/* Telas pequenas (smartphones) */
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0.75rem var(--spacing-small);
+    }
+
+    /* Esconde o texto do logo */
+    .logo-text {
+        display: none !important;
+    }
+
+    /* Centraliza a logo */
+    .logo-container {
+        justify-content: center;
+    }
+
+    .logo {
+        height: 35px;
+    }
+
+    /* Remove efeitos hover em mobile */
+    .logo-container:hover {
+        transform: none;
+        gap: 0;
+    }
+
+    /* Botão fechar otimizado para mobile */
+    .close-btn {
+        font-size: 1.2rem;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Ajuste no container da navbar */
+    .nav-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50px;
+    }
+
+    /* Ajuste na altura do container principal */
+    .creditos-container {
+        min-height: calc(100vh - 110px);
     }
 }
 
@@ -349,6 +440,41 @@
     .creditos-title::after {
         left: 15%;
         width: 70%;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 400px) {
+    .logo {
+        height: 30px;
+    }
+
+    .navbar {
+        padding: 0.5rem;
+    }
+
+    .close-btn {
+        right: 0.75rem;
+        font-size: 1.1rem;
+        width: 32px;
+        height: 32px;
+    }
+
+    .creditos-title {
+        font-size: 1.6rem;
+    }
+
+    .creditos-container {
+        padding: 0.5rem;
+    }
+
+    .credito-card {
+        padding: 1rem;
+    }
+
+    .credito-image {
+        width: 60px;
+        height: 60px;
     }
 }
 

@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         };
     }
+    
 
     // =========================
     // Inicializar Tudo

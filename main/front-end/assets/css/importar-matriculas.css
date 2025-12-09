@@ -695,3 +695,797 @@
         width: 100%;
     }
 }
+
+/* =======================
+   RESPONSIVIDADE COMPLETA
+   ======================= */
+
+/* =======================
+   BREAKPOINTS CONSISTENTES
+   ======================= */
+
+/* Desktop Grande (1200px) */
+@media (max-width: 1200px) {
+    .upload-card {
+        max-width: 90%;
+    }
+
+    .preview-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablets (768px - 992px) */
+@media (max-width: 992px) {
+    .page-header h1 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    .page-header p {
+        font-size: 1rem;
+    }
+
+    .upload-card {
+        padding: 2rem;
+    }
+
+    .upload-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2.5rem;
+    }
+
+    .upload-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .upload-info {
+        text-align: left;
+        flex-wrap: wrap;
+    }
+}
+
+/* Smartphones grandes (576px - 768px) */
+@media (max-width: 768px) {
+    .admin-content {
+        padding: 1.25rem;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .upload-section {
+        margin-bottom: 2rem;
+    }
+
+    .upload-card {
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .upload-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .upload-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .upload-card p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Área de Upload Mobile */
+    .upload-area {
+        padding: 2rem 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .upload-area i {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .upload-area p {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .file-types {
+        font-size: 0.8rem;
+    }
+
+    /* Upload Info Mobile */
+    .upload-info {
+        padding: 0.875rem;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .info-item i {
+        margin-top: 0.125rem;
+        flex-shrink: 0;
+    }
+
+    /* Botão de Upload Mobile */
+    .btn {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+
+    /* Status do Upload Mobile */
+    .upload-status {
+        padding: 1.25rem;
+        margin-top: 1.25rem;
+        border-radius: 8px;
+    }
+
+    .status-header h4 {
+        font-size: 0.9rem;
+    }
+
+    .progress-bar {
+        height: 6px;
+        margin-bottom: 0.75rem;
+    }
+
+    .status-details {
+        font-size: 0.8rem;
+    }
+
+    /* Seção de Pré-visualização Mobile */
+    .preview-section {
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .section-header p {
+        font-size: 0.9rem;
+    }
+
+    /* Stats Mobile */
+    .preview-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+        gap: 0.75rem;
+        min-height: 70px;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.5rem;
+    }
+
+    .stat-info p {
+        font-size: 0.85rem;
+    }
+
+    /* Container da Tabela Mobile */
+    .table-container {
+        border-radius: 8px;
+    }
+
+    .table-header {
+        padding: 1.25rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .table-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .table-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Tabela Mobile - Otimização */
+    .preview-table {
+        min-width: 600px;
+        font-size: 0.85rem;
+    }
+
+    /* Esconde colunas menos importantes em mobile */
+    .preview-table thead th:nth-child(2), /* Nome */
+    .preview-table tbody td:nth-child(2) {
+        display: none;
+    }
+
+    .preview-table thead th:nth-child(3), /* Email */
+    .preview-table tbody td:nth-child(3) {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .preview-table th,
+    .preview-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+    }
+
+    /* Scroll suave para tabela mobile */
+    .table-responsive {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border-radius: 2px;
+    }
+
+    /* Seção de Histórico Mobile */
+    .history-section {
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .history-list {
+        gap: 0.75rem;
+    }
+
+    .history-item {
+        padding: 1rem;
+        gap: 0.75rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .history-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .history-content p {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .history-time {
+        font-size: 0.8rem;
+    }
+
+    .history-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        font-size: 0.85rem;
+    }
+
+    .history-stats span {
+        justify-content: space-between;
+    }
+
+    /* Alertas Mobile */
+    .alert-modal {
+        padding: 1.5rem;
+        width: 95%;
+        margin: 1rem;
+    }
+
+    .alert-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .alert-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .alert-message {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .alert-btn {
+        width: 100%;
+        min-width: auto;
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Smartphones pequenos (480px - 576px) */
+@media (max-width: 576px) {
+    .admin-content {
+        padding: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .page-header p {
+        font-size: 0.95rem;
+    }
+
+    .upload-card {
+        padding: 1.25rem;
+    }
+
+    .upload-area {
+        padding: 1.5rem 1rem;
+    }
+
+    .upload-area i {
+        font-size: 2rem;
+    }
+
+    .upload-area p {
+        font-size: 0.85rem;
+    }
+
+    .preview-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
+    }
+
+    .table-header {
+        padding: 1rem;
+    }
+
+    .preview-table {
+        min-width: 550px;
+    }
+
+    /* Esconde mais colunas em mobile pequeno */
+    .preview-table thead th:nth-child(3), /* Email */
+    .preview-table tbody td:nth-child(3) {
+        display: none;
+    }
+
+    .history-section {
+        padding: 1.25rem;
+    }
+
+    .history-item {
+        padding: 0.875rem;
+    }
+
+    .alert-modal {
+        padding: 1.25rem;
+    }
+
+    .alert-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+    }
+
+    .alert-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Smartphones muito pequenos (até 480px) */
+@media (max-width: 480px) {
+    .upload-card {
+        padding: 1rem;
+    }
+
+    .upload-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+    }
+
+    .upload-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .upload-area {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .upload-info {
+        padding: 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .info-item {
+        align-items: center;
+    }
+
+    .info-item i {
+        font-size: 0.9rem;
+    }
+
+    .preview-section {
+        padding: 1.25rem;
+    }
+
+    .stat-card {
+        padding: 0.875rem;
+        gap: 0.5rem;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.3rem;
+    }
+
+    .stat-info p {
+        font-size: 0.8rem;
+    }
+
+    .preview-table {
+        min-width: 500px;
+        font-size: 0.8rem;
+    }
+
+    .preview-table th,
+    .preview-table td {
+        padding: 0.5rem 0.375rem;
+    }
+
+    .status-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .history-item {
+        padding: 0.75rem;
+        gap: 0.5rem;
+    }
+
+    .history-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+
+    .history-content p {
+        font-size: 0.85rem;
+    }
+
+    .history-time {
+        font-size: 0.75rem;
+    }
+
+    .history-stats {
+        font-size: 0.8rem;
+    }
+}
+
+/* Smartphones extremamente pequenos (até 360px) */
+@media (max-width: 360px) {
+    .admin-content {
+        padding: 0.75rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .page-header p {
+        font-size: 0.9rem;
+    }
+
+    .upload-card {
+        padding: 0.875rem;
+    }
+
+    .upload-area {
+        padding: 1rem 0.5rem;
+    }
+
+    .upload-area i {
+        font-size: 1.8rem;
+    }
+
+    .upload-area p {
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .preview-table {
+        min-width: 450px;
+        font-size: 0.75rem;
+    }
+
+    .history-section {
+        padding: 1rem;
+    }
+
+    .alert-modal {
+        padding: 1rem;
+    }
+
+    .alert-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .alert-title {
+        font-size: 1.1rem;
+    }
+
+    .alert-message {
+        font-size: 0.85rem;
+        margin-bottom: 1.25rem;
+    }
+}
+
+/* =======================
+   MELHORIAS DE USABILIDADE
+   ======================= */
+
+/* Feedback visual para estados do upload */
+.upload-area.dragover {
+    border-color: var(--accent);
+    background: rgba(122, 4, 235, 0.05);
+    animation: pulseBorder 0.5s ease-in-out;
+}
+
+@keyframes pulseBorder {
+    0%, 100% { border-color: var(--accent); }
+    50% { border-color: var(--secondary); }
+}
+
+/* Loading state para botões */
+.btn.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.btn-secondary.loading::after {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top: 2px solid var(--text-dark);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Feedback de validação */
+.preview-table tr[data-valid="false"] {
+    background: rgba(244, 67, 54, 0.05);
+    border-left: 3px solid var(--danger);
+}
+
+.preview-table tr[data-valid="false"]:hover {
+    background: rgba(244, 67, 54, 0.08);
+}
+
+.preview-table tr[data-valid="true"] {
+    border-left: 3px solid var(--success);
+}
+
+/* Estados vazios */
+.history-list:empty::before {
+    content: 'Nenhuma importação realizada nesta sessão';
+    display: block;
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.preview-table tbody:empty::before {
+    content: 'Nenhum dado para mostrar';
+    display: table-row;
+}
+
+.preview-table tbody:empty::before td {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-medium);
+    font-style: italic;
+}
+
+/* =======================
+   ACESSIBILIDADE
+   ======================= */
+
+/* Focus states para acessibilidade */
+.btn:focus,
+.upload-area:focus,
+input[type="file"]:focus + .upload-area {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .upload-card,
+    .preview-section,
+    .history-section,
+    .alert-modal {
+        border: 2px solid #000;
+    }
+
+    .upload-area {
+        border: 2px dashed #000;
+    }
+
+    .upload-area.dragover {
+        border: 2px solid var(--accent);
+    }
+
+    .table-container {
+        border: 2px solid #000;
+    }
+
+    .preview-table th {
+        background: #000;
+        color: #fff;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .upload-card,
+    .upload-area,
+    .stat-card,
+    .history-item,
+    .btn,
+    .alert-modal,
+    .progress-fill {
+        transition: none;
+        animation: none;
+    }
+
+    .upload-area:hover,
+    .stat-card:hover,
+    .history-item:hover,
+    .btn:hover {
+        transform: none;
+    }
+
+    .progress-fill::after {
+        animation: none;
+    }
+}
+
+/* Suporte a orientação paisagem em mobile */
+@media (max-height: 500px) and (max-width: 768px) {
+    .admin-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .upload-area {
+        padding: 1rem;
+    }
+
+    .alert-modal {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* Ajuste para telas muito altas */
+@media (min-height: 1000px) {
+    .admin-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .upload-card {
+        max-width: 700px;
+    }
+}
+
+/* Touch-friendly para mobile */
+@media (max-width: 768px) {
+    .btn,
+    .upload-area,
+    .table-actions .btn,
+    .alert-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .btn-table {
+        cursor: pointer;
+    }
+}
+
+/* Scroll indicador visual para tabelas mobile */
+@media (max-width: 768px) {
+    .table-responsive {
+        position: relative;
+    }
+}

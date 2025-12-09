@@ -98,6 +98,28 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Ajuste para responsividade do logo
+        function checkLogoResponsive() {
+            const logoText = document.querySelector('.logo-text');
+            const logoContainer = document.querySelector('.logo-container');
+
+            if (window.innerWidth <= 576) {
+                // Remove efeitos hover em mobile
+                if (logoContainer) {
+                    logoContainer.style.transition = 'none';
+                }
+            } else {
+                // Restaura efeitos hover em desktop
+                if (logoContainer) {
+                    logoContainer.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                }
+            }
+        }
+
+        // Executa ao carregar e ao redimensionar
+        window.addEventListener('load', checkLogoResponsive);
+        window.addEventListener('resize', checkLogoResponsive);
+
         // ✅ FUNÇÃO PRINCIPAL: Carregar e exibir alertas
         async function carregarAlertas() {
             try {

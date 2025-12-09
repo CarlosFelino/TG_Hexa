@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalProfessorsEl = document.getElementById('total-professors');
     const totalSupportEl = document.getElementById('total-support');
     const totalAdminsEl = document.getElementById('total-admins');
+    
 
     let activeFilters = { search: '', role: '', status: '' };
     let usersData = [];
@@ -83,10 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Configurar eventos
             this.setupAlertEvents(alertOverlay, buttons);
 
-            // Auto-fechar se não tiver botões
-            if (buttons.length === 0) {
-                setTimeout(() => this.closeAlert(alertOverlay), 3000);
-            }
+            // ✅ REMOVIDO: Auto-fechar se não tiver botões
+            // O modal só fecha quando o usuário clicar em um botão ou fora do modal
 
             return alertOverlay;
         },
@@ -481,34 +480,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         currentEditingUserId = userId;
         userFormTitle.textContent = 'Editar Usuário';
+
+        // Preencher campos
         document.getElementById('user-matricula').value = user.matricula;
         document.getElementById('user-matricula').disabled = true;
         document.getElementById('user-name').value = user.name;
         document.getElementById('user-email').value = user.email;
         document.getElementById('user-role').value = user.role;
-        document.getElementById('user-status').value = user.status;
+
+        // ✅ CORREÇÃO: Garantir que o status seja preenchido
+        document.getElementById('user-status').value = user.status || 'active';
+
         passwordField.style.display = 'none';
         document.getElementById('user-password').required = false;
 
         modalManager.openStaticModal(userFormModal);
     }
 
-    function deleteUser(userId) {
-        const user = usersData.find(u => u.id == userId);
-        if (!user) return;
-
-        if (user.role === 'admin' || user.role === 'suporte') {
-            showPasswordConfirmation(userId, user);
-        } else {
-            modalManager.createAlert('warning', 'Confirmar Exclusão', 
-                `Tem certeza que deseja excluir <strong>${user.name}</strong>?`,
-                [
-                    { text: 'Cancelar', action: 'secondary' },
-                    { text: 'Excluir', action: 'primary', callback: () => confirmDelete(userId, null) }
-                ]
-            );
-        }
-    }
 
     function showPasswordConfirmation(userId, user) {
         const alertOverlay = modalManager.createAlert('warning', 'Confirmação de Segurança', 
@@ -803,8 +791,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: document.getElementById('user-name').value,
                 email: document.getElementById('user-email').value,
                 role: document.getElementById('user-role').value,
-                status: document.getElementById('user-status').value
+                status: document.getElementById('user-status').value // ✅ SEMPRE enviar status
             };
+
+            console.log('📤 [FRONTEND] Enviando dados:', formData);
 
             const password = document.getElementById('user-password').value;
             if (password?.trim()) formData.password = password;

@@ -331,9 +331,9 @@ a:focus, button:focus {
     outline-offset: 4px;
 }
 
-    /* =======================
-    Responsividade
-    ======================= */
+/* =======================
+   Responsividade
+   ======================= */
 @media (max-width: 1200px) {
     .hero {
         padding: var(--spacing-large);
@@ -377,28 +377,35 @@ a:focus, button:focus {
         padding: var(--spacing-small) var(--spacing-medium);
     }
 
+    /* IMPORTANTE: Esconde o texto do logo em telas pequenas */
     .logo-text {
-        display: none;
+        display: none !important;
     }
-
+    .logo-container {
+        justify-content: center;
+    }
     .logo-container:hover {
-        transform: translateX(0);
+        transform: none;
         gap: 0;
     }
-        .logo-text {
-        display: block !important; /* Garante que o texto aparece */
+
+    /* Corrige a regra anterior que forçava display: block */
+    .logo-text {
+        display: none !important;
     }
-    
-    .logo-container:hover {
-        transform: none; /* Remove transform em mobile */
-        gap: 8px; /* Mantém gap consistente */
-    }
-    
+
     /* Garante que o body tenha scroll quando necessário */
     html, body {
         overflow-x: hidden;
         overflow-y: auto;
         height: auto;
         min-height: 100vh;
+    }
+}
+
+/* Para garantir em telas muito pequenas */
+@media (max-width: 400px) {
+    .logo-text {
+        display: none !important;
     }
 }

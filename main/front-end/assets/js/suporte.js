@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ suporte.js carregado - Versão Atualizada");
+    // =========================
+    // 0. DESABILITA DROPDOWN CONFLITANTE
+    // =========================
+    // Adicione esta linha para ignorar a seção de dropdown do suporte.js
+    window.suporteSkipDropdown = true;
 
     // =========================
     // 1. AUTENTICAÇÃO
@@ -309,21 +314,44 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // ✅ FUNÇÃO: Formatar data para exibição (para ordens sem responsável)
-    function formatarDataParaExibicao(dataString) {
-        if (!dataString) return "Data não informada";
+    // ✅ FUNÇÃO: Formatar data para exibição (para ordens sem responsável) - DATA DE CRIAÇÃO
+    function formatarDataCriacaoParaExibicao(dataString) {
+        if (!dataString) return "Sem data de criação";
 
         try {
             const data = new Date(dataString);
+
+            // Formatar como "DD/MM/YYYY HH:mm"
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const ano = data.getFullYear();
+            const horas = String(data.getHours()).padStart(2, '0');
+            const minutos = String(data.getMinutes()).padStart(2, '0');
+
+            return `Criada em ${dia}/${mes}/${ano} às ${horas}:${minutos}`;
+        } catch (err) {
+            console.error("Erro ao formatar data de criação:", err);
+            return "Data inválida";
+        }
+    }
+    // ✅ FUNÇÃO: Formatar data limite com +1 dia (opcional)
+    function formatarDataLimiteComTolerancia(dataString) {
+        if (!dataString) return "Sem data limite";
+
+        try {
+            const data = new Date(dataString);
+
+            // ✅ ADICIONAR +1 DIA À DATA
+            data.setDate(data.getDate() + 1);
 
             // Formatar como "DD/MM/YYYY"
             const dia = String(data.getDate()).padStart(2, '0');
             const mes = String(data.getMonth() + 1).padStart(2, '0');
             const ano = data.getFullYear();
 
-            return `${dia}/${mes}/${ano}`;
+            return `Vence até ${dia}/${mes}/${ano}`;
         } catch (err) {
-            console.error("Erro ao formatar data:", err);
+            console.error("Erro ao formatar data limite:", err);
             return "Data inválida";
         }
     }
@@ -355,7 +383,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alertasQueue = [];
 
             // ============================================
-            // POP-UP 1: Ordens próximas do vencimento
+            // POP-UP 1: Ordens próximas do vencimento (MANTÉM IGUAL)
             // ============================================
             let hasVencimentoContent = false;
             if (alertas.prazo && alertas.prazo.length > 0) {
@@ -419,67 +447,84 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
             }
 
-            // ============================================
-            // POP-UP 2: Ordens sem responsável (COM DATA FORMATADA)
-            // ============================================
-            let hasSemRespContent = false;
-            if (alertas.sem_responsavel && alertas.sem_responsavel.length > 0) {
-                hasSemRespContent = true;
-                // Ordenar por data de criação
-                const ordensOrdenadas = [...alertas.sem_responsavel].sort((a, b) => {
-                    const dataA = a.data_criacao ? new Date(a.data_criacao) : new Date(0);
-                    const dataB = b.data_criacao ? new Date(b.data_criacao) : new Date(0);
-                    return dataA - dataB;
-                });
+    // ============================================
+    // POP-UP 2: Ordens sem responsável (APENAS "VENCE ATÉ...")
+    // ============================================
+    let hasSemRespContent = false;
+    if (alertas.sem_responsavel && alertas.sem_responsavel.length > 0) {
+        hasSemRespContent = true;
 
-                alertBodySemResp.innerHTML = ordensOrdenadas.map(ordem => {
-                    const prioridade = 2; // Média
-                    const textoPrioridade = "Sem responsável";
-                    const dataFormatada = formatarDataParaExibicao(ordem.data_criacao);
+        // Filtrar apenas ordens que têm data_limite (se quiser mostrar todas, remova este filtro)
+        const ordensComDataLimite = alertas.sem_responsavel.filter(ordem => ordem.data_limite);
 
-                    return `
-                    <div class="alert-item priority-${prioridade}">
-                        <div class="alert-icon-wrap">
-                            <i class="fas fa-user-times"></i>
-                        </div>
-                        <div class="alert-content">
-                            <strong>
-                                <span class="priority-indicator"></span>
-                                ${ordem.codigo || `#${ordem.id}`}
-                            </strong>
-                            <p>${ordem.titulo || 'Sem título'}</p>
-                            <small>
-                                <i class="far fa-calendar"></i> 
-                                ${dataFormatada}
-                            </small>
-                            <span class="badge">
-                                ${textoPrioridade}
-                            </span>
-                        </div>
-                    </div>
-                `}).join('');
-            } else {
-                alertBodySemResp.innerHTML = `
-                    <div class="alert-empty">
-                        <i class="fas fa-user-check"></i>
-                        <p>Todas as ordens têm responsável</p>
-                    </div>
-                `;
-            }
+        // Ordenar por data limite (mais próximas primeiro)
+        const ordensOrdenadas = [...ordensComDataLimite].sort((a, b) => {
+            const dataA = a.data_limite ? new Date(a.data_limite) : new Date(9999, 11, 31);
+            const dataB = b.data_limite ? new Date(b.data_limite) : new Date(9999, 11, 31);
+            return dataA - dataB; // Mais próximas primeiro
+        });
 
-            // Adicionar alertas à fila (apenas os que têm conteúdo)
-            addAlertToQueue(alertPopupVencimento, hasVencimentoContent);
-            addAlertToQueue(alertPopupSemResp, hasSemRespContent);
+        alertBodySemResp.innerHTML = ordensOrdenadas.map(ordem => {
+            const prioridade = 2; // Média
+            const textoPrioridade = "Sem responsável";
 
-            // Começar a mostrar os alertas
-            setTimeout(() => {
-                showNextAlert();
-            }, 1000);
+            // ✅ FORMATAR DATA_LIMITE COM +1 DIA (se tiver data_limite)
+            const dataLimiteFormatada = formatarDataLimiteComTolerancia(ordem.data_limite);
 
-        } catch (err) {
-            console.error("Erro ao carregar alertas:", err);
-            alertasCarregados = false;
+            return `
+            <div class="alert-item priority-${prioridade}">
+                <div class="alert-icon-wrap">
+                    <i class="fas fa-user-times"></i>
+                </div>
+                <div class="alert-content">
+                    <strong>
+                        <span class="priority-indicator"></span>
+                        ${ordem.codigo || `#${ordem.id}`}
+                    </strong>
+                    <p>${ordem.titulo || 'Sem título'}</p>
+                    <small>
+                        <i class="far fa-calendar"></i> 
+                        ${dataLimiteFormatada}
+                    </small>
+                    <span class="badge">
+                        ${textoPrioridade}
+                    </span>
+                </div>
+            </div>
+        `}).join('');
+
+        // Se não houver ordens com data_limite, mostrar mensagem
+        if (ordensComDataLimite.length === 0) {
+            alertBodySemResp.innerHTML = `
+                <div class="alert-empty">
+                    <i class="fas fa-user-times"></i>
+                    <p>Ordens sem responsável</p>
+                    <small>Nenhuma ordem com data limite definida</small>
+                </div>
+            `;
         }
+    } else {
+        alertBodySemResp.innerHTML = `
+            <div class="alert-empty">
+                <i class="fas fa-user-check"></i>
+                <p>Todas as ordens têm responsável</p>
+            </div>
+        `;
+    }
+
+    // Adicionar alertas à fila (apenas os que têm conteúdo)
+    addAlertToQueue(alertPopupVencimento, hasVencimentoContent);
+    addAlertToQueue(alertPopupSemResp, hasSemRespContent);
+
+    // Começar a mostrar os alertas
+    setTimeout(() => {
+        showNextAlert();
+    }, 1000);
+
+    } catch (err) {
+    console.error("Erro ao carregar alertas:", err);
+    alertasCarregados = false;
+    }
     }
 
     // ✅ Funções auxiliares (mantidas do código anterior)

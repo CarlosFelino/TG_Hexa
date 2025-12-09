@@ -11,18 +11,15 @@ function validarEmail(email) {
 }
 
 // =========================
-// 🔧 Registrar log de auditoria (CORRIGIDO)
+// 🔧 Registrar log de auditoria
 // =========================
 async function registrarAuditLog(client, usuarioId, usuarioAfetadoId, acao, detalhes, req) {
   try {
-    // ✅ CORREÇÃO: Verificar se o usuário afetado ainda existe antes de registrar
     const userExists = await client.query(
       'SELECT id FROM users WHERE id = $1',
       [usuarioAfetadoId]
     );
 
-    // Se o usuário não existe mais (já foi deletado), não registrar o log com foreign key
-    // Guardar o ID nos detalhes em vez de usar a coluna
     const finalUsuarioAfetadoId = userExists.rows.length > 0 ? usuarioAfetadoId : null;
 
     await client.query(
@@ -30,11 +27,11 @@ async function registrarAuditLog(client, usuarioId, usuarioAfetadoId, acao, deta
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [
         usuarioId,
-        finalUsuarioAfetadoId, // ← Null se usuário não existe mais
+        finalUsuarioAfetadoId,
         acao,
         JSON.stringify({
           ...detalhes,
-          usuario_afetado_id_original: usuarioAfetadoId // Guardar aqui para referência
+          usuario_afetado_id_original: usuarioAfetadoId
         }),
         req.ip || req.connection.remoteAddress,
         req.headers['user-agent']
@@ -43,11 +40,11 @@ async function registrarAuditLog(client, usuarioId, usuarioAfetadoId, acao, deta
     console.log('✅ [AUDIT] Log registrado com sucesso');
   } catch (error) {
     console.error('❌ [AUDIT] Erro ao registrar audit log:', error.message);
-    // Não lançar erro para não interromper a operação principal
   }
 }
+
 // =========================
-// 📋 LISTAR USUÁRIOS ATIVOS (COM SOFT DELETE)
+// 📋 LISTAR USUÁRIOS ATIVOS (CORRIGIDO COM STATUS REAL)
 // =========================
 export const listarUsuarios = async (req, res) => {
   try {
@@ -58,11 +55,16 @@ export const listarUsuarios = async (req, res) => {
         u.nome as name,
         u.email,
         u.role,
-        CASE WHEN u.deletado_em IS NULL THEN 'active' ELSE 'inactive' END as status,
+        COALESCE(ma.status, 'ativa') as status_matricula,
+        CASE 
+          WHEN u.deletado_em IS NULL AND COALESCE(ma.status, 'ativa') = 'ativa' THEN 'active'
+          ELSE 'inactive' 
+        END as status,
         u.criado_em as created_at,
         u.deletado_em,
         NULL as last_login
       FROM users u
+      LEFT JOIN matriculas_autorizadas ma ON ma.matricula = u.matricula
       WHERE u.deletado_em IS NULL
       ORDER BY u.criado_em DESC
     `;
@@ -158,8 +160,8 @@ export const criarUsuario = async (req, res) => {
   const client = await pool.connect();
 
   try {
-    const { matricula, name, email, role, password } = req.body;
-    const adminId = req.user?.id; // ID do admin que está criando
+    const { matricula, name, email, role, password, status = 'active' } = req.body;
+    const adminId = req.user?.id;
 
     // Validações
     if (!matricula || !name || !email || !role || !password) {
@@ -194,6 +196,9 @@ export const criarUsuario = async (req, res) => {
 
     await client.query('BEGIN');
 
+    // Converter status do frontend para o banco
+    const statusMatricula = status === 'active' ? 'ativa' : 'inativa';
+
     // Verificar matrícula
     const checkMatricula = await client.query(
       'SELECT * FROM matriculas_autorizadas WHERE matricula = $1',
@@ -203,8 +208,14 @@ export const criarUsuario = async (req, res) => {
     if (checkMatricula.rows.length === 0) {
       await client.query(
         `INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
-         VALUES ($1, $2, 'ativa', $3)`,
-        [matricula, role, name]
+         VALUES ($1, $2, $3, $4)`,
+        [matricula, role, statusMatricula, name]
+      );
+    } else {
+      // Atualizar status se já existe
+      await client.query(
+        `UPDATE matriculas_autorizadas SET status = $1, role = $2 WHERE matricula = $3`,
+        [statusMatricula, role, matricula]
       );
     }
 
@@ -250,7 +261,8 @@ export const criarUsuario = async (req, res) => {
       matricula,
       nome: name,
       email,
-      role
+      role,
+      status: statusMatricula
     }, req);
 
     await client.query('COMMIT');
@@ -275,15 +287,17 @@ export const criarUsuario = async (req, res) => {
 };
 
 // =========================
-// ✏️ ATUALIZAR USUÁRIO
+// ✏️ ATUALIZAR USUÁRIO (CORRIGIDO - AGORA ATUALIZA STATUS CORRETAMENTE)
 // =========================
 export const atualizarUsuario = async (req, res) => {
   const client = await pool.connect();
 
   try {
     const { id } = req.params;
-    const { name, email, role, password } = req.body;
+    const { name, email, role, status, password } = req.body;
     const adminId = req.user?.id;
+
+    console.log('📝 [UPDATE] Dados recebidos:', { id, name, email, role, status, password: !!password });
 
     // Validações
     if (!name || !email || !role) {
@@ -318,7 +332,7 @@ export const atualizarUsuario = async (req, res) => {
 
     const currentUser = userCheck.rows[0];
 
-    // ✅ VALIDAÇÃO: Admin não pode mudar seu próprio role
+    // VALIDAÇÃO: Admin não pode mudar seu próprio role
     if (parseInt(id) === adminId && currentUser.role !== role) {
       await client.query('ROLLBACK');
       return res.status(403).json({
@@ -327,7 +341,7 @@ export const atualizarUsuario = async (req, res) => {
       });
     }
 
-    // ✅ VALIDAÇÃO: Proteger último admin
+    // VALIDAÇÃO: Proteger último admin
     if (currentUser.role === 'admin' && role !== 'admin') {
       const adminsCount = await client.query(
         `SELECT COUNT(*) as total FROM users WHERE role = 'admin' AND deletado_em IS NULL`
@@ -356,24 +370,49 @@ export const atualizarUsuario = async (req, res) => {
       });
     }
 
-    // Atualizar role na matrícula autorizada se mudou
-    if (currentUser.role !== role) {
+    // ✅ CORREÇÃO PRINCIPAL: Converter status e atualizar matriculas_autorizadas
+    const statusMatricula = status === 'active' ? 'ativa' : 'inativa';
+
+    console.log(`📝 [UPDATE] Atualizando matrícula ${currentUser.matricula}: role=${role}, status=${statusMatricula}`);
+
+    // Primeiro verificar se a matrícula existe na tabela
+    const matriculaExists = await client.query(
+      'SELECT matricula FROM matriculas_autorizadas WHERE matricula = $1',
+      [currentUser.matricula]
+    );
+
+    if (matriculaExists.rows.length === 0) {
+      // Se não existir, criar
       await client.query(
-        'UPDATE matriculas_autorizadas SET role = $1 WHERE matricula = $2',
-        [role, currentUser.matricula]
+        'INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado) VALUES ($1, $2, $3, $4)',
+        [currentUser.matricula, role, statusMatricula, name]
+      );
+    } else {
+      // Se existir, atualizar
+      await client.query(
+        'UPDATE matriculas_autorizadas SET role = $1, status = $2 WHERE matricula = $3',
+        [role, statusMatricula, currentUser.matricula]
       );
     }
 
-    // Atualizar usuário
+    // Verificar se a atualização funcionou
+    const verificacao = await client.query(
+      'SELECT status, role FROM matriculas_autorizadas WHERE matricula = $1',
+      [currentUser.matricula]
+    );
+
+    console.log(`✅ [UPDATE] Status após update:`, verificacao.rows[0]);
+
+    // Atualizar usuário na tabela users
     let updateQuery = `UPDATE users SET nome = $1, email = $2, role = $3`;
     let params = [name, email, role];
 
     if (password && password.trim() !== '') {
       const senhaHash = await bcrypt.hash(password, 10);
-      updateQuery += `, senha_hash = $4 WHERE id = $5`;
+      updateQuery += `, senha_hash = $${params.length + 1} WHERE id = $${params.length + 2}`;
       params.push(senhaHash, id);
     } else {
-      updateQuery += ` WHERE id = $4`;
+      updateQuery += ` WHERE id = $${params.length + 1}`;
       params.push(id);
     }
 
@@ -387,7 +426,8 @@ export const atualizarUsuario = async (req, res) => {
         nome_antigo: currentUser.nome,
         nome_novo: name,
         role_antigo: currentUser.role,
-        role_novo: role
+        role_novo: role,
+        status_novo: statusMatricula
       }
     }, req);
 
@@ -401,7 +441,7 @@ export const atualizarUsuario = async (req, res) => {
 
   } catch (error) {
     await client.query('ROLLBACK');
-    console.error("Erro ao atualizar usuário:", error);
+    console.error("❌ [UPDATE] Erro ao atualizar usuário:", error);
     res.status(500).json({
       success: false,
       message: "Erro ao atualizar usuário",
@@ -412,13 +452,9 @@ export const atualizarUsuario = async (req, res) => {
   }
 };
 
-
-
 // =========================
-// 🗑️ DELETAR USUÁRIO (CORRIGIDO)
+// 🗑️ DELETAR USUÁRIO
 // =========================
-// Substitua a função deletarUsuario COMPLETA no gerenciarController.js
-
 export const deletarUsuario = async (req, res) => {
   const client = await pool.connect();
 
@@ -442,7 +478,6 @@ export const deletarUsuario = async (req, res) => {
 
     await client.query('BEGIN');
 
-    // 1️⃣ Buscar usuário que será deletado
     const userCheck = await client.query(
       'SELECT * FROM users WHERE id = $1 AND deletado_em IS NULL',
       [id]
@@ -458,7 +493,7 @@ export const deletarUsuario = async (req, res) => {
 
     const usuario = userCheck.rows[0];
 
-    // ✅ VALIDAÇÃO 1: Impedir que admin delete a si mesmo
+    // VALIDAÇÃO 1: Impedir que admin delete a si mesmo
     if (parseInt(id) === adminId) {
       await client.query('ROLLBACK');
       return res.status(403).json({
@@ -467,7 +502,7 @@ export const deletarUsuario = async (req, res) => {
       });
     }
 
-    // ✅ VALIDAÇÃO 2: Proteger último admin
+    // VALIDAÇÃO 2: Proteger último admin
     if (usuario.role === 'admin') {
       const adminsCount = await client.query(
         `SELECT COUNT(*) as total FROM users WHERE role = 'admin' AND deletado_em IS NULL`
@@ -482,7 +517,7 @@ export const deletarUsuario = async (req, res) => {
       }
     }
 
-    // ✅ VALIDAÇÃO 3: Verificar ordens em andamento (APENAS para suporte)
+    // VALIDAÇÃO 3: Verificar ordens em andamento (APENAS para suporte)
     if (usuario.role === 'suporte') {
       const ordensEmAndamento = await client.query(
         `SELECT id, codigo, titulo 
@@ -495,7 +530,6 @@ export const deletarUsuario = async (req, res) => {
       if (ordensEmAndamento.rows.length > 0) {
         await client.query('ROLLBACK');
 
-        // Buscar outros usuários de suporte disponíveis
         const outrosSuporte = await client.query(
           `SELECT id, nome, matricula 
            FROM users 
@@ -524,7 +558,7 @@ export const deletarUsuario = async (req, res) => {
       }
     }
 
-    // ✅ VALIDAÇÃO 4: Confirmar senha para admin/suporte
+    // VALIDAÇÃO 4: Confirmar senha para admin/suporte
     if (usuario.role === 'admin' || usuario.role === 'suporte') {
       if (!senhaAdmin || senhaAdmin.trim() === '') {
         await client.query('ROLLBACK');
@@ -559,7 +593,7 @@ export const deletarUsuario = async (req, res) => {
       }
     }
 
-    // 4️⃣ REGISTRAR LOG ANTES DE DELETAR
+    // REGISTRAR LOG ANTES DE DELETAR
     await registrarAuditLog(client, adminId, parseInt(id), 'DELETAR_USER', {
       usuario_deletado: {
         matricula: usuario.matricula,
@@ -570,7 +604,7 @@ export const deletarUsuario = async (req, res) => {
       tipo_exclusao: (usuario.role === 'professor') ? 'HARD_DELETE' : 'SOFT_DELETE'
     }, req);
 
-    // 5️⃣ EXECUTAR EXCLUSÃO
+    // EXECUTAR EXCLUSÃO
     let mensagem;
 
     if (usuario.role === 'suporte' || usuario.role === 'admin') {
@@ -587,7 +621,6 @@ export const deletarUsuario = async (req, res) => {
         [usuario.matricula]
       );
 
-      // ✅ MENSAGEM SIMPLES (sem mencionar soft delete ou auditoria)
       mensagem = `Usuário ${usuario.nome} foi excluído com sucesso.`;
 
     } else {
@@ -629,6 +662,7 @@ export const deletarUsuario = async (req, res) => {
     client.release();
   }
 };
+
 // =========================
 // 📊 ESTATÍSTICAS
 // =========================
@@ -668,9 +702,17 @@ export const buscarUsuarioPorId = async (req, res) => {
     const { id } = req.params;
 
     const result = await pool.query(
-      `SELECT id, matricula, nome as name, email, role, criado_em as created_at
-       FROM users 
-       WHERE id = $1 AND deletado_em IS NULL`,
+      `SELECT 
+        u.id, 
+        u.matricula, 
+        u.nome as name, 
+        u.email, 
+        u.role, 
+        u.criado_em as created_at,
+        COALESCE(ma.status, 'ativa') as status_matricula
+       FROM users u
+       LEFT JOIN matriculas_autorizadas ma ON ma.matricula = u.matricula
+       WHERE u.id = $1 AND u.deletado_em IS NULL`,
       [id]
     );
 
@@ -694,4 +736,3 @@ export const buscarUsuarioPorId = async (req, res) => {
     });
   }
 };
-

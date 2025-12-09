@@ -171,111 +171,119 @@ main {
 }
 
 /* =======================
-   Responsividade
+   Responsividade do Logo
    ======================= */
+
+/* Telas médias (tablets) - já temos algumas regras */
 @media (max-width: 768px) {
     .hero {
         padding: 0 var(--spacing-small);
-        height: 100vh; /* Mantém 100% viewport */
+        height: 100vh;
     }
-    
+
     .hero-content {
         padding: 1rem 0;
     }
-    
+
     .hero h1 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
     }
-    
+
     .subtitle {
         font-size: 1.1rem;
         margin-bottom: 2rem;
     }
-    
+
     .btn-login {
         padding: 1rem 2rem;
         font-size: 1rem;
     }
-    
+
     .btn-container {
         margin-bottom: var(--spacing-medium);
     }
-    
+
     .footer {
         padding: 0.75rem var(--spacing-small);
     }
+
+    /* Logo - tablet */
+    .logo-text {
+        font-size: 1.3rem;
+    }
+
+    .logo {
+        height: 32px;
+    }
 }
 
-@media (max-width: 480px) {
+/* Telas pequenas (smartphones) */
+@media (max-width: 576px) {
     .hero h1 {
         font-size: 2rem;
     }
-    
+
     .subtitle {
         font-size: 1rem;
         padding: 0;
     }
-    
+
     .btn-login {
         padding: 0.875rem 1.75rem;
         font-size: 0.95rem;
     }
-    
+
+    .navbar {
+        padding: 0.75rem var(--spacing-small);
+    }
+
+    /* Logo - smartphone: mostra apenas a logo */
+    .logo-text {
+        display: none; /* Esconde o texto em telas pequenas */
+    }
+
+    .logo {
+        height: 35px; /* Aumenta um pouco a logo para compensar */
+    }
+
+    /* Remove efeitos hover que dependiam do texto */
+    .logo-container:hover {
+        transform: none;
+        gap: 0;
+    }
+
     .footer-links {
         flex-direction: column;
         gap: 0.5rem;
     }
-    
+
     .divider {
         display: none;
     }
-    
-    .navbar {
-        padding: 0.75rem var(--spacing-small);
+}
+
+/* Telas muito pequenas (smartphones pequenos) */
+@media (max-width: 400px) {
+    .hero h1 {
+        font-size: 1.8rem;
     }
-    
-    .logo-text {
-        font-size: 1.1rem;
+
+    .subtitle {
+        font-size: 0.9rem;
     }
-    
+
+    .btn-login {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Logo ainda menor */
     .logo {
         height: 30px;
     }
-}
 
-/* Para telas muito altas */
-@media (min-height: 900px) {
-    .hero-content {
-        padding: 3rem 0;
-    }
-    
-    .btn-container {
-        margin-bottom: 3rem;
-    }
-}
-
-/* Para telas muito baixas */
-@media (max-height: 600px) {
-    .hero-content {
-        padding: 1rem 0;
-    }
-    
-    .hero h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .subtitle {
-        margin-bottom: 1rem;
-        font-size: 0.9rem;
-    }
-    
-    .btn-container {
-        margin-bottom: 1rem;
-    }
-    
-    .footer {
+    .navbar {
         padding: 0.5rem var(--spacing-small);
     }
 }

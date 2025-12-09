@@ -12,6 +12,7 @@
     min-height: 100vh;
     background-color: #f5f7fa;
     color: #333;
+    transition: all 0.3s ease;
 }
 
 /* Navbar Superior - MESMO ESTILO DO PROFESSOR */
@@ -33,67 +34,107 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
 }
 
+/* Menu Hambúrguer - RESPONSIVO */
 .menu-toggle {
     background: none;
     border: none;
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-    margin-right: 1rem;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
     display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+.menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Logo Container - RESPONSIVO */
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
 }
 
 .logo-container {
     display: flex;
     align-items: center;
+    gap: 10px;
     transition: all 0.3s ease;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.logo-container:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .logo {
     height: 35px;
+    width: auto;
     transition: transform 0.3s;
+}
+
+.logo-container:hover .logo {
+    transform: scale(1.05);
 }
 
 .logo-text {
     color: white;
     font-weight: bold;
-    margin-left: 10px;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
     opacity: 1;
-    transition: opacity 0.3s;
 }
 
+/* User Profile - RESPONSIVO */
 .user-profile {
     display: flex;
     align-items: center;
+    gap: 1rem;
     position: relative;
 }
 
 .profile-info {
     text-align: right;
-    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .user-name {
     display: block;
     font-weight: 600;
     font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 .user-email {
     font-size: 0.8rem;
     opacity: 0.8;
+    white-space: nowrap;
 }
 
 .profile-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 50% !important;
     object-fit: cover;
     cursor: pointer;
     border: 2px solid rgba(255, 255, 255, 0.3);
     transition: all 0.3s;
+    flex-shrink: 0;
 }
 
 .profile-avatar:hover {
@@ -109,20 +150,28 @@
     display: none;
     position: absolute;
     right: 0;
-    top: 50px;
+    top: calc(100% + 10px);
     background: white;
     min-width: 180px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    z-index: 1;
+    z-index: 101;
     overflow: hidden;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .dropdown-content a {
     color: #333;
     padding: 12px 16px;
     text-decoration: none;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 0.9rem;
     transition: all 0.2s;
 }
@@ -132,23 +181,21 @@
     color: var(--secondary);
 }
 
-.dropdown-content a i {
-    margin-right: 8px;
-    width: 20px;
-    text-align: center;
-}
-
 .profile-dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* Menu Lateral - MESMO ESTILO DO PROFESSOR */
+/* Menu Lateral - RESPONSIVO */
 .sidebar {
     grid-area: sidebar;
     background: white;
     border-right: 1px solid #e1e5eb;
     padding: 1.5rem 0;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    position: sticky;
+    top: 70px;
 }
 
 .sidebar-nav ul {
@@ -170,6 +217,7 @@
     font-weight: 500;
     transition: all 0.2s;
     border-left: 3px solid transparent;
+    min-height: 44px;
 }
 
 .sidebar-nav a:hover {
@@ -188,22 +236,29 @@
     margin-right: 12px;
     width: 24px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .sidebar-nav a span {
     font-size: 0.95rem;
+    white-space: nowrap;
 }
 
-/* Conteúdo Principal - MESMO ESTILO DO PROFESSOR */
+/* Conteúdo Principal - RESPONSIVO */
 .admin-content {
     grid-area: content;
     padding: 2rem;
     background: #f5f7fa;
     overflow-y: auto;
+    min-height: calc(100vh - 70px);
 }
 
 .welcome-banner {
     margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
 }
 
 .welcome-banner h1 {
@@ -213,14 +268,16 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .welcome-banner p {
     color: #666;
     font-size: 1.1rem;
+    margin: 0;
 }
 
-/* Quick Actions - MESMO ESTILO DO PROFESSOR */
+/* Quick Actions - RESPONSIVO */
 .quick-actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -238,6 +295,8 @@
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
+    display: block;
+    min-height: 150px;
 }
 
 .action-card:hover {
@@ -253,18 +312,25 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.card-icon i {
+    font-size: 1.3rem;
 }
 
 .action-card h3 {
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
     color: #101728;
+    line-height: 1.3;
 }
 
 .action-card p {
     color: #666;
     font-size: 0.9rem;
     line-height: 1.5;
+    margin: 0;
 }
 
 .card-badge {
@@ -279,11 +345,7 @@
     font-weight: 600;
 }
 
-/* =======================
-   Seções Específicas do Admin
-   ======================= */
-
-/* Estatísticas do Sistema */
+/* Seções de Estatísticas - RESPONSIVO */
 .stats-section {
     background: white;
     border-radius: 10px;
@@ -334,6 +396,7 @@
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
+    flex-shrink: 0;
 }
 
 .stat-info h3 {
@@ -341,15 +404,17 @@
     font-weight: 700;
     color: #101728;
     margin-bottom: 0.3rem;
+    line-height: 1;
 }
 
 .stat-info p {
     color: #666;
     font-size: 0.9rem;
     margin: 0;
+    line-height: 1.3;
 }
 
-/* Atividade Recente */
+/* Atividade Recente - RESPONSIVO */
 .recent-activity {
     background: white;
     border-radius: 10px;
@@ -405,17 +470,21 @@
 
 .activity-content {
     flex: 1;
+    min-width: 0;
 }
 
 .activity-content p {
     margin: 0 0 0.3rem 0;
     color: #101728;
     font-weight: 500;
+    line-height: 1.3;
+    word-break: break-word;
 }
 
 .activity-time {
     color: #666;
     font-size: 0.85rem;
+    line-height: 1.3;
 }
 
 /* Overlay para Menu Mobile */
@@ -438,25 +507,29 @@
 }
 
 /* =======================
-   Responsividade - OTIMIZADA
+   RESPONSIVIDADE AVANÇADA
    ======================= */
-@media (max-width: 1200px) {
-    .admin-content {
-        padding: 1.5rem;
-    }
-    
-    .quick-actions {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.25rem;
-    }
-}
 
+/* Tablets (768px - 992px) */
 @media (max-width: 992px) {
     .admin-dashboard {
         grid-template-areas:
             "navbar navbar"
             "content content";
         grid-template-columns: 1fr;
+    }
+
+    .admin-navbar {
+        padding: 0 1rem;
+    }
+
+    .menu-toggle {
+        display: flex !important;
+    }
+
+    .logo-text {
+        display: block !important;
+        font-size: 1.1rem;
     }
 
     .sidebar {
@@ -474,36 +547,38 @@
         left: 0;
     }
 
-    .menu-toggle {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+    .admin-content {
+        padding: 1.5rem;
+        min-height: calc(100vh - 70px);
     }
 
-    .menu-toggle:hover {
-        background: rgba(255, 255, 255, 0.1);
+    .welcome-banner {
+        padding: 1.25rem;
+        margin-bottom: 2rem;
     }
 
-    .menu-toggle i {
-        font-size: 1.3rem;
+    .welcome-banner h1 {
+        font-size: 1.8rem;
     }
 
-    .navbar-content {
-        gap: 1rem;
+    .quick-actions {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+}
+
+/* Smartphones grandes (576px - 768px) */
+@media (max-width: 768px) {
+    .admin-navbar {
+        padding: 0 0.75rem;
     }
 
     .logo-text {
-        display: block !important;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
     .profile-info {
         display: flex !important;
-        flex-direction: column;
         text-align: right;
     }
 
@@ -514,20 +589,13 @@
     .user-email {
         font-size: 0.75rem;
     }
-}
-
-@media (max-width: 768px) {
-    .admin-navbar {
-        padding: 0 1rem;
-    }
 
     .admin-content {
         padding: 1.25rem;
     }
 
     .welcome-banner h1 {
-        font-size: clamp(1.5rem, 5vw, 2rem);
-        flex-wrap: wrap;
+        font-size: 1.6rem;
         gap: 8px;
     }
 
@@ -542,10 +610,7 @@
 
     .action-card {
         padding: 1.25rem;
-        min-height: 120px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        min-height: 130px;
     }
 
     .card-icon {
@@ -560,12 +625,10 @@
 
     .action-card h3 {
         font-size: 1.1rem;
-        margin-bottom: 0.4rem;
     }
 
     .action-card p {
         font-size: 0.85rem;
-        line-height: 1.4;
     }
 
     .stats-grid {
@@ -593,66 +656,6 @@
     .stat-info p {
         font-size: 0.8rem;
     }
-}
-
-@media (max-width: 576px) {
-    .admin-navbar {
-        padding: 0 0.75rem;
-    }
-
-    .navbar-content {
-        gap: 0.75rem;
-    }
-
-    .logo-text {
-        font-size: 1rem;
-    }
-
-    .profile-info {
-        max-width: 120px;
-    }
-
-    .user-name {
-        font-size: 0.85rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .user-email {
-        font-size: 0.7rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .profile-avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 50% !important;
-    }
-
-    .admin-content {
-        padding: 1rem;
-    }
-
-    .welcome-banner {
-        margin-bottom: 1.5rem;
-    }
-
-    .welcome-banner h1 {
-        font-size: 1.4rem;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .stat-card {
-        flex-direction: row;
-        text-align: left;
-        justify-content: flex-start;
-    }
 
     .activity-item {
         padding: 0.875rem;
@@ -672,21 +675,111 @@
     .activity-time {
         font-size: 0.8rem;
     }
+}
 
-    /* Ajustes para o dropdown do perfil em mobile */
+/* Smartphones pequenos (480px - 576px) */
+@media (max-width: 576px) {
+    .admin-navbar {
+        padding: 0 0.5rem;
+    }
+
+    .navbar-content {
+        gap: 0.5rem;
+    }
+
+    /* IMPORTANTE: Esconde o texto do logo em telas pequenas */
+    .logo-text {
+        display: none !important;
+    }
+
+    .profile-info {
+        max-width: 140px;
+    }
+
+    .user-name {
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-email {
+        font-size: 0.7rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .menu-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+        margin-right: 0;
+    }
+
+    .admin-content {
+        padding: 1rem;
+    }
+
+    .welcome-banner {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.4rem;
+    }
+
+    .welcome-banner p {
+        font-size: 0.95rem;
+    }
+
+    .action-card {
+        padding: 1rem;
+        min-height: 120px;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card-badge {
+        top: 10px;
+        right: 10px;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
+    }
+
     .dropdown-content {
         position: fixed;
         top: 70px;
-        right: 1rem;
-        left: 1rem;
+        right: 0.5rem;
+        left: 0.5rem;
         min-width: auto;
         transform: none;
     }
 }
 
+/* Smartphones muito pequenos (até 480px) */
 @media (max-width: 480px) {
-    .logo-text {
-        display: none !important;
+    .admin-navbar {
+        padding: 0 0.375rem;
     }
 
     .profile-info {
@@ -696,48 +789,39 @@
     .profile-avatar {
         width: 32px;
         height: 32px;
-        border-radius: 50% !important;
     }
 
     .menu-toggle {
-        margin-right: 0;
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
     }
 
-    .admin-navbar {
-        padding: 0 0.5rem;
+    .logo {
+        height: 30px;
     }
 
-    .action-card {
-        padding: 1rem;
-        min-height: 110px;
-    }
-
-    .card-badge {
-        top: 10px;
-        right: 10px;
-        font-size: 0.7rem;
-        padding: 2px 8px;
-    }
-}
-
-@media (max-width: 360px) {
     .admin-content {
         padding: 0.75rem;
     }
 
-    .profile-avatar {
-        width: 30px;
-        height: 30px;
-        border-radius: 50% !important;
+    .welcome-banner {
+        padding: 0.875rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.3rem;
     }
 
     .action-card {
         padding: 0.875rem;
+        min-height: 110px;
     }
 
     .card-icon {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
+        margin-bottom: 0.5rem;
     }
 
     .card-icon i {
@@ -751,71 +835,99 @@
     .action-card p {
         font-size: 0.8rem;
     }
-}
 
-/* =======================
-   Melhorias de Acessibilidade Mobile
-   ======================= */
-@media (max-width: 992px) {
+    .sidebar {
+        width: 260px;
+    }
+
     .sidebar-nav a {
-        padding: 1rem 1.25rem;
+        padding: 10px 16px;
+        font-size: 0.9rem;
     }
 
     .sidebar-nav a i {
-        font-size: 1.2rem;
-        margin-right: 1rem;
-    }
-
-    .sidebar-nav a span {
         font-size: 1rem;
+        margin-right: 10px;
+    }
+}
+
+/* Telas muito pequenas (até 360px) */
+@media (max-width: 360px) {
+    .admin-navbar {
+        padding: 0 0.25rem;
     }
 
-    /* Melhor touch target para mobile */
-    .menu-toggle,
-    .profile-avatar,
-    .sidebar-nav a {
-        min-height: 44px;
+    .logo {
+        height: 28px;
+    }
+
+    .menu-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+
+    .profile-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .admin-content {
+        padding: 0.5rem;
+    }
+
+    .welcome-banner {
+        padding: 0.75rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.2rem;
     }
 
     .action-card {
+        padding: 0.75rem;
+    }
+
+    .card-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .sidebar {
+        width: 240px;
+    }
+
+    .sidebar-nav a {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
+    .sidebar-nav a i {
+        font-size: 0.9rem;
+        margin-right: 8px;
+    }
+}
+
+/* =======================
+   MELHORIAS DE ACESSIBILIDADE
+   ======================= */
+
+/* Melhor touch target para mobile */
+@media (max-width: 768px) {
+    .menu-toggle,
+    .profile-avatar,
+    .sidebar-nav a,
+    .action-card {
+        min-height: 44px;
+    }
+
+    .menu-toggle,
+    .profile-avatar {
         cursor: pointer;
     }
 }
 
-/* =======================
-   Estados de Loading Mobile
-   ======================= */
-@media (max-width: 768px) {
-    .action-card.loading {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .action-card.loading::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.4),
-            transparent
-        );
-        animation: loading 1.5s infinite;
-    }
-
-    @keyframes loading {
-        0% { left: -100%; }
-        100% { left: 100%; }
-    }
-}
-
-/* =======================
-   Scroll Suave para Mobile
-   ======================= */
+/* Scroll suave para mobile */
 @media (max-width: 768px) {
     .admin-content {
         scroll-behavior: smooth;
@@ -823,11 +935,12 @@
     }
 }
 
-/* =======================
-   High Contrast Mode Mobile
-   ======================= */
-@media (max-width: 768px) and (prefers-contrast: high) {
-    .action-card {
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .action-card,
+    .stats-section,
+    .recent-activity,
+    .welcome-banner {
         border: 2px solid #333;
     }
 
@@ -840,20 +953,46 @@
     }
 }
 
-/* =======================
-   Reduced Motion Support
-   ======================= */
+/* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
     .sidebar,
     .action-card,
     .stat-card,
     .menu-toggle,
-    .profile-avatar {
+    .profile-avatar,
+    .dropdown-content,
+    .activity-item {
         transition: none;
+        animation: none;
     }
 
     .action-card:hover,
-    .stat-card:hover {
+    .stat-card:hover,
+    .profile-avatar:hover {
         transform: none;
+    }
+}
+
+/* Melhorias para orientação paisagem em mobile */
+@media (max-height: 500px) and (max-width: 992px) {
+    .sidebar {
+        overflow-y: auto;
+        max-height: calc(100vh - 70px);
+    }
+
+    .admin-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+}
+
+/* Ajuste para telas altas */
+@media (min-height: 1000px) {
+    .sidebar {
+        height: calc(100vh - 70px);
+    }
+
+    .admin-content {
+        min-height: calc(100vh - 70px);
     }
 }

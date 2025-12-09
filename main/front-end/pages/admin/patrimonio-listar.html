@@ -166,7 +166,7 @@
             <div class="table-header">
                 <h3>Lista de Itens do Patrimônio</h3>
                 <div class="table-actions">
-                    
+
                 </div>
             </div>
 
@@ -211,6 +211,48 @@
                 <button class="btn btn-primary" id="edit-item-btn">
                     <i class="fas fa-edit"></i> Editar Item
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Formulário (Adicionar/Editar) -->
+    <div id="modal-form" class="modal">
+        <div class="modal-content form-modal">
+            <h2 id="modal-title"><i class="fas fa-plus"></i> Novo Patrimônio</h2>
+
+            <div class="form-group">
+                <label class="required-field">Nº Patrimônio</label>
+                <input id="form-patrimonio" type="text" maxlength="7" pattern="[0-9]{7}" placeholder="0000000" required>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="required-field">Descrição</label>
+                <input id="form-descricao" type="text" required>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-row" style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label class="required-field">Local</label>
+                    <input id="form-local" type="text" required>
+                    <div class="field-error"></div>
+                </div>
+
+                <div class="form-group" style="flex: 1;">
+                    <label>Status</label>
+                    <select id="form-status">
+                        <option>Disponível</option>
+                        <option>Em Uso</option>
+                        <option>Em Manutenção</option>
+                        <option>Inativo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="form-cancel">Cancelar</button>
+                <button class="btn btn-primary" id="form-submit">Salvar</button>
             </div>
         </div>
     </div>

@@ -522,74 +522,909 @@
     text-decoration: underline;
 }
 
-/* =========================
-   RESPONSIVIDADE
-   ========================= */
+/* =======================
+   RESPONSIVIDADE LISTAR ORDENS
+   ======================= */
 
-@media (max-width: 768px) {
+/* =======================
+   BREAKPOINTS CONSISTENTES
+   ======================= */
+
+/* Tablets (768px - 992px) - PADRÃO */
+@media (max-width: 992px) {
+    .suporte-content {
+        padding: 1.5rem;
+        min-height: calc(100vh - 70px);
+    }
+
     .page-header h1 {
-        font-size: 1.5rem;
+        font-size: clamp(1.5rem, 4vw, 1.8rem);
+    }
+
+    .page-header p {
+        font-size: 1rem;
+    }
+
+    .filters-section {
+        padding: 1.25rem;
+        border-radius: 10px;
     }
 
     .filters-container {
         flex-direction: column;
-        align-items: stretch;
         gap: 1rem;
+        align-items: stretch;
     }
 
     .filter-group {
-        flex-direction: column;
         width: 100%;
+        justify-content: space-between;
     }
 
     .search-box {
         min-width: auto;
+        flex: 1;
         width: 100%;
     }
 
     .filter-group select {
-        width: 100%;
+        min-width: 150px;
+        flex: 1;
     }
 
     .orders-container {
-        padding: 1rem;
-        margin-top: 1rem;
-        overflow-x: scroll;
+        padding: 1.25rem;
+        border-radius: 10px;
+        margin-top: 1.5rem;
     }
 
     .orders-table {
         min-width: 900px;
     }
 
+    .orders-table th,
+    .orders-table td {
+        padding: 0.875rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .modal-content,
+    .popup-content {
+        width: 95%;
+        margin: 1rem;
+        padding: 2rem;
+        max-height: 85vh;
+    }
+}
+
+/* Smartphones grandes (576px - 768px) - PADRÃO */
+@media (max-width: 768px) {
+    .suporte-content {
+        padding: 1.25rem;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem;
+        line-height: 1.3;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-header p {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    .filters-section {
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .filters-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .search-box {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .search-box input {
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        font-size: 16px; /* Previne zoom no iOS */
+    }
+
+    .filter-group select {
+        width: 100%;
+        min-width: auto;
+        padding: 0.75rem 1rem;
+        font-size: 16px; /* Previne zoom no iOS */
+    }
+
+    .btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .btn-secondary {
+        order: 2; /* Botão "Limpar Filtros" fica depois dos selects */
+    }
+
+    .orders-container {
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .orders-table {
+        min-width: 800px;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .orders-table th {
+        font-size: 0.75rem;
+        padding: 0.75rem 0.5rem;
+        white-space: nowrap;
+    }
+
+    /* Esconde colunas progressivamente no mobile */
+    .orders-table th:nth-child(4), /* Tipo */
+    .orders-table th:nth-child(7), /* Responsável */
+    .orders-table td:nth-child(4),
+    .orders-table td:nth-child(7) {
+        display: none;
+    }
+
+    .status {
+        min-width: 90px;
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        justify-content: center;
+    }
+
+    .loading {
+        padding: 2rem;
+        font-size: 1rem;
+    }
+
+    /* AÇÕES RESPONSIVAS */
     .actions {
         flex-direction: column;
+        gap: 0.3rem;
+        min-width: 100px;
     }
 
-    .actions button {
+    .actions button,
+    .actions .disabled {
         width: 100%;
         justify-content: center;
+        padding: 0.6rem;
+        font-size: 0.8rem;
+        min-height: 36px;
     }
 
-    .modal-content, .popup-content {
-        width: 95%;
+    .actions button span {
+        font-size: 0.75rem;
+    }
+
+    /* MODAIS RESPONSIVOS */
+    .modal,
+    .popup {
+        padding: 1rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+
+    .modal.active,
+    .popup.active {
+        display: flex;
+    }
+
+    .modal-content,
+    .popup-content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
         padding: 1.5rem;
-        margin: auto;
+        border-radius: 10px;
+        max-height: 80vh;
+        overflow-y: auto;
     }
 
+    .modal-header {
+        margin: -1.5rem -1.5rem 1rem -1.5rem;
+        padding: 1rem 1.5rem;
+        border-radius: 10px 10px 0 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .modal-header h3,
+    .popup-content h3 {
+        font-size: 1.2rem;
+        line-height: 1.3;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 32px;
+        height: 32px;
+        font-size: 1.5rem;
+    }
+
+    .modal-body {
+        margin-bottom: 1.25rem;
+        padding: 0;
+    }
+
+    .modal-footer,
     .popup-buttons {
         flex-direction: column;
+        gap: 0.5rem;
+        padding-top: 1rem;
     }
 
-    .popup-buttons button {
-        width: 100%;
-    }
-
-    .modal-footer {
-        flex-direction: column;
-    }
-
-    .modal-footer .btn {
+    .modal-footer .btn,
+    .popup-buttons .btn {
         width: 100%;
         justify-content: center;
+        padding: 0.875rem;
     }
+
+    /* DETALHES DO MODAL */
+    #order-details-modal .modal-content,
+    .confirm-modal,
+    .notification-modal {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    .detail-section {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .anexos-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .anexo-item {
+        padding: 0.5rem;
+    }
+
+    .anexo-imagem {
+        height: 80px;
+    }
+
+    .anexo-link {
+        font-size: 0.75rem;
+    }
+
+    /* POPUP DE ENCERRAR */
+    .popup-content textarea {
+        height: 100px;
+        padding: 0.75rem;
+        font-size: 16px; /* Previne zoom no iOS */
+        margin: 0.75rem 0 1rem 0;
+    }
+}
+
+/* Smartphones pequenos (480px - 576px) - PADRÃO */
+@media (max-width: 576px) {
+    .suporte-content {
+        padding: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.4rem;
+        gap: 0.5rem;
+    }
+
+    .page-header p {
+        font-size: 0.9rem;
+    }
+
+    .filters-section {
+        padding: 0.875rem;
+        border-radius: 8px;
+    }
+
+    .filter-group {
+        gap: 0.5rem;
+    }
+
+    .search-box input,
+    .filter-group select {
+        padding: 0.7rem 0.875rem;
+        font-size: 15px;
+    }
+
+    .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+        min-height: 42px;
+    }
+
+    .orders-container {
+        padding: 0.875rem;
+        border-radius: 8px;
+    }
+
+    .orders-table {
+        min-width: 700px;
+        font-size: 0.8rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.6rem 0.4rem;
+    }
+
+    /* Esconde mais colunas em telas pequenas */
+    .orders-table th:nth-child(2), /* Data */
+    .orders-table td:nth-child(2) {
+        display: none;
+    }
+
+    .status {
+        min-width: 80px;
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .actions button,
+    .actions .disabled {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+        min-height: 32px;
+    }
+
+    .actions button span {
+        font-size: 0.7rem;
+    }
+
+    .modal-content,
+    .popup-content {
+        padding: 1.25rem;
+        border-radius: 8px;
+    }
+
+    .modal-header {
+        margin: -1.25rem -1.25rem 0.875rem -1.25rem;
+        padding: 0.875rem 1.25rem;
+    }
+
+    .modal-header h3,
+    .popup-content h3 {
+        font-size: 1.1rem;
+    }
+
+    .modal-close {
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 28px;
+        height: 28px;
+        font-size: 1.3rem;
+    }
+
+    .modal-body {
+        font-size: 0.9rem;
+    }
+
+    .detail-section h4 {
+        font-size: 0.95rem;
+    }
+
+    .anexos-container {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 0.625rem;
+    }
+
+    .anexo-item {
+        padding: 0.5rem;
+    }
+
+    .anexo-imagem {
+        height: 70px;
+    }
+
+    .popup-content textarea {
+        height: 80px;
+        padding: 0.625rem;
+        font-size: 15px;
+    }
+}
+
+/* Smartphones muito pequenos (até 480px) - PADRÃO */
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.3rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .page-header p {
+        font-size: 0.85rem;
+    }
+
+    .filter-group:last-child {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.7rem;
+        font-size: 0.8rem;
+    }
+
+    .orders-table {
+        min-width: 650px;
+    }
+
+    /* Esconde mais colunas em telas muito pequenas */
+    .orders-table th:nth-child(5), /* Local */
+    .orders-table td:nth-child(5) {
+        display: none;
+    }
+
+    .actions {
+        flex-direction: row;
+        gap: 0.2rem;
+        min-width: auto;
+    }
+
+    .actions button,
+    .actions .disabled {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 6px;
+    }
+
+    .actions button span {
+        display: none;
+    }
+
+    .actions button i {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .modal,
+    .popup {
+        padding: 0.5rem;
+        padding-top: 1.5rem;
+    }
+
+    .modal-content,
+    .popup-content {
+        padding: 1rem;
+        border-radius: 8px;
+        max-height: 75vh;
+    }
+
+    .modal-header {
+        margin: -1rem -1rem 0.75rem -1rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .modal-header h3,
+    .popup-content h3 {
+        font-size: 1rem;
+    }
+
+    .modal-close {
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 28px;
+        height: 28px;
+    }
+
+    .anexos-container {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .anexo-item {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .anexo-imagem {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .anexo-link {
+        flex: 1;
+        text-align: left;
+    }
+
+    .popup-content textarea {
+        height: 70px;
+        padding: 0.5rem;
+        font-size: 14px;
+    }
+}
+
+/* Smartphones extremamente pequenos (até 360px) - PADRÃO */
+@media (max-width: 360px) {
+    .suporte-content {
+        padding: 0.75rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .page-header p {
+        font-size: 0.8rem;
+    }
+
+    .filters-section {
+        padding: 0.75rem;
+        border-radius: 6px;
+    }
+
+    .search-box input,
+    .filter-group select {
+        padding: 0.6rem 0.75rem;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+
+    .btn {
+        padding: 0.6rem;
+        font-size: 0.75rem;
+        min-height: 40px;
+        border-radius: 6px;
+    }
+
+    .orders-container {
+        padding: 0.75rem;
+        border-radius: 6px;
+    }
+
+    .orders-table {
+        min-width: 600px;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.5rem 0.3rem;
+        font-size: 0.75rem;
+    }
+
+    /* Esconde quase todas as colunas, mantendo apenas as essenciais */
+    .orders-table th:nth-child(1), /* Código */
+    .orders-table th:nth-child(3), /* Título */
+    .orders-table th:nth-child(6), /* Status */
+    .orders-table th:nth-child(8), /* Ações */
+    .orders-table td:nth-child(1),
+    .orders-table td:nth-child(3),
+    .orders-table td:nth-child(6),
+    .orders-table td:nth-child(8) {
+        display: table-cell;
+    }
+
+    .orders-table th:nth-child(2),
+    .orders-table th:nth-child(4),
+    .orders-table th:nth-child(5),
+    .orders-table th:nth-child(7),
+    .orders-table td:nth-child(2),
+    .orders-table td:nth-child(4),
+    .orders-table td:nth-child(5),
+    .orders-table td:nth-child(7) {
+        display: none;
+    }
+
+    .status {
+        min-width: 70px;
+        font-size: 0.6rem;
+        padding: 0.15rem 0.3rem;
+    }
+
+    .actions button,
+    .actions .disabled {
+        width: 32px;
+        height: 32px;
+    }
+
+    .actions button i {
+        font-size: 0.9rem;
+    }
+
+    .modal-content,
+    .popup-content {
+        padding: 0.875rem;
+        border-radius: 6px;
+    }
+
+    .modal-header {
+        margin: -0.875rem -0.875rem 0.625rem -0.875rem;
+        padding: 0.625rem 0.875rem;
+    }
+
+    .modal-header h3,
+    .popup-content h3 {
+        font-size: 0.95rem;
+    }
+
+    .modal-close {
+        width: 24px;
+        height: 24px;
+        font-size: 1.1rem;
+    }
+
+    .modal-body {
+        font-size: 0.85rem;
+    }
+
+    .anexo-item {
+        padding: 0.5rem;
+    }
+
+    .anexo-imagem {
+        width: 50px;
+        height: 50px;
+    }
+
+    .popup-content textarea {
+        height: 60px;
+        padding: 0.4rem;
+        font-size: 13px;
+    }
+}
+
+/* =======================
+   MELHORIAS DE USABILIDADE
+   (Mesmo padrão das outras páginas)
+   ======================= */
+
+/* Touch-friendly para mobile */
+@media (max-width: 768px) {
+    .filter-group select,
+    .btn,
+    .actions button,
+    .modal-close {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .actions button,
+    .btn {
+        cursor: pointer;
+    }
+}
+
+/* Scroll suave para mobile */
+@media (max-width: 768px) {
+    .suporte-content {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .orders-container,
+    .filters-section,
+    .modal-content,
+    .popup-content {
+        border: 2px solid #000;
+    }
+
+    .orders-table th {
+        border: 2px solid #000;
+    }
+
+    .orders-table tr:hover {
+        background: #000 !important;
+        color: #fff !important;
+    }
+
+    .status {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .actions button,
+    .modal-content,
+    .popup-content,
+    .anexo-item {
+        transition: none;
+        animation: none;
+    }
+
+    .btn:hover,
+    .actions button:hover,
+    .anexo-item:hover {
+        transform: none;
+    }
+
+    .modal-content,
+    .popup-content {
+        animation: none;
+    }
+}
+
+/* Melhorias para orientação paisagem em mobile */
+@media (max-height: 500px) and (max-width: 992px) {
+    .modal-content,
+    .popup-content {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .suporte-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+}
+
+/* Ajuste para telas altas */
+@media (min-height: 1000px) {
+    .suporte-content {
+        min-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .modal-content,
+    .popup-content {
+        max-height: 70vh;
+    }
+}
+
+/* Estados de loading */
+.orders-table tr[data-loading="true"] {
+    position: relative;
+    min-height: 100px;
+}
+
+.orders-table tr[data-loading="true"]::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0) 100%);
+    animation: loadingShimmer 1.5s infinite;
+}
+
+@keyframes loadingShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Scrollbar personalizada para mobile */
+@media (max-width: 768px) {
+    .orders-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .orders-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .orders-container::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 3px;
+    }
+
+    .modal-content::-webkit-scrollbar,
+    .popup-content::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .modal-content::-webkit-scrollbar-track,
+    .popup-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .modal-content::-webkit-scrollbar-thumb,
+    .popup-content::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 2px;
+    }
+}
+
+/* Indicador visual para tabela scrollável */
+@media (max-width: 768px) {
+    .orders-container {
+        position: relative;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+}
+
+/* Tooltip para ações em mobile */
+@media (max-width: 480px) {
+    .actions button[title]:hover::after,
+    .actions button[title]:focus::after {
+        content: attr(title);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--text-dark);
+        color: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+}
+
+/* Melhoria para campos de data em mobile */
+@media (max-width: 768px) {
+    input[type="date"] {
+        min-height: 44px;
+        font-size: 16px;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+}
+
+/* Feedback visual para tabela vazia */
+.orders-table tbody:empty::after {
+    content: 'Nenhuma ordem encontrada';
+    display: block;
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-medium);
+    font-style: italic;
+    grid-column: 1 / -1;
+}
+
+.orders-table tbody:empty::after i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--border-light);
 }

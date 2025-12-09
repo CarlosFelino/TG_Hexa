@@ -544,3 +544,739 @@
         max-width: 100%; /* Ocupa toda a tela */
     }
 }
+
+/* =======================
+   RESPONSIVIDADE DO PERFIL
+   ======================= */
+
+/* =======================
+   BREAKPOINTS CONSISTENTES
+   ======================= */
+
+/* Tablets (768px - 992px) - PADRÃO */
+@media (max-width: 992px) {
+    .admin-dashboard {
+        grid-template-areas:
+            "navbar navbar"
+            "content content";
+        grid-template-columns: 1fr;
+    }
+
+    .profile-header {
+        padding-bottom: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-header h1 {
+        font-size: clamp(1.5rem, 4vw, 1.8rem);
+        justify-content: center;
+        width: 100%;
+    }
+
+    .profile-card {
+        padding: 2rem;
+        max-width: 95%;
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .profile-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .profile-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .photo-upload {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .upload-controls {
+        width: 100%;
+        align-items: center;
+    }
+
+    .upload-controls .btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+}
+
+/* Smartphones grandes (576px - 768px) - PADRÃO */
+@media (max-width: 768px) {
+    .admin-content {
+        padding: 1.25rem;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .profile-card {
+        padding: 1.5rem;
+        border-radius: 10px;
+        background: white;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .photo-preview {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-photo {
+        border-width: 3px;
+        box-shadow: 0 3px 10px rgba(122, 4, 235, 0.15);
+    }
+
+    .change-photo-btn {
+        width: 35px;
+        height: 35px;
+        border-width: 2px;
+        bottom: 3px;
+        right: 3px;
+    }
+
+    .change-photo-btn i {
+        font-size: 0.9rem;
+    }
+
+    .upload-controls {
+        gap: 0.875rem;
+    }
+
+    .btn {
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .btn-outline {
+        border-width: 1px;
+    }
+
+    .upload-hint {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+    }
+
+    /* FORMULÁRIOS RESPONSIVOS */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .input-with-icon input {
+        height: 48px;
+        padding: 0 45px;
+        font-size: 16px; /* Previne zoom no iOS */
+    }
+
+    .input-with-icon i.fas:not(.fa-eye):not(.fa-eye-slash) {
+        left: 15px;
+        font-size: 0.95rem;
+    }
+
+    .toggle-password {
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .toggle-password i {
+        font-size: 1rem;
+    }
+
+    .password-hint {
+        font-size: 0.8rem;
+        margin-top: 0.375rem;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* TOASTS RESPONSIVOS */
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .toast {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+        padding: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .toast-title {
+        font-size: 0.9rem;
+    }
+
+    .toast-message {
+        font-size: 0.8rem;
+    }
+
+    /* MODAL DE CONFIRMAÇÃO RESPONSIVO */
+    .confirm-content {
+        padding: 1.5rem;
+        width: 95%;
+        margin: 1rem;
+    }
+
+    .confirm-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .confirm-title {
+        font-size: 1.3rem;
+    }
+
+    .confirm-text {
+        font-size: 0.95rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .confirm-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .confirm-btn {
+        width: 100%;
+        min-width: auto;
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Smartphones pequenos (480px - 576px) - PADRÃO */
+@media (max-width: 576px) {
+    .admin-content {
+        padding: 1rem;
+    }
+
+    .profile-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .profile-card {
+        padding: 1.25rem;
+        border-radius: 8px;
+    }
+
+    .profile-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .photo-preview {
+        width: 110px;
+        height: 110px;
+    }
+
+    .upload-controls .btn {
+        max-width: 100%;
+    }
+
+    .btn {
+        padding: 0.8rem 0.875rem;
+        font-size: 0.875rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .input-with-icon input {
+        height: 46px;
+        padding: 0 40px;
+    }
+
+    .input-with-icon i.fas:not(.fa-eye):not(.fa-eye-slash) {
+        left: 12px;
+        font-size: 0.9rem;
+    }
+
+    .toggle-password {
+        right: 8px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .toggle-password i {
+        font-size: 0.95rem;
+    }
+
+    .upload-hint {
+        font-size: 0.75rem;
+    }
+
+    /* Ajuste fino para mobile muito pequeno */
+    .toast {
+        padding: 0.75rem;
+        border-radius: 6px;
+    }
+
+    .confirm-content {
+        padding: 1.25rem;
+        margin: 0.5rem;
+    }
+}
+
+/* Smartphones muito pequenos (até 480px) - PADRÃO */
+@media (max-width: 480px) {
+    .admin-content {
+        padding: 0.875rem;
+    }
+
+    .profile-header {
+        margin-bottom: 1rem;
+    }
+
+    .profile-header h1 {
+        font-size: 1.3rem;
+        gap: 0.5rem;
+    }
+
+    .profile-header h1 i {
+        font-size: 1.2rem;
+    }
+
+    .profile-card {
+        padding: 1rem;
+        background: transparent;
+        box-shadow: none;
+        border: 1px solid var(--border-light);
+    }
+
+    .profile-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .profile-section h2 {
+        font-size: 1.1rem;
+        gap: 0.5rem;
+    }
+
+    .profile-section h2 i {
+        font-size: 0.95rem;
+    }
+
+    .photo-preview {
+        width: 100px;
+        height: 100px;
+    }
+
+    .change-photo-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .change-photo-btn i {
+        font-size: 0.8rem;
+    }
+
+    .upload-controls {
+        gap: 0.75rem;
+    }
+
+    .btn {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+        min-height: 42px;
+    }
+
+    .form-group label {
+        font-size: 0.85rem;
+    }
+
+    .input-with-icon input {
+        height: 44px;
+        padding: 0 38px;
+        font-size: 15px;
+    }
+
+    .input-with-icon i.fas:not(.fa-eye):not(.fa-eye-slash) {
+        left: 10px;
+        font-size: 0.85rem;
+    }
+
+    .toggle-password {
+        right: 6px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .toggle-password i {
+        font-size: 0.9rem;
+    }
+
+    .password-hint {
+        font-size: 0.75rem;
+    }
+
+    .form-actions {
+        margin-top: 1.5rem;
+        gap: 0.5rem;
+    }
+}
+
+/* Smartphones extremamente pequenos (até 360px) - PADRÃO */
+@media (max-width: 360px) {
+    .admin-content {
+        padding: 0.75rem;
+    }
+
+    .profile-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .profile-card {
+        padding: 0.875rem;
+        border-width: 1px;
+    }
+
+    .photo-preview {
+        width: 90px;
+        height: 90px;
+    }
+
+    .profile-photo {
+        border-width: 2px;
+    }
+
+    .change-photo-btn {
+        width: 30px;
+        height: 30px;
+        bottom: 2px;
+        right: 2px;
+        border-width: 2px;
+    }
+
+    .btn {
+        padding: 0.7rem;
+        font-size: 0.8rem;
+        min-height: 40px;
+    }
+
+    .input-with-icon input {
+        height: 42px;
+        padding: 0 35px;
+        font-size: 14px;
+    }
+
+    .input-with-icon i.fas:not(.fa-eye):not(.fa-eye-slash) {
+        left: 8px;
+        font-size: 0.8rem;
+    }
+
+    .toggle-password {
+        right: 5px;
+        width: 34px;
+        height: 34px;
+    }
+
+    .toggle-password i {
+        font-size: 0.85rem;
+    }
+
+    .upload-hint,
+    .password-hint {
+        font-size: 0.7rem;
+    }
+
+    /* Toast ajustado para telas muito pequenas */
+    .toast {
+        padding: 0.625rem;
+        min-width: auto;
+    }
+
+    .toast-title {
+        font-size: 0.85rem;
+    }
+
+    .toast-message {
+        font-size: 0.75rem;
+    }
+
+    /* Modal ajustado */
+    .confirm-content {
+        padding: 1rem;
+    }
+
+    .confirm-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .confirm-title {
+        font-size: 1.1rem;
+    }
+
+    .confirm-text {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .confirm-btn {
+        padding: 0.7rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* =======================
+   MELHORIAS DE USABILIDADE
+   ======================= */
+
+/* Loading state para botões */
+.btn.loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.btn-secondary.loading::after,
+.btn-outline.loading::after {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top: 2px solid var(--text-dark);
+}
+
+/* Feedback visual para validação de senha */
+.input-with-icon input:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: var(--danger);
+    background-color: rgba(244, 67, 54, 0.05);
+}
+
+.input-with-icon input:valid:not(:focus):not(:placeholder-shown) {
+    border-color: var(--success);
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+/* Animações suaves para fotos */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.profile-photo {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Feedback de drag & drop para upload de foto */
+#photo-input:focus + .change-photo-btn {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Estados vazios */
+.photo-preview:empty::before {
+    content: 'Sem foto';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #f8f9fa;
+    border-radius: 50%;
+    color: var(--text-light);
+    font-size: 0.8rem;
+    border: 2px dashed var(--border-light);
+}
+
+/* =======================
+   ACESSIBILIDADE
+   ======================= */
+
+/* Focus states para acessibilidade */
+.btn:focus,
+.input-with-icon input:focus,
+.change-photo-btn:focus,
+.toggle-password:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Touch-friendly para mobile */
+@media (max-width: 768px) {
+    .btn,
+    .toggle-password,
+    .change-photo-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .toggle-password {
+        cursor: pointer;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .profile-card,
+    .confirm-content,
+    .toast {
+        border: 2px solid #000;
+    }
+
+    .profile-photo {
+        border: 3px solid #000;
+    }
+
+    .input-with-icon input {
+        border: 2px solid #000;
+    }
+
+    .input-with-icon input:focus {
+        border: 2px solid var(--accent);
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .profile-photo,
+    .btn,
+    .toast,
+    .confirm-content,
+    .change-photo-btn {
+        transition: none;
+        animation: none;
+    }
+
+    .profile-photo:hover,
+    .btn:hover,
+    .change-photo-btn:hover {
+        transform: none;
+    }
+
+    .btn.loading::after {
+        animation: none;
+        border: none;
+        content: '...';
+        color: inherit;
+        margin: 0;
+        position: static;
+    }
+}
+
+/* Suporte a orientação paisagem em mobile */
+@media (max-height: 500px) and (max-width: 768px) {
+    .admin-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .profile-card {
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+
+    .photo-upload {
+        flex-direction: row;
+        gap: 1.5rem;
+    }
+
+    .photo-preview {
+        flex-shrink: 0;
+    }
+}
+
+/* Ajuste para telas muito altas */
+@media (min-height: 1000px) {
+    .admin-content {
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+    }
+
+    .profile-card {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+}
+
+/* Indicador de scroll para formulários longos em mobile */
+@media (max-width: 768px) {
+    .profile-card {
+        position: relative;
+        max-height: calc(100vh - 150px);
+        overflow-y: auto;
+    }
+
+    .profile-card::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .profile-card::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .profile-card::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border-radius: 2px;
+    }
+}
+
+/* Feedback visual para botão de remover foto em hover */
+#remove-photo:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    #remove-photo:hover {
+        transform: none;
+    }
+}

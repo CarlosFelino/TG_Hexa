@@ -403,6 +403,82 @@
 }
 
 /* =======================
+   Responsividade do Logo
+   ======================= */
+
+/* Telas pequenas (smartphones) - Esconde o texto */
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0.75rem var(--spacing-small);
+    }
+
+    /* Ajuste específico para a página Sobre */
+    .logo-text {
+        display: none !important;
+    }
+
+    .logo-container {
+        justify-content: center;
+    }
+
+    .logo {
+        height: 35px;
+    }
+
+    /* Remove efeitos hover que não funcionam bem em mobile */
+    .logo-container:hover {
+        transform: none;
+        gap: 0;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 400px) {
+    .hero-section {
+        min-height: 30vh;
+        padding: 1rem;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .logo {
+        height: 30px;
+    }
+
+    .navbar {
+        padding: 0.5rem;
+    }
+}
+
+/* Ajustes para tablets */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
+}
+
+/* Garantir que o footer fique no final */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* =======================
    Responsividade Avançada
    ======================= */
 @media (max-width: 480px) {

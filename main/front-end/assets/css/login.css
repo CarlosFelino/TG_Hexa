@@ -119,6 +119,7 @@
     left: clamp(12px, 3vw, 15px);
     color: rgba(255, 255, 255, 0.7);
     font-size: clamp(1rem, 2.5vw, 1.1rem);
+    z-index: 2;
 }
 
 .input-wrapper input {
@@ -130,6 +131,7 @@
     color: var(--text-light);
     font-size: clamp(0.95rem, 2vw, 1rem);
     transition: all 0.3s ease;
+    min-height: 48px; /* Altura mínima para melhor toque */
 }
 
 .input-wrapper input:focus {
@@ -151,27 +153,59 @@
     border-color: #09c372;
 }
 
+/* Botão show-password - CORRIGIDO */
 .show-password {
     position: absolute;
-    right: clamp(12px, 3vw, 15px);
+    right: clamp(8px, 3vw, 12px); /* Reduzido para telas pequenas */
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     font-size: clamp(0.9rem, 2vw, 1rem);
-    transition: color 0.3s;
-    padding: 5px;
-    border-radius: 4px;
+    transition: all 0.3s;
+    padding: 6px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(25px, 6vw, 30px);
-    height: clamp(25px, 6vw, 30px);
+    width: clamp(36px, 8vw, 40px);
+    height: clamp(36px, 8vw, 40px);
+    z-index: 2;
 }
 
 .show-password:hover {
     color: var(--accent);
     background: rgba(255, 255, 255, 0.1);
+}
+
+/* CORREÇÃO ESPECÍFICA PARA TELAS MUITO PEQUENAS */
+@media (max-width: 400px) {
+    .show-password {
+        right: 6px;
+        width: 34px;
+        height: 34px;
+        font-size: 0.95rem;
+        padding: 5px;
+    }
+
+    .input-wrapper input {
+        padding-right: 42px; /* Ajuste de padding para telas pequenas */
+    }
+}
+
+/* Telas pequenas (smartphones) */
+@media (max-width: 576px) {
+    .show-password {
+        right: 8px;
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .input-wrapper input {
+        padding-right: 46px;
+        min-height: 44px;
+    }
 }
 
 /* Botão de Ação - RESPONSIVO */
@@ -195,6 +229,7 @@
     overflow: hidden;
     position: relative;
     width: 100%;
+    min-height: 48px; /* Altura mínima para toque */
 }
 
 .btn-auth span {
@@ -319,7 +354,7 @@
     color: rgba(255, 255, 255, 0.7);
     font-size: clamp(1.5rem, 4vw, 1.8rem);
     cursor: pointer;
-    transition: color 0.3s;
+    transition: all 0.3s;
     line-height: 1;
     padding: 5px;
     border-radius: 4px;
@@ -450,6 +485,7 @@
     font-size: clamp(0.9rem, 2vw, 0.95rem);
     min-width: 120px;
     flex: 1;
+    min-height: 44px; /* Altura mínima para toque */
 }
 
 .alert-btn-primary {
@@ -654,6 +690,209 @@
 }
 
 /* =======================
+   Responsividade do Logo
+   ======================= */
+
+/* Telas pequenas (smartphones) */
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0.75rem var(--spacing-small);
+    }
+
+    /* Esconde o texto do logo */
+    .logo-text {
+        display: none !important;
+    }
+
+    /* Centraliza a logo */
+    .logo-container {
+        justify-content: center;
+    }
+
+    .logo {
+        height: 35px;
+    }
+
+    /* Remove efeitos hover em mobile */
+    .logo-container:hover {
+        transform: none;
+        gap: 0;
+    }
+
+    /* Ajustes específicos para login */
+    .auth-card {
+        padding: 1.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .card-header h1 {
+        font-size: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 400px) {
+    .logo {
+        height: 30px;
+    }
+
+    .navbar {
+        padding: 0.5rem;
+    }
+
+    .auth-card {
+        padding: 1.25rem;
+        border-radius: 15px;
+    }
+
+    .card-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .input-wrapper input {
+        padding: 10px 10px 10px 35px;
+        min-height: 44px;
+        font-size: 0.95rem;
+    }
+
+    .input-wrapper .icon {
+        left: 10px;
+        font-size: 0.9rem;
+    }
+
+    .btn-auth {
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        min-height: 44px;
+    }
+
+    .auth-footer {
+        font-size: 0.85rem;
+    }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
+
+    /* Garante que o login fique bem centralizado */
+    .auth-container {
+        min-height: calc(100vh - 120px);
+    }
+}
+
+/* Ajuste para telas grandes */
+@media (min-width: 1200px) {
+    .auth-card {
+        max-width: 450px;
+    }
+}
+
+/* Garantir que o footer fique no final */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* Otimização para mobile - reduz animações */
+@media (max-width: 768px) {
+    .auth-card:hover {
+        transform: none;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-auth:hover {
+        transform: none;
+        box-shadow: 0 4px 20px rgba(122, 4, 235, 0.4);
+    }
+
+    .btn-auth:hover i {
+        transform: none;
+    }
+
+    .pulse-hover:hover {
+        animation: none;
+    }
+}
+
+/* Melhorias para formulários em mobile */
+@media (max-width: 576px) {
+    /* Aumenta a área de toque para inputs */
+    .input-wrapper input,
+    .show-password {
+        min-height: 44px; /* Tamanho mínimo para toque */
+    }
+
+    /* Ajusta o wrapper de senha para mobile */
+    .input-wrapper {
+        position: relative;
+    }
+
+    /* Ajusta força da senha para mobile */
+    #resetForm .password-strength.visible {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    #resetForm .strength-bar-container {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #resetForm .strength-text {
+        text-align: left;
+    }
+
+    /* Ajusta feedback de senha */
+    .password-match-feedback {
+        font-size: 0.8rem;
+    }
+}
+
+/* Corrige problema de zoom em iOS */
+@media (max-width: 480px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        font-size: 16px; /* Previne zoom automático no iOS */
+    }
+}
+
+/* Ajuste para telas muito curtas */
+@media (max-height: 700px) and (max-width: 576px) {
+    .auth-container {
+        min-height: calc(100vh - 100px);
+        padding: 0.5rem;
+    }
+
+    .auth-card {
+        margin: 0.5rem auto;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+}
+
+/* =======================
    Melhorias de Acessibilidade
    ======================= */
 @media (prefers-reduced-motion: reduce) {
@@ -661,20 +900,22 @@
     .btn-auth,
     .alert-btn,
     .show-password,
-    .type-btn {
+    .type-btn,
+    .modal-close {
         transition: none;
     }
-    
+
     .auth-card:hover,
     .btn-auth:hover,
-    .alert-btn:hover {
+    .alert-btn:hover,
+    .modal-close:hover {
         transform: none;
     }
-    
+
     .pulse-hover:hover {
         animation: none;
     }
-    
+
     .login-error.visible,
     #resetForm.visible {
         animation: none;
@@ -688,57 +929,12 @@
     .alert-modal {
         border: 2px solid var(--text-light);
     }
-    
+
     .input-wrapper input {
         border: 2px solid var(--text-light);
     }
-    
+
     .type-btn {
         border: 1px solid var(--text-light);
-    }
-}
-
-/* =======================
-   Responsividade Avançada
-   ======================= */
-@media (max-width: 360px) {
-    .auth-card {
-        padding: 1.25rem;
-        border-radius: 15px;
-    }
-    
-    .card-header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .type-btn {
-        font-size: 0.75rem;
-        padding: 0.6rem;
-    }
-    
-    .input-wrapper input {
-        padding: 10px 10px 10px 35px;
-    }
-    
-    .input-wrapper .icon {
-        left: 10px;
-        font-size: 0.9rem;
-    }
-    
-    .show-password {
-        right: 10px;
-        font-size: 0.9rem;
-    }
-}
-
-/* Garantir que modais não vazem em telas muito pequenas */
-@media (max-height: 600px) {
-    .modal-card {
-        max-height: 85vh;
-        overflow-y: auto;
-    }
-    
-    .auth-card {
-        margin: 1rem 0;
     }
 }
