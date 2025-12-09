@@ -38,6 +38,7 @@
 2025-11-30 21:49:53.330 UTC [3459] ERROR:  role "meu_usuario" already exists
 2025-11-30 21:49:53.330 UTC [3459] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-11-30 21:49:53.426 UTC [3463] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-11-30 21:49:53.426 UTC [3463] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -49,6 +50,19 @@
 2025-11-30 21:49:53.428 UTC [3463] DETAIL:  Key (matricula)=(00001) already exists.
 2025-11-30 21:49:53.428 UTC [3463] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-11-30 21:49:53.426 UTC [3463] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-30 21:49:53.428 UTC [3463] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-30 21:49:53.428 UTC [3463] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-30 21:49:53.428 UTC [3463] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -65,6 +79,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-11-30 21:49:53.468 UTC [3465] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-11-30 21:49:53.468 UTC [3465] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -85,6 +100,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-11-30 21:49:53.468 UTC [3465] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-30 21:49:53.501 UTC [3467] ERROR:  relation "resetsenha" already exists
+2025-11-30 21:49:53.501 UTC [3467] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-11-30 21:49:53.570 UTC [3469] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-11-30 21:49:53.570 UTC [3469] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -92,6 +129,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-11-30 21:49:53.654 UTC [3471] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-11-30 21:49:53.654 UTC [3471] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -113,6 +151,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-11-30 21:49:53.654 UTC [3471] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-30 21:49:53.699 UTC [3473] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-30 21:49:53.699 UTC [3473] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-30 21:49:53.727 UTC [3475] ERROR:  relation "ordens_anexos" already exists
+2025-11-30 21:49:53.727 UTC [3475] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-11-30 21:49:53.754 UTC [3477] ERROR:  relation "ordens_alertas" already exists
 2025-11-30 21:49:53.754 UTC [3477] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -283,6 +344,7 @@
 2025-11-30 23:13:15.614 UTC [4829] ERROR:  role "meu_usuario" already exists
 2025-11-30 23:13:15.614 UTC [4829] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-11-30 23:13:15.712 UTC [4833] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-11-30 23:13:15.712 UTC [4833] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -294,6 +356,19 @@
 2025-11-30 23:13:15.713 UTC [4833] DETAIL:  Key (matricula)=(00001) already exists.
 2025-11-30 23:13:15.713 UTC [4833] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-11-30 23:13:15.712 UTC [4833] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-11-30 23:13:15.713 UTC [4833] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-11-30 23:13:15.713 UTC [4833] DETAIL:  Key (matricula)=(00001) already exists.
+2025-11-30 23:13:15.713 UTC [4833] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -310,6 +385,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-11-30 23:13:15.793 UTC [4835] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-11-30 23:13:15.793 UTC [4835] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -330,6 +406,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-11-30 23:13:15.793 UTC [4835] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-11-30 23:13:15.821 UTC [4837] ERROR:  relation "resetsenha" already exists
+2025-11-30 23:13:15.821 UTC [4837] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-11-30 23:13:15.912 UTC [4839] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-11-30 23:13:15.912 UTC [4839] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -337,6 +435,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-11-30 23:13:16.003 UTC [4841] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-11-30 23:13:16.003 UTC [4841] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -358,6 +457,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-11-30 23:13:16.003 UTC [4841] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-11-30 23:13:16.087 UTC [4843] ERROR:  relation "ordens_instalacoes" already exists
+2025-11-30 23:13:16.087 UTC [4843] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-11-30 23:13:16.121 UTC [4845] ERROR:  relation "ordens_anexos" already exists
+2025-11-30 23:13:16.121 UTC [4845] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-11-30 23:13:16.212 UTC [4847] ERROR:  relation "ordens_alertas" already exists
 2025-11-30 23:13:16.212 UTC [4847] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -647,6 +769,7 @@
 	    1,
 	    '2025-11-15 09:30:00',
 	    NOW()
+<<<<<<< HEAD
 	);
 2025-12-01 02:41:44.742 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
 2025-12-01 02:41:44.742 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
@@ -1169,6 +1292,530 @@
 2025-12-01 23:30:08.875 UTC [287] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-01 23:30:08.875 UTC [287] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+	);
+2025-12-01 02:41:44.742 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.742 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'Projetor', 'Não liga');
+2025-12-01 02:41:44.742 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.742 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-002',
+	    1, -- Spock
+	    3, -- Han Solo
+	    'problema',
+	    'sala',
+	    '308',
+	    '308 - kit-professor',
+	    'Mouse sem fio não conecta no receptor USB',
+	    'Não Concluída',
+	    1,
+	    '2025-11-18 14:20:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.742 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.742 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'kit-professor', 'Mouse não funciona');
+2025-12-01 02:41:44.742 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.742 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-003',
+	    5, -- Daenerys
+	    4, -- Anakin
+	    'instalacao',
+	    'laboratorio',
+	    '216',
+	    '216 - Python 3.11',
+	    'Necessário instalar Python 3.11 com pip, numpy e pandas',
+	    'Não Concluída',
+	    1,
+	    '2025-11-19 10:15:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens_instalacoes (ordem_id, app_nome, app_versao)
+	VALUES (currval('ordens_id_seq'), 'Python', '3.11');
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-004',
+	    1, -- Spock
+	    6, -- Marcus
+	    'problema',
+	    'sala',
+	    '405',
+	    '405 - tv',
+	    'TV não liga, testamos controle remoto e está funcionando',
+	    'Em Andamento',
+	    5,
+	    '2025-11-21 08:00:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'tv', 'Não liga');
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo, criado_em)
+	VALUES (currval('ordens_id_seq'), 'prazo', true, NOW());
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-005',
+	    5, -- Daenerys
+	    3, -- Han Solo
+	    'problema',
+	    'laboratorio',
+	    '209',
+	    '209 - kit-aluno-desktop',
+	    'Computador não conecta na rede, cabo testado e funcionando',
+	    'Em Andamento',
+	    4,
+	    '2025-11-22 11:30:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'kit-aluno-desktop', 'Sem conexão com internet');
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo, criado_em)
+	VALUES (currval('ordens_id_seq'), 'prazo', true, NOW());
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-006',
+	    1, -- Spock
+	    4, -- Anakin
+	    'problema',
+	    'laboratorio',
+	    '208',
+	    '208 - perifericos',
+	    'Teclado com teclas travadas',
+	    'Em Andamento',
+	    4,
+	    '2025-11-23 09:45:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.743 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.743 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'perifericos', 'Teclado com defeito');
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo, criado_em)
+	VALUES (currval('ordens_id_seq'), 'prazo', true, NOW());
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-007',
+	    5, -- Daenerys
+	    6, -- Marcus
+	    'instalacao',
+	    'sala',
+	    '312',
+	    '312 - Git',
+	    'Instalar Git para controle de versão',
+	    'Em Andamento',
+	    3,
+	    '2025-11-24 13:20:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens_instalacoes (ordem_id, app_nome, app_versao)
+	VALUES (currval('ordens_id_seq'), 'Git', '2.43');
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo, criado_em)
+	VALUES (currval('ordens_id_seq'), 'prazo', true, NOW());
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-008',
+	    1, -- Spock
+	    3, -- Han Solo
+	    'problema',
+	    'sala',
+	    '202',
+	    '202 - kit-professor',
+	    'Cabo HDMI não funciona',
+	    'Em Andamento',
+	    2,
+	    '2025-11-25 15:10:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'kit-professor', 'Sem imagem no projetor');
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-009',
+	    5, -- Daenerys
+	    'problema',
+	    'laboratorio',
+	    '211',
+	    '211 - kit-aluno-notebook',
+	    'Notebook não carrega a bateria',
+	    'Pendente',
+	    4,
+	    '2025-11-26 10:00:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'kit-aluno-notebook', 'Bateria não carrega');
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo, criado_em)
+	VALUES (currval('ordens_id_seq'), 'sem_responsavel', true, NOW());
+2025-12-01 02:41:44.744 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.744 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-010',
+	    1, -- Spock
+	    'instalacao',
+	    'sala',
+	    '306',
+	    '306 - Visual Studio Code',
+	    'Instalar VS Code com extensões Python e C#',
+	    'Pendente',
+	    4,
+	    '2025-11-27 14:30:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens_instalacoes (ordem_id, app_nome, app_versao)
+	VALUES (currval('ordens_id_seq'), 'Visual Studio Code', 'latest');
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens_alertas (ordem_id, tipo_alerta, ativo, criado_em)
+	VALUES (currval('ordens_id_seq'), 'sem_responsavel', true, NOW());
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-011',
+	    5, -- Daenerys
+	    'problema',
+	    'sala',
+	    '401',
+	    '401 - tv',
+	    'TV sem som, imagem funcionando normalmente',
+	    'Pendente',
+	    1,
+	    '2025-11-28 09:15:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'tv', 'Sem som');
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-012',
+	    1, -- Spock
+	    'problema',
+	    'laboratorio',
+	    '217',
+	    '217 - perifericos',
+	    'Mouse não funciona',
+	    'Pendente',
+	    1,
+	    '2025-11-29 11:00:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'perifericos', 'Mouse com defeito');
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, status, prioridade, data_criacao, data_atualizacao
+	) VALUES (
+	    '#ORD-2025-013',
+	    5, -- Daenerys
+	    'instalacao',
+	    'laboratorio',
+	    '220',
+	    '220 - PostgreSQL 16',
+	    'Instalar PostgreSQL 16 para aulas de banco de dados',
+	    'Pendente',
+	    1,
+	    '2025-11-30 08:30:00',
+	    NOW()
+	);
+2025-12-01 02:41:44.745 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.745 UTC [14132] STATEMENT:  INSERT INTO ordens_instalacoes (ordem_id, app_nome, app_versao)
+	VALUES (currval('ordens_id_seq'), 'PostgreSQL', '16');
+2025-12-01 02:41:44.746 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.746 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, solucao, status, prioridade, avaliacao,
+	    data_criacao, data_atualizacao, data_finalizacao
+	) VALUES (
+	    '#ORD-2025-014',
+	    1, -- Spock
+	    3, -- Han Solo
+	    'problema',
+	    'sala',
+	    '303',
+	    '303 - kit-professor',
+	    'Teclado não funciona',
+	    'Teclado substituído por um novo. Problema resolvido.',
+	    'Concluída',
+	    1,
+	    5,
+	    '2025-11-18 10:00:00',
+	    '2025-11-20 14:30:00',
+	    '2025-11-20 14:30:00'
+	);
+2025-12-01 02:41:44.746 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.746 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'kit-professor', 'Teclado com defeito');
+2025-12-01 02:41:44.746 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.746 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, solucao, status, prioridade,
+	    data_criacao, data_atualizacao, data_finalizacao
+	) VALUES (
+	    '#ORD-2025-015',
+	    5, -- Daenerys
+	    4, -- Anakin
+	    'instalacao',
+	    'sala',
+	    '307',
+	    '307 - Node.js',
+	    'Instalar Node.js LTS',
+	    'Node.js 20.11 LTS instalado e testado com sucesso.',
+	    'Concluída',
+	    1,
+	    '2025-11-22 09:00:00',
+	    '2025-11-24 16:00:00',
+	    '2025-11-24 16:00:00'
+	);
+2025-12-01 02:41:44.746 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.746 UTC [14132] STATEMENT:  INSERT INTO ordens_instalacoes (ordem_id, app_nome, app_versao)
+	VALUES (currval('ordens_id_seq'), 'Node.js', '20.11 LTS');
+2025-12-01 02:41:44.746 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.746 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, solucao, status, prioridade, avaliacao,
+	    data_criacao, data_atualizacao, data_finalizacao
+	) VALUES (
+	    '#ORD-2025-016',
+	    1, -- Spock
+	    6, -- Marcus
+	    'problema',
+	    'laboratorio',
+	    '206',
+	    '206 - kit-aluno-desktop',
+	    'Computador lento',
+	    'Limpeza de disco e desfragmentação realizadas. Desempenho melhorou.',
+	    'Concluída',
+	    1,
+	    3,
+	    '2025-11-20 13:00:00',
+	    '2025-11-23 10:00:00',
+	    '2025-11-23 10:00:00'
+	);
+2025-12-01 02:41:44.746 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.746 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'kit-aluno-desktop', 'Lentidão');
+2025-12-01 02:41:44.746 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.746 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, solucao, status, prioridade,
+	    data_criacao, data_atualizacao, data_finalizacao
+	) VALUES (
+	    '#ORD-2025-017',
+	    5, -- Daenerys
+	    3, -- Han Solo
+	    'problema',
+	    'sala',
+	    '404',
+	    '404 - tv',
+	    'Controle remoto não funciona',
+	    'Pilhas do controle remoto substituídas. Problema resolvido.',
+	    'Concluída',
+	    1,
+	    '2025-11-26 11:00:00',
+	    '2025-11-28 15:00:00',
+	    '2025-11-28 15:00:00'
+	);
+2025-12-01 02:41:44.747 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.747 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'tv', 'Controle remoto não funciona');
+2025-12-01 02:41:44.747 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.747 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, solucao, status, prioridade, avaliacao,
+	    data_criacao, data_atualizacao, data_finalizacao
+	) VALUES (
+	    '#ORD-2025-018',
+	    1, -- Spock
+	    4, -- Anakin
+	    'problema',
+	    'sala',
+	    '110',
+	    '110 - tv',
+	    'TV com tela preta',
+	    'Cabo HDMI trocado. Problema resolvido mas demorou muito.',
+	    'Concluída',
+	    1,
+	    2,
+	    '2025-11-15 21:24:00',
+	    '2025-11-19 10:00:00',
+	    '2025-11-19 10:00:00'
+	);
+2025-12-01 02:41:44.747 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.747 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'tv', 'Tela preta');
+2025-12-01 02:41:44.747 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.747 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, solucao, status, prioridade, avaliacao,
+	    data_criacao, data_atualizacao, data_finalizacao
+	) VALUES (
+	    '#ORD-2025-019',
+	    5, -- Daenerys
+	    6, -- Marcus
+	    'instalacao',
+	    'laboratorio',
+	    '215',
+	    '215 - C#',
+	    'Instalar Visual Studio Community com workload .NET',
+	    'Visual Studio Community instalado com todas as extensões solicitadas. Teste realizado com sucesso.',
+	    'Concluída',
+	    1,
+	    5,
+	    '2025-11-16 18:03:00',
+	    '2025-11-21 16:30:00',
+	    '2025-11-21 16:30:00'
+	);
+2025-12-01 02:41:44.747 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.747 UTC [14132] STATEMENT:  INSERT INTO ordens_instalacoes (ordem_id, app_nome, app_versao)
+	VALUES (currval('ordens_id_seq'), 'Visual Studio Community', '2022');
+2025-12-01 02:41:44.747 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.747 UTC [14132] STATEMENT:  INSERT INTO ordens (
+	    codigo, criador_id, responsavel_id, tipo_solicitacao, local_tipo, local_detalhe,
+	    titulo, descricao, solucao, status, prioridade,
+	    data_criacao, data_atualizacao, data_finalizacao
+	) VALUES (
+	    '#ORD-2025-020',
+	    1, -- Spock
+	    3, -- Han Solo
+	    'problema',
+	    'laboratorio',
+	    '213',
+	    '213 - kit-aluno-notebook',
+	    'Notebook não conecta no Wi-Fi',
+	    'Driver de rede reinstalado. Conexão funcionando normalmente.',
+	    'Concluída',
+	    1,
+	    '2025-11-27 14:00:00',
+	    '2025-11-29 11:30:00',
+	    '2025-11-29 11:30:00'
+	);
+2025-12-01 02:41:44.747 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.747 UTC [14132] STATEMENT:  INSERT INTO ordens_problemas (ordem_id, equipamento, tipo_problema)
+	VALUES (currval('ordens_id_seq'), 'kit-aluno-notebook', 'Sem Wi-Fi');
+2025-12-01 02:41:44.748 UTC [14132] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-12-01 02:41:44.748 UTC [14132] STATEMENT:  DO $$
+	DECLARE
+	    total_ordens INT;
+	    ordens_pendentes INT;
+	    ordens_andamento INT;
+	    ordens_concluidas INT;
+	    ordens_nao_concluidas INT;
+	    alertas_prazo INT;
+	    alertas_sem_resp INT;
+	BEGIN
+	    SELECT COUNT(*) INTO total_ordens FROM ordens;
+	    SELECT COUNT(*) INTO ordens_pendentes FROM ordens WHERE status = 'Pendente';
+	    SELECT COUNT(*) INTO ordens_andamento FROM ordens WHERE status = 'Em Andamento';
+	    SELECT COUNT(*) INTO ordens_concluidas FROM ordens WHERE status = 'Concluída';
+	    SELECT COUNT(*) INTO ordens_nao_concluidas FROM ordens WHERE status = 'Não Concluída';
+	    SELECT COUNT(*) INTO alertas_prazo FROM ordens_alertas WHERE ativo = true AND tipo_alerta = 'prazo';
+	    SELECT COUNT(*) INTO alertas_sem_resp FROM ordens_alertas WHERE ativo = true AND tipo_alerta = 'sem_responsavel';
+	
+	    RAISE NOTICE '';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '✅ POVOAMENTO CONCLUÍDO COM SUCESSO!';
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE 'Data de referência: 30/11/2025';
+	    RAISE NOTICE 'Total de ordens criadas: %', total_ordens;
+	    RAISE NOTICE '';
+	    RAISE NOTICE '📊 ORDENS POR STATUS:';
+	    RAISE NOTICE '  • Pendentes: %', ordens_pendentes;
+	    RAISE NOTICE '  • Em Andamento: %', ordens_andamento;
+	    RAISE NOTICE '  • Concluídas: %', ordens_concluidas;
+	    RAISE NOTICE '  • Não Concluídas: %', ordens_nao_concluidas;
+	    RAISE NOTICE '';
+	    RAISE NOTICE '⚠️ ALERTAS ATIVOS:';
+	    RAISE NOTICE '  • Alertas de prazo: %', alertas_prazo;
+	    RAISE NOTICE '  • Alertas sem responsável: %', alertas_sem_resp;
+	    RAISE NOTICE '========================================';
+	    RAISE NOTICE '';
+	END$$;
+2025-12-01 02:43:16.813 UTC [4818] LOG:  checkpoint starting: time
+2025-12-01 02:43:18.764 UTC [4818] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.916 s, sync=0.016 s, total=1.952 s; sync files=40, longest=0.003 s, average=0.001 s; distance=93 kB, estimate=93 kB; lsn=0/1B0AB38, redo lsn=0/1B0AAA8
+2025-12-01 02:58:17.064 UTC [4818] LOG:  checkpoint starting: time
+2025-12-01 02:58:22.579 UTC [4818] LOG:  checkpoint complete: wrote 55 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.438 s, sync=0.047 s, total=5.515 s; sync files=40, longest=0.008 s, average=0.002 s; distance=210 kB, estimate=210 kB; lsn=0/1B3F468, redo lsn=0/1B3F410
+2025-12-01 03:13:17.879 UTC [4818] LOG:  checkpoint starting: time
+2025-12-01 03:13:18.417 UTC [4818] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.505 s, sync=0.014 s, total=0.538 s; sync files=5, longest=0.009 s, average=0.003 s; distance=21 kB, estimate=191 kB; lsn=0/1B44BE8, redo lsn=0/1B44B90
+2025-12-01 03:23:17.617 UTC [4818] LOG:  checkpoint starting: time
+2025-12-01 03:23:18.008 UTC [4818] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.347 s, sync=0.013 s, total=0.391 s; sync files=4, longest=0.008 s, average=0.004 s; distance=4 kB, estimate=172 kB; lsn=0/1B45FE0, redo lsn=0/1B45F88
+2025-12-01 03:45:08.932 UTC [4817] LOG:  received fast shutdown request
+2025-12-01 03:45:08.946 UTC [4817] LOG:  aborting any active transactions
+2025-12-01 03:45:08.950 UTC [4817] LOG:  background worker "logical replication launcher" (PID 4823) exited with exit code 1
+2025-12-01 03:45:08.951 UTC [4818] LOG:  shutting down
+2025-12-01 03:45:08.958 UTC [4818] LOG:  checkpoint starting: shutdown immediate
+2025-12-01 03:45:08.972 UTC [4818] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.020 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=155 kB; lsn=0/1B460A8, redo lsn=0/1B460A8
+2025-12-01 03:45:08.983 UTC [4817] LOG:  database system is shut down
+2025-12-01 23:30:06.213 UTC [270] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-01 23:30:06.214 UTC [270] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-01 23:30:06.216 UTC [270] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 23:30:06.219 UTC [270] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-01 23:30:06.228 UTC [273] LOG:  database system was interrupted; last known up at 2025-12-01 22:39:03 UTC
+2025-12-01 23:30:06.243 UTC [273] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-01 23:30:06.258 UTC [273] LOG:  redo starts at 0/1EAD940
+2025-12-01 23:30:06.258 UTC [273] LOG:  invalid record length at 0/1EADA48: expected at least 24, got 0
+2025-12-01 23:30:06.258 UTC [273] LOG:  redo done at 0/1EADA10 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-01 23:30:06.263 UTC [271] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-01 23:30:06.279 UTC [271] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.018 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1EADA48, redo lsn=0/1EADA48
+2025-12-01 23:30:06.287 UTC [270] LOG:  database system is ready to accept connections
+2025-12-01 23:30:08.682 UTC [281] ERROR:  database "meu_banco" already exists
+2025-12-01 23:30:08.682 UTC [281] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-01 23:30:08.803 UTC [283] ERROR:  role "meu_usuario" already exists
+2025-12-01 23:30:08.803 UTC [283] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-01 23:30:08.857 UTC [287] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-01 23:30:08.857 UTC [287] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-01 23:30:08.875 UTC [287] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-01 23:30:08.875 UTC [287] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-01 23:30:08.875 UTC [287] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -1185,6 +1832,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-01 23:30:08.896 UTC [289] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-01 23:30:08.896 UTC [289] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -1205,6 +1853,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-01 23:30:08.896 UTC [289] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-01 23:30:08.930 UTC [291] ERROR:  relation "resetsenha" already exists
+2025-12-01 23:30:08.930 UTC [291] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-01 23:30:09.007 UTC [293] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-01 23:30:09.007 UTC [293] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -1212,6 +1882,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-01 23:30:09.027 UTC [295] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-01 23:30:09.027 UTC [295] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -1233,6 +1904,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-01 23:30:09.027 UTC [295] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-01 23:30:09.043 UTC [297] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-01 23:30:09.043 UTC [297] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-01 23:30:09.059 UTC [299] ERROR:  relation "ordens_anexos" already exists
+2025-12-01 23:30:09.059 UTC [299] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-01 23:30:09.080 UTC [301] ERROR:  relation "ordens_alertas" already exists
 2025-12-01 23:30:09.080 UTC [301] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -1413,6 +2107,7 @@
 2025-12-02 15:09:33.416 UTC [317] ERROR:  role "meu_usuario" already exists
 2025-12-02 15:09:33.416 UTC [317] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-02 15:09:33.502 UTC [321] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-02 15:09:33.502 UTC [321] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -1424,6 +2119,19 @@
 2025-12-02 15:09:33.528 UTC [321] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-02 15:09:33.528 UTC [321] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-02 15:09:33.502 UTC [321] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 15:09:33.528 UTC [321] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 15:09:33.528 UTC [321] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 15:09:33.528 UTC [321] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -1440,6 +2148,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-02 15:09:33.593 UTC [323] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-02 15:09:33.593 UTC [323] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -1460,6 +2169,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-02 15:09:33.593 UTC [323] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 15:09:33.645 UTC [325] ERROR:  relation "resetsenha" already exists
+2025-12-02 15:09:33.645 UTC [325] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 15:09:33.712 UTC [327] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-02 15:09:33.712 UTC [327] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -1467,6 +2198,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-02 15:09:33.738 UTC [329] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-02 15:09:33.738 UTC [329] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -1488,6 +2220,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-02 15:09:33.738 UTC [329] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 15:09:33.758 UTC [331] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 15:09:33.758 UTC [331] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 15:09:33.790 UTC [333] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 15:09:33.790 UTC [333] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 15:09:33.819 UTC [335] ERROR:  relation "ordens_alertas" already exists
 2025-12-02 15:09:33.819 UTC [335] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -1642,6 +2397,7 @@
 2025-12-02 17:15:56.589 UTC [480] ERROR:  role "meu_usuario" already exists
 2025-12-02 17:15:56.589 UTC [480] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-02 17:15:56.681 UTC [484] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-02 17:15:56.681 UTC [484] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -1653,6 +2409,19 @@
 2025-12-02 17:15:56.687 UTC [484] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-02 17:15:56.687 UTC [484] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-02 17:15:56.681 UTC [484] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 17:15:56.687 UTC [484] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 17:15:56.687 UTC [484] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 17:15:56.687 UTC [484] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -1669,6 +2438,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-02 17:15:56.721 UTC [486] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-02 17:15:56.721 UTC [486] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -1689,6 +2459,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-02 17:15:56.721 UTC [486] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 17:15:56.757 UTC [488] ERROR:  relation "resetsenha" already exists
+2025-12-02 17:15:56.757 UTC [488] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 17:15:56.786 UTC [490] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-02 17:15:56.786 UTC [490] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -1696,6 +2488,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-02 17:15:56.809 UTC [492] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-02 17:15:56.809 UTC [492] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -1717,6 +2510,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-02 17:15:56.809 UTC [492] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 17:15:56.830 UTC [494] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 17:15:56.830 UTC [494] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 17:15:56.864 UTC [496] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 17:15:56.864 UTC [496] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 17:15:56.889 UTC [498] ERROR:  relation "ordens_alertas" already exists
 2025-12-02 17:15:56.889 UTC [498] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -1865,6 +2681,7 @@
 2025-12-02 17:55:30.006 UTC [596] ERROR:  role "meu_usuario" already exists
 2025-12-02 17:55:30.006 UTC [596] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-02 17:55:30.198 UTC [600] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-02 17:55:30.198 UTC [600] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -1876,6 +2693,19 @@
 2025-12-02 17:55:30.200 UTC [600] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-02 17:55:30.200 UTC [600] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-02 17:55:30.198 UTC [600] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 17:55:30.200 UTC [600] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 17:55:30.200 UTC [600] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 17:55:30.200 UTC [600] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -1892,6 +2722,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-02 17:55:30.222 UTC [602] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-02 17:55:30.222 UTC [602] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -1912,6 +2743,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-02 17:55:30.222 UTC [602] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 17:55:30.252 UTC [604] ERROR:  relation "resetsenha" already exists
+2025-12-02 17:55:30.252 UTC [604] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 17:55:30.279 UTC [606] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-02 17:55:30.279 UTC [606] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -1919,6 +2772,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-02 17:55:30.307 UTC [608] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-02 17:55:30.307 UTC [608] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -1940,6 +2794,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-02 17:55:30.307 UTC [608] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 17:55:30.321 UTC [610] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 17:55:30.321 UTC [610] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 17:55:30.337 UTC [612] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 17:55:30.337 UTC [612] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 17:55:30.354 UTC [614] ERROR:  relation "ordens_alertas" already exists
 2025-12-02 17:55:30.354 UTC [614] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -2089,6 +2966,7 @@
 2025-12-02 20:01:19.704 UTC [150] ERROR:  role "meu_usuario" already exists
 2025-12-02 20:01:19.704 UTC [150] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-02 20:01:19.769 UTC [154] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-02 20:01:19.769 UTC [154] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -2100,6 +2978,19 @@
 2025-12-02 20:01:19.784 UTC [154] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-02 20:01:19.784 UTC [154] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-02 20:01:19.769 UTC [154] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-02 20:01:19.784 UTC [154] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-02 20:01:19.784 UTC [154] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-02 20:01:19.784 UTC [154] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -2116,6 +3007,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-02 20:01:19.803 UTC [156] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-02 20:01:19.803 UTC [156] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -2136,6 +3028,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-02 20:01:19.803 UTC [156] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-02 20:01:19.859 UTC [158] ERROR:  relation "resetsenha" already exists
+2025-12-02 20:01:19.859 UTC [158] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 20:01:19.907 UTC [160] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-02 20:01:19.907 UTC [160] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -2143,6 +3057,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-02 20:01:19.930 UTC [162] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-02 20:01:19.930 UTC [162] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -2164,6 +3079,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-02 20:01:19.930 UTC [162] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-02 20:01:19.956 UTC [164] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-02 20:01:19.956 UTC [164] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-02 20:01:19.985 UTC [166] ERROR:  relation "ordens_anexos" already exists
+2025-12-02 20:01:19.985 UTC [166] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-02 20:01:20.018 UTC [168] ERROR:  relation "ordens_alertas" already exists
 2025-12-02 20:01:20.018 UTC [168] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -2315,6 +3253,7 @@
 2025-12-06 03:13:10.951 UTC [296] ERROR:  role "meu_usuario" already exists
 2025-12-06 03:13:10.951 UTC [296] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-06 03:13:11.019 UTC [300] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-06 03:13:11.019 UTC [300] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -2326,6 +3265,19 @@
 2025-12-06 03:13:11.032 UTC [300] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-06 03:13:11.032 UTC [300] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-06 03:13:11.019 UTC [300] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-06 03:13:11.032 UTC [300] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-06 03:13:11.032 UTC [300] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-06 03:13:11.032 UTC [300] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -2342,6 +3294,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-06 03:13:11.053 UTC [302] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-06 03:13:11.053 UTC [302] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -2362,6 +3315,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-06 03:13:11.053 UTC [302] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-06 03:13:11.084 UTC [304] ERROR:  relation "resetsenha" already exists
+2025-12-06 03:13:11.084 UTC [304] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-06 03:13:11.135 UTC [306] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-06 03:13:11.135 UTC [306] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -2369,6 +3344,24 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-06 03:13:11.151 UTC [308] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
+2025-12-06 03:13:11.151 UTC [308] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-06 03:13:11.167 UTC [310] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-06 03:13:11.167 UTC [310] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-06 03:13:11.191 UTC [312] ERROR:  relation "ordens_anexos" already exists
+2025-12-06 03:13:11.191 UTC [312] STATEMENT:  CREATE TABLE ordens_anexos (
+=======
 2025-12-06 03:13:11.151 UTC [308] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -2393,6 +3386,7 @@
 	);
 2025-12-06 03:13:11.227 UTC [314] ERROR:  relation "ordens_alertas" already exists
 2025-12-06 03:13:11.227 UTC [314] STATEMENT:  CREATE TABLE ordens_alertas (
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
 	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
@@ -2400,6 +3394,18 @@
 	    ativo BOOLEAN DEFAULT TRUE,
 	    resolvido_em TIMESTAMP DEFAULT NULL
 	);
+<<<<<<< HEAD
+2025-12-06 03:13:11.227 UTC [314] ERROR:  relation "ordens_alertas" already exists
+2025-12-06 03:13:11.227 UTC [314] STATEMENT:  CREATE TABLE ordens_alertas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    tipo_alerta VARCHAR(30) NOT NULL CHECK (tipo_alerta IN ('prazo', 'sem_responsavel')),
+	    data_alerta TIMESTAMP DEFAULT NOW(),
+	    ativo BOOLEAN DEFAULT TRUE,
+	    resolvido_em TIMESTAMP DEFAULT NULL
+	);
+=======
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 2025-12-06 03:13:11.253 UTC [314] ERROR:  column "data_alerta" does not exist
 2025-12-06 03:13:11.253 UTC [314] CONTEXT:  SQL statement "ALTER TABLE ordens_alertas
 	        RENAME COLUMN data_alerta TO criado_em"
@@ -2538,6 +3544,7 @@
 2025-12-06 18:01:36.579 UTC [302] ERROR:  role "meu_usuario" already exists
 2025-12-06 18:01:36.579 UTC [302] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-06 18:01:36.666 UTC [306] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-06 18:01:36.666 UTC [306] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -2549,6 +3556,19 @@
 2025-12-06 18:01:36.681 UTC [306] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-06 18:01:36.681 UTC [306] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-06 18:01:36.666 UTC [306] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-06 18:01:36.681 UTC [306] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-06 18:01:36.681 UTC [306] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-06 18:01:36.681 UTC [306] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -2565,6 +3585,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-06 18:01:36.717 UTC [308] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-06 18:01:36.717 UTC [308] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -2585,6 +3606,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-06 18:01:36.717 UTC [308] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-06 18:01:36.802 UTC [310] ERROR:  relation "resetsenha" already exists
+2025-12-06 18:01:36.802 UTC [310] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-06 18:01:36.881 UTC [312] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-06 18:01:36.881 UTC [312] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -2592,6 +3635,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-06 18:01:36.905 UTC [314] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-06 18:01:36.905 UTC [314] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -2613,6 +3657,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-06 18:01:36.905 UTC [314] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-06 18:01:36.934 UTC [316] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-06 18:01:36.934 UTC [316] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-06 18:01:36.961 UTC [318] ERROR:  relation "ordens_anexos" already exists
+2025-12-06 18:01:36.961 UTC [318] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-06 18:01:36.999 UTC [320] ERROR:  relation "ordens_alertas" already exists
 2025-12-06 18:01:36.999 UTC [320] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -2783,6 +3850,7 @@
 2025-12-06 18:44:30.844 UTC [749] ERROR:  role "meu_usuario" already exists
 2025-12-06 18:44:30.844 UTC [749] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-06 18:44:30.875 UTC [753] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-06 18:44:30.875 UTC [753] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -2794,6 +3862,19 @@
 2025-12-06 18:44:30.877 UTC [753] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-06 18:44:30.877 UTC [753] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-06 18:44:30.875 UTC [753] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-06 18:44:30.877 UTC [753] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-06 18:44:30.877 UTC [753] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-06 18:44:30.877 UTC [753] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -2810,6 +3891,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-06 18:44:30.900 UTC [755] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-06 18:44:30.900 UTC [755] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -2830,6 +3912,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-06 18:44:30.900 UTC [755] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-06 18:44:30.936 UTC [757] ERROR:  relation "resetsenha" already exists
+2025-12-06 18:44:30.936 UTC [757] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-06 18:44:30.964 UTC [759] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-06 18:44:30.964 UTC [759] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -2837,6 +3941,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-06 18:44:30.999 UTC [761] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-06 18:44:30.999 UTC [761] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -2858,6 +3963,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-06 18:44:30.999 UTC [761] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-06 18:44:31.015 UTC [763] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-06 18:44:31.015 UTC [763] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-06 18:44:31.037 UTC [765] ERROR:  relation "ordens_anexos" already exists
+2025-12-06 18:44:31.037 UTC [765] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-06 18:44:31.055 UTC [767] ERROR:  relation "ordens_alertas" already exists
 2025-12-06 18:44:31.055 UTC [767] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -3006,6 +4134,7 @@
 2025-12-07 22:16:06.927 UTC [2978] ERROR:  role "meu_usuario" already exists
 2025-12-07 22:16:06.927 UTC [2978] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-07 22:16:07.025 UTC [2982] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-07 22:16:07.025 UTC [2982] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -3017,6 +4146,19 @@
 2025-12-07 22:16:07.026 UTC [2982] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-07 22:16:07.026 UTC [2982] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-07 22:16:07.025 UTC [2982] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-07 22:16:07.026 UTC [2982] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-07 22:16:07.026 UTC [2982] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-07 22:16:07.026 UTC [2982] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -3033,6 +4175,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-07 22:16:07.081 UTC [2984] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-07 22:16:07.081 UTC [2984] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -3053,6 +4196,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-07 22:16:07.081 UTC [2984] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-07 22:16:07.121 UTC [2986] ERROR:  relation "resetsenha" already exists
+2025-12-07 22:16:07.121 UTC [2986] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-07 22:16:07.194 UTC [2988] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-07 22:16:07.194 UTC [2988] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -3060,6 +4225,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-07 22:16:07.216 UTC [2990] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-07 22:16:07.216 UTC [2990] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -3081,6 +4247,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-07 22:16:07.216 UTC [2990] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-07 22:16:07.289 UTC [2992] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-07 22:16:07.289 UTC [2992] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-07 22:16:07.313 UTC [2994] ERROR:  relation "ordens_anexos" already exists
+2025-12-07 22:16:07.313 UTC [2994] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-07 22:16:07.390 UTC [2996] ERROR:  relation "ordens_alertas" already exists
 2025-12-07 22:16:07.390 UTC [2996] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -3240,6 +4429,7 @@
 2025-12-08 22:25:03.405 UTC [19639] ERROR:  role "meu_usuario" already exists
 2025-12-08 22:25:03.405 UTC [19639] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
 2025-12-08 22:25:03.717 UTC [19643] ERROR:  relation "matriculas_autorizadas" already exists
+<<<<<<< HEAD
 2025-12-08 22:25:03.717 UTC [19643] STATEMENT:  CREATE TABLE matriculas_autorizadas (
 	  id SERIAL PRIMARY KEY,
 	  matricula VARCHAR(13) UNIQUE NOT NULL,
@@ -3251,6 +4441,19 @@
 2025-12-08 22:25:03.796 UTC [19643] DETAIL:  Key (matricula)=(00001) already exists.
 2025-12-08 22:25:03.796 UTC [19643] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
 	VALUES 
+=======
+2025-12-08 22:25:03.717 UTC [19643] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-08 22:25:03.796 UTC [19643] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-08 22:25:03.796 UTC [19643] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-08 22:25:03.796 UTC [19643] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
 	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
 	('00002', 'professor', 'inativa', 'Arya Stark'),
@@ -3267,6 +4470,7 @@
 	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
 	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
 2025-12-08 22:25:03.894 UTC [19645] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-08 22:25:03.894 UTC [19645] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -3287,6 +4491,28 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-08 22:25:03.894 UTC [19645] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-08 22:25:04.101 UTC [19647] ERROR:  relation "resetsenha" already exists
+2025-12-08 22:25:04.101 UTC [19647] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-08 22:25:04.384 UTC [19649] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-08 22:25:04.384 UTC [19649] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -3294,6 +4520,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-08 22:25:04.498 UTC [19651] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-08 22:25:04.498 UTC [19651] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -3315,6 +4542,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-08 22:25:04.498 UTC [19651] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-08 22:25:04.606 UTC [19653] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-08 22:25:04.606 UTC [19653] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-08 22:25:04.801 UTC [19655] ERROR:  relation "ordens_anexos" already exists
+2025-12-08 22:25:04.801 UTC [19655] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-08 22:25:05.084 UTC [19657] ERROR:  relation "ordens_alertas" already exists
 2025-12-08 22:25:05.084 UTC [19657] STATEMENT:  CREATE TABLE ordens_alertas (

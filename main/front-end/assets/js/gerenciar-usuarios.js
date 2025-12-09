@@ -36,6 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const API_URL = "https://59474a86-d1ec-4d8b-be95-f13d54b8921d-00-2dfvvk3i4x3oc.riker.replit.dev";
 
     // =========================
+<<<<<<< HEAD
+    // 🔧 GERENCIADOR DE MODAIS
+    // =========================
+    const modalManager = {
+        activeModals: new Set(),
+
+=======
     // 🔧 GERENCIADOR DE MODAIS (SIMPLIFICADO E CORRIGIDO)
     // =========================
     const modalManager = {
@@ -43,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         activeModals: new Set(),
 
         // Cria e mostra modal dinâmico
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         createAlert(type, title, message, buttons = []) {
             const alertOverlay = document.createElement('div');
             alertOverlay.className = 'alert-overlay';
@@ -75,12 +83,23 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(alertOverlay);
             this.activeModals.add(alertOverlay);
 
+<<<<<<< HEAD
+=======
             // Animar entrada
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
             setTimeout(() => {
                 alertOverlay.classList.add('visible');
                 alertOverlay.classList.add(`alert-${type}`);
             }, 10);
 
+<<<<<<< HEAD
+            this.setupAlertEvents(alertOverlay, buttons);
+
+            return alertOverlay;
+        },
+
+        setupAlertEvents(alertOverlay, buttons) {
+=======
             // Configurar eventos
             this.setupAlertEvents(alertOverlay, buttons);
 
@@ -93,13 +112,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Configurar eventos para alertas
         setupAlertEvents(alertOverlay, buttons) {
             // Fechar ao clicar fora
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
             alertOverlay.addEventListener('click', (e) => {
                 if (e.target === alertOverlay) {
                     this.closeAlert(alertOverlay);
                 }
             });
 
+<<<<<<< HEAD
+=======
             // Configurar botões
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
             alertOverlay.querySelectorAll('.alert-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -114,7 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
+<<<<<<< HEAD
+=======
             // ESC para fechar
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
             const escHandler = (e) => {
                 if (e.key === 'Escape' && this.activeModals.has(alertOverlay)) {
                     this.closeAlert(alertOverlay);
@@ -124,13 +150,19 @@ document.addEventListener('DOMContentLoaded', function() {
             alertOverlay.dataset.escHandler = 'true';
             document.addEventListener('keydown', escHandler);
 
+<<<<<<< HEAD
+=======
             // Limpar listener quando fechar
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
             alertOverlay.addEventListener('modal-closed', () => {
                 document.removeEventListener('keydown', escHandler);
             });
         },
 
+<<<<<<< HEAD
+=======
         // Fechar alerta
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         closeAlert(alertOverlay) {
             if (!this.activeModals.has(alertOverlay)) return;
 
@@ -141,17 +173,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     alertOverlay.parentNode.removeChild(alertOverlay);
                 }
                 this.activeModals.delete(alertOverlay);
+<<<<<<< HEAD
+=======
 
                 // Disparar evento de fechamento
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
                 alertOverlay.dispatchEvent(new Event('modal-closed'));
             }, 300);
         },
 
+<<<<<<< HEAD
+=======
         // Fechar todos os alertas
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         closeAllAlerts() {
             this.activeModals.forEach(modal => this.closeAlert(modal));
         },
 
+<<<<<<< HEAD
+        openStaticModal(modal) {
+            if (!modal) return;
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        },
+
+        closeStaticModal(modal) {
+            if (!modal) return;
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 300);
+        },
+
+        setupStaticModals() {
+            console.log('🔧 Configurando modais estáticos...');
+
+            document.addEventListener('click', (e) => {
+=======
         // =========================
         // Para modais estáticos (user-details, user-form)
         // =========================
@@ -183,10 +239,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // DELEGAÇÃO DE EVENTOS - Corrigido!
             document.addEventListener('click', (e) => {
                 // Botão X (modal-close)
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
                 if (e.target.classList.contains('modal-close') || 
                     e.target.closest('.modal-close')) {
                     e.preventDefault();
                     e.stopPropagation();
+<<<<<<< HEAD
+                    const modal = e.target.closest('.modal');
+                    if (modal) this.closeStaticModal(modal);
+                }
+
+=======
 
                     const modal = e.target.closest('.modal');
                     console.log('❌ Fechando modal via X:', modal?.id);
@@ -196,10 +259,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // Botões "Fechar" ou "Cancelar" (modal-close-btn)
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
                 if (e.target.classList.contains('modal-close-btn') || 
                     e.target.closest('.modal-close-btn')) {
                     e.preventDefault();
                     e.stopPropagation();
+<<<<<<< HEAD
+                    const modal = e.target.closest('.modal');
+                    if (modal) this.closeStaticModal(modal);
+                }
+
+=======
 
                     const modal = e.target.closest('.modal');
                     console.log('❌ Fechando modal via botão:', modal?.id);
@@ -209,10 +279,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // Botão "Cancelar" específico no modal de formulário
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
                 if (e.target.id === 'cancel-feedback' || 
                     e.target.closest('#cancel-feedback')) {
                     e.preventDefault();
                     e.stopPropagation();
+<<<<<<< HEAD
+                    const modal = e.target.closest('.modal');
+                    if (modal) this.closeStaticModal(modal);
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+=======
 
                     const modal = e.target.closest('.modal');
                     if (modal) {
@@ -226,10 +306,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Verifica se o clique foi em um modal E se não foi em seu conteúdo
                 if (e.target.classList.contains('modal')) {
                     console.log('🎯 Clicou fora do conteúdo do modal:', e.target.id);
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
                     this.closeStaticModal(e.target);
                 }
             });
 
+<<<<<<< HEAD
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const openModals = document.querySelectorAll('.modal.active');
+                    openModals.forEach(modal => this.closeStaticModal(modal));
+=======
             // Fechar com ESC - CORRIGIDO!
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
@@ -240,16 +327,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                     // Também fecha alertas abertos
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
                     this.closeAllAlerts();
                 }
             });
 
+<<<<<<< HEAD
+            console.log('✅ Eventos de modal configurados');
+=======
             console.log('✅ Eventos de modal configurados via delegação');
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         }
     };
 
     // =========================
+<<<<<<< HEAD
+    // 🔧 VALIDAÇÃO DE MATRÍCULA
+=======
     // 🔧 VALIDAÇÃO DE MATRÍCULA POR CARGO
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     function setupMatriculaValidation() {
         const matriculaInput = document.getElementById('user-matricula');
@@ -343,7 +439,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
+<<<<<<< HEAD
+    // 📊 BUSCAR E RENDERIZAR
+=======
     // Buscar usuários
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     async function fetchAllUsers() {
         try {
@@ -363,7 +463,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (err) {
             console.error("Erro ao carregar usuários:", err);
+<<<<<<< HEAD
+            modalManager.createAlert('error', 'Erro', 'Não foi possível carregar os usuários.');
+=======
             showCustomAlert('error', 'Erro', 'Não foi possível carregar os usuários.');
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         }
     }
 
@@ -451,7 +555,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
+<<<<<<< HEAD
+    // 🔧 AÇÕES DE USUÁRIO (VER DETALHES E EDITAR)
+=======
     // Ações de usuário
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     function showUserDetails(userId) {
         const user = usersData.find(u => u.id == userId);
@@ -480,23 +588,176 @@ document.addEventListener('DOMContentLoaded', function() {
 
         currentEditingUserId = userId;
         userFormTitle.textContent = 'Editar Usuário';
+<<<<<<< HEAD
+=======
 
         // Preencher campos
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         document.getElementById('user-matricula').value = user.matricula;
         document.getElementById('user-matricula').disabled = true;
         document.getElementById('user-name').value = user.name;
         document.getElementById('user-email').value = user.email;
         document.getElementById('user-role').value = user.role;
+<<<<<<< HEAD
+        document.getElementById('user-status').value = user.status || 'active';
+=======
 
         // ✅ CORREÇÃO: Garantir que o status seja preenchido
         document.getElementById('user-status').value = user.status || 'active';
 
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         passwordField.style.display = 'none';
         document.getElementById('user-password').required = false;
 
         modalManager.openStaticModal(userFormModal);
     }
 
+<<<<<<< HEAD
+    // =========================
+    // 🔧 EXCLUIR USUÁRIO (APENAS UMA FUNÇÃO!)
+    // =========================
+    function deleteUser(userId) {
+        const user = usersData.find(u => u.id == userId);
+        if (!user) return;
+
+        // Para professores, mostra confirmação simples (sem senha)
+        if (user.role === 'professor') {
+            modalManager.createAlert('warning', 'Confirmar Exclusão', 
+                `Tem certeza que deseja excluir o professor <strong>${user.name}</strong>?<br><br>
+                 <small style="color: #666;">Esta ação não pode ser desfeita.</small>`,
+                [
+                    { 
+                        text: 'Cancelar', 
+                        action: 'secondary' 
+                    },
+                    { 
+                        text: 'Excluir', 
+                        action: 'primary', 
+                        callback: () => confirmDelete(userId, null) 
+                    }
+                ]
+            );
+        } 
+        // Para admin/suporte, pede confirmação de senha
+        else {
+            const alertOverlay = modalManager.createAlert('warning', 'Confirmação de Segurança', 
+                `Para excluir um usuário <strong>${user.role === 'admin' ? 'administrador' : 'de suporte'}</strong>, 
+                 é necessário confirmar sua senha.<br><br>
+                 <div style="margin: 1rem 0; padding: 1rem; background: #fff3cd; border-radius: 6px; border: 1px solid #ffeaa7;">
+                    <strong>${user.name}</strong><br>
+                    <small>${user.matricula} • ${user.email}</small>
+                 </div>`,
+                []
+            );
+
+            const alertModal = alertOverlay.querySelector('.alert-modal');
+            alertModal.innerHTML = `
+                <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <h3 class="alert-title">Confirmação de Segurança</h3>
+                <div class="alert-message">
+                    <div style="margin-bottom: 1rem;">
+                        Para excluir um usuário <strong>${user.role === 'admin' ? 'administrador' : 'de suporte'}</strong>, 
+                        é necessário confirmar sua senha.
+                    </div>
+                    <div style="margin: 1rem 0; padding: 1rem; background: #fff3cd; border-radius: 6px; border: 1px solid #ffeaa7;">
+                        <strong>${user.name}</strong><br>
+                        <small>${user.matricula} • ${user.email}</small>
+                    </div>
+                    <div style="margin: 1.5rem 0;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Sua Senha:</label>
+                        <input type="password" id="confirm-password" placeholder="Digite sua senha para confirmar" 
+                            style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                        <small style="display: block; margin-top: 0.25rem; color: #666;">
+                            Digite sua senha de administrador para confirmar a exclusão.
+                        </small>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="alert-btn alert-btn-secondary" id="cancel-delete-btn">Cancelar</button>
+                    <button class="alert-btn alert-btn-primary" id="confirm-delete-btn" style="min-width: 120px;">
+                        <i class="fas fa-trash"></i> Confirmar Exclusão
+                    </button>
+                </div>
+            `;
+
+            const passwordInput = alertModal.querySelector('#confirm-password');
+            const cancelBtn = alertModal.querySelector('#cancel-delete-btn');
+            const confirmBtn = alertModal.querySelector('#confirm-delete-btn');
+
+            // Focar no campo de senha após a animação do modal
+            setTimeout(() => passwordInput.focus(), 150);
+
+            // Botão Cancelar
+            cancelBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                modalManager.closeAlert(alertOverlay);
+            });
+
+            // Botão Confirmar
+            confirmBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const senha = passwordInput.value.trim();
+
+                if (!senha) {
+                    passwordInput.style.borderColor = '#F44336';
+                    passwordInput.style.boxShadow = '0 0 0 2px rgba(244, 67, 54, 0.2)';
+                    passwordInput.focus();
+
+                    // Mostrar mensagem de erro temporária
+                    const errorMsg = document.createElement('small');
+                    errorMsg.textContent = 'Por favor, digite sua senha.';
+                    errorMsg.style.color = '#F44336';
+                    errorMsg.style.display = 'block';
+                    errorMsg.style.marginTop = '0.25rem';
+                    errorMsg.style.fontSize = '0.85rem';
+
+                    // Remover mensagens anteriores
+                    const existingError = passwordInput.parentNode.querySelector('small[style*="color: #F44336"]');
+                    if (existingError) existingError.remove();
+
+                    passwordInput.parentNode.appendChild(errorMsg);
+                    return;
+                }
+
+                // Desabilitar botão e mostrar loading
+                confirmBtn.disabled = true;
+                confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+
+                // Fechar modal e chamar confirmDelete
+                modalManager.closeAlert(alertOverlay);
+
+                // Pequeno delay para garantir que o modal feche antes da próxima ação
+                setTimeout(() => confirmDelete(userId, senha), 100);
+            });
+
+            // Permitir Enter para confirmar
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    confirmBtn.click();
+                }
+            });
+
+            // Limpar estilos de erro ao digitar
+            passwordInput.addEventListener('input', () => {
+                passwordInput.style.borderColor = '#ddd';
+                passwordInput.style.boxShadow = 'none';
+                const existingError = passwordInput.parentNode.querySelector('small[style*="color: #F44336"]');
+                if (existingError) existingError.remove();
+            });
+
+            // Fechar modal ao clicar no overlay
+            alertOverlay.addEventListener('click', (e) => {
+                if (e.target === alertOverlay) {
+                    modalManager.closeAlert(alertOverlay);
+                }
+            });
+        }
+    }
+
+    // =========================
+    // 🔧 REATRIBUIÇÃO DE ORDENS
+=======
 
     function showPasswordConfirmation(userId, user) {
         const alertOverlay = modalManager.createAlert('warning', 'Confirmação de Segurança', 
@@ -556,6 +817,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // =========================
     // Modal de Reatribuição
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     function showReassignmentModal(userId, data) {
         const alertOverlay = modalManager.createAlert('warning', 'Reatribuir Ordens', 
@@ -593,7 +855,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alertOverlay.querySelector('.alert-modal').appendChild(alertActions);
 
+<<<<<<< HEAD
+=======
         // Configurar eventos
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
         alertOverlay.querySelector('#cancel-reassign').addEventListener('click', () => {
             modalManager.closeAlert(alertOverlay);
         });
@@ -639,8 +904,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 modalManager.closeAlert(alertOverlay);
+<<<<<<< HEAD
+                // Após reatribuir, mostra confirmação de senha para exclusão
+                const user = usersData.find(u => u.id == userId);
+                deleteUser(userId); // Chama a função deleteUser novamente para a confirmação de senha
+=======
                 const user = usersData.find(u => u.id == userId);
                 showPasswordConfirmation(userId, user);
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 
             } catch (error) {
                 console.error('❌ [REASSIGN] Erro:', error);
@@ -652,7 +923,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
+<<<<<<< HEAD
+    // 🔧 CONFIRMAR DELETE
+=======
     // Confirmar Delete
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     async function confirmDelete(userId, senhaAdmin) {
         try {
@@ -683,7 +958,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
+<<<<<<< HEAD
+    // 🔧 CRIAR/ATUALIZAR
+=======
     // Criar/Atualizar Usuário
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     async function createUser(userData) {
         try {
@@ -719,7 +998,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+<<<<<<< HEAD
+=======
     // Função auxiliar (mantida para compatibilidade)
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     function showCustomAlert(type, title, message, buttons = []) {
         return modalManager.createAlert(type, title, message, buttons);
     }
@@ -754,7 +1036,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
+<<<<<<< HEAD
+    // 🔧 FORMULÁRIO
+=======
     // Formulário
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     let validateMatriculaFn;
 
@@ -775,7 +1061,10 @@ document.addEventListener('DOMContentLoaded', function() {
         saveUserBtn.addEventListener('click', async (e) => {
             e.preventDefault();
 
+<<<<<<< HEAD
+=======
             // Validar matrícula antes de enviar
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
             if (!validateMatriculaFn()) {
                 modalManager.createAlert('warning', 'Atenção', 'Corrija a matrícula antes de continuar.');
                 return;
@@ -819,7 +1108,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================
+<<<<<<< HEAD
+    // 🔧 INICIALIZAÇÃO
+=======
     // Inicialização
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
     // =========================
     function init() {
         modalManager.setupStaticModals();
@@ -861,5 +1154,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     init();
+<<<<<<< HEAD
+    console.log('✅ Gerenciar Usuários inicializado - VERSÃO COMPLETA CORRIGIDA!');
+=======
     console.log('✅ Gerenciar Usuários inicializado com todas as correções!');
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 });

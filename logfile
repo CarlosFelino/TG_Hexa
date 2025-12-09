@@ -7,6 +7,7 @@
 2025-12-01 03:55:18.412 UTC [15325] ERROR:  column "deletado_em" does not exist at character 42
 2025-12-01 03:55:18.412 UTC [15325] STATEMENT:  SELECT * FROM users WHERE email = $1 AND deletado_em IS NULL
 2025-12-01 03:58:29.673 UTC [15417] ERROR:  relation "users" already exists
+<<<<<<< HEAD
 2025-12-01 03:58:29.673 UTC [15417] STATEMENT:  CREATE TABLE users (
 	    id SERIAL PRIMARY KEY,
 	    nome VARCHAR(100) NOT NULL,
@@ -732,6 +733,733 @@
 	  token TEXT NOT NULL UNIQUE,
 	  expira_em TIMESTAMP NOT NULL,
 	  usado BOOLEAN DEFAULT FALSE
+=======
+2025-12-01 03:58:29.673 UTC [15417] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-01 03:59:06.121 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 03:59:08.982 UTC [15279] LOG:  checkpoint complete: wrote 31 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.818 s, sync=0.033 s, total=2.861 s; sync files=25, longest=0.003 s, average=0.002 s; distance=121 kB, estimate=121 kB; lsn=0/1B64830, redo lsn=0/1B647D8
+2025-12-01 04:04:07.082 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:04:08.340 UTC [15279] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.218 s, sync=0.019 s, total=1.258 s; sync files=11, longest=0.004 s, average=0.002 s; distance=22 kB, estimate=111 kB; lsn=0/1B6A2E8, redo lsn=0/1B6A290
+2025-12-01 04:14:07.540 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:14:08.007 UTC [15279] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.431 s, sync=0.016 s, total=0.468 s; sync files=5, longest=0.009 s, average=0.004 s; distance=16 kB, estimate=102 kB; lsn=0/1B6E648, redo lsn=0/1B6E5F0
+2025-12-01 04:19:07.107 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:19:07.449 UTC [15279] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.017 s, total=0.343 s; sync files=4, longest=0.011 s, average=0.005 s; distance=3 kB, estimate=92 kB; lsn=0/1B6F5B0, redo lsn=0/1B6F558
+2025-12-01 04:24:07.549 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:24:07.771 UTC [15279] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.008 s, total=0.222 s; sync files=3, longest=0.004 s, average=0.003 s; distance=7 kB, estimate=83 kB; lsn=0/1B71200, redo lsn=0/1B711A8
+2025-12-01 04:29:07.872 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:29:08.604 UTC [15279] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.703 s, sync=0.012 s, total=0.732 s; sync files=6, longest=0.004 s, average=0.002 s; distance=18 kB, estimate=77 kB; lsn=0/1B75A60, redo lsn=0/1B75A08
+2025-12-01 04:34:07.704 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:34:08.160 UTC [15279] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.012 s, total=0.456 s; sync files=5, longest=0.008 s, average=0.003 s; distance=17 kB, estimate=71 kB; lsn=0/1B79F90, redo lsn=0/1B79F38
+2025-12-01 04:44:07.360 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:44:11.858 UTC [15279] LOG:  checkpoint complete: wrote 45 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.432 s, sync=0.050 s, total=4.499 s; sync files=37, longest=0.022 s, average=0.002 s; distance=128 kB, estimate=128 kB; lsn=0/1B99FF8, redo lsn=0/1B99FA0
+2025-12-01 04:49:07.959 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:49:08.606 UTC [15279] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.611 s, sync=0.016 s, total=0.648 s; sync files=5, longest=0.010 s, average=0.004 s; distance=4 kB, estimate=115 kB; lsn=0/1B9B180, redo lsn=0/1B9B128
+2025-12-01 04:59:07.807 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 04:59:09.312 UTC [15279] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.407 s, sync=0.063 s, total=1.505 s; sync files=12, longest=0.063 s, average=0.006 s; distance=37 kB, estimate=107 kB; lsn=0/1BA4698, redo lsn=0/1BA4640
+2025-12-01 05:04:07.412 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 05:04:07.655 UTC [15279] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.014 s, total=0.244 s; sync files=3, longest=0.012 s, average=0.005 s; distance=4 kB, estimate=97 kB; lsn=0/1BA5868, redo lsn=0/1BA5810
+2025-12-01 05:14:07.855 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 05:14:08.717 UTC [15279] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.032 s, total=0.863 s; sync files=5, longest=0.024 s, average=0.007 s; distance=53 kB, estimate=93 kB; lsn=0/1BB2DA8, redo lsn=0/1BB2D50
+2025-12-01 05:19:07.817 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 05:19:09.475 UTC [15279] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.606 s, sync=0.026 s, total=1.658 s; sync files=11, longest=0.025 s, average=0.003 s; distance=39 kB, estimate=87 kB; lsn=0/1BBC9E8, redo lsn=0/1BBC958
+2025-12-01 05:24:07.575 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 05:24:08.015 UTC [15279] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.014 s, total=0.440 s; sync files=5, longest=0.008 s, average=0.003 s; distance=16 kB, estimate=80 kB; lsn=0/1BC0A48, redo lsn=0/1BC09F0
+2025-12-01 05:29:07.114 UTC [15279] LOG:  checkpoint starting: time
+2025-12-01 05:29:07.499 UTC [15279] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.337 s, sync=0.026 s, total=0.385 s; sync files=4, longest=0.015 s, average=0.007 s; distance=4 kB, estimate=72 kB; lsn=0/1BC1E08, redo lsn=0/1BC1DB0
+2025-12-01 13:15:22.910 UTC [607] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-01 13:15:22.914 UTC [607] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-01 13:15:22.916 UTC [607] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 13:15:22.919 UTC [607] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-01 13:15:22.928 UTC [611] LOG:  database system was interrupted; last known up at 2025-12-01 05:29:07 UTC
+2025-12-01 13:15:22.944 UTC [611] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-01 13:15:22.964 UTC [611] LOG:  redo starts at 0/1BC1DB0
+2025-12-01 13:15:22.964 UTC [611] LOG:  invalid record length at 0/1BC1EB8: expected at least 24, got 0
+2025-12-01 13:15:22.964 UTC [611] LOG:  redo done at 0/1BC1E80 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-01 13:15:22.980 UTC [609] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-01 13:15:23.021 UTC [609] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.006 s, total=0.047 s; sync files=2, longest=0.004 s, average=0.003 s; distance=0 kB, estimate=0 kB; lsn=0/1BC1EB8, redo lsn=0/1BC1EB8
+2025-12-01 13:15:23.032 UTC [607] LOG:  database system is ready to accept connections
+2025-12-01 13:20:22.121 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 13:20:29.046 UTC [609] LOG:  checkpoint complete: wrote 65 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=6.458 s, sync=0.457 s, total=6.925 s; sync files=53, longest=0.354 s, average=0.009 s; distance=231 kB, estimate=231 kB; lsn=0/1BFBD20, redo lsn=0/1BFBCC8
+2025-12-01 13:25:22.145 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 13:25:22.278 UTC [609] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.012 s, total=0.133 s; sync files=2, longest=0.009 s, average=0.006 s; distance=2 kB, estimate=208 kB; lsn=0/1BFC5C0, redo lsn=0/1BFC568
+2025-12-01 13:35:22.477 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 13:35:23.388 UTC [609] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.032 s, total=0.911 s; sync files=9, longest=0.030 s, average=0.004 s; distance=31 kB, estimate=190 kB; lsn=0/1C044E8, redo lsn=0/1C04490
+2025-12-01 13:45:22.588 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 13:45:23.027 UTC [609] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.015 s, total=0.440 s; sync files=5, longest=0.009 s, average=0.003 s; distance=4 kB, estimate=172 kB; lsn=0/1C057B8, redo lsn=0/1C05760
+2025-12-01 13:50:22.128 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 13:50:22.566 UTC [609] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.016 s, total=0.439 s; sync files=5, longest=0.009 s, average=0.004 s; distance=9 kB, estimate=156 kB; lsn=0/1C07E20, redo lsn=0/1C07DC8
+2025-12-01 14:00:22.765 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:00:23.169 UTC [609] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.056 s, total=0.405 s; sync files=4, longest=0.056 s, average=0.014 s; distance=10 kB, estimate=141 kB; lsn=0/1C0A778, redo lsn=0/1C0A720
+2025-12-01 14:15:22.469 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:15:23.622 UTC [609] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.103 s, sync=0.038 s, total=1.153 s; sync files=10, longest=0.035 s, average=0.004 s; distance=35 kB, estimate=130 kB; lsn=0/1C133F8, redo lsn=0/1C133A0
+2025-12-01 14:20:22.721 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:20:25.213 UTC [609] LOG:  checkpoint complete: wrote 25 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.419 s, sync=0.050 s, total=2.492 s; sync files=16, longest=0.031 s, average=0.004 s; distance=86 kB, estimate=126 kB; lsn=0/1C28E40, redo lsn=0/1C28DE8
+2025-12-01 14:25:22.313 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:25:22.970 UTC [609] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.602 s, sync=0.014 s, total=0.658 s; sync files=5, longest=0.006 s, average=0.003 s; distance=9 kB, estimate=114 kB; lsn=0/1C2B610, redo lsn=0/1C2B5B8
+2025-12-01 14:30:23.071 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:30:23.412 UTC [609] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.007 s, total=0.341 s; sync files=4, longest=0.003 s, average=0.002 s; distance=17 kB, estimate=104 kB; lsn=0/1C2FA60, redo lsn=0/1C2FA08
+2025-12-01 14:35:23.512 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:35:24.370 UTC [609] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.035 s, total=0.858 s; sync files=9, longest=0.018 s, average=0.004 s; distance=19 kB, estimate=96 kB; lsn=0/1C34A00, redo lsn=0/1C349A8
+2025-12-01 14:40:23.469 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:40:25.132 UTC [609] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.612 s, sync=0.027 s, total=1.664 s; sync files=11, longest=0.008 s, average=0.003 s; distance=57 kB, estimate=92 kB; lsn=0/1C43210, redo lsn=0/1C43180
+2025-12-01 14:45:23.232 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:45:23.874 UTC [609] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.015 s, total=0.642 s; sync files=5, longest=0.008 s, average=0.003 s; distance=9 kB, estimate=84 kB; lsn=0/1C45840, redo lsn=0/1C457E8
+2025-12-01 14:50:23.973 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:50:24.946 UTC [609] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.903 s, sync=0.047 s, total=0.973 s; sync files=6, longest=0.039 s, average=0.008 s; distance=46 kB, estimate=80 kB; lsn=0/1C51390, redo lsn=0/1C51338
+2025-12-01 14:54:58.629 UTC [4032] ERROR:  invalid input syntax for type integer: "null"
+2025-12-01 14:54:58.629 UTC [4032] CONTEXT:  unnamed portal parameter $1 = '...'
+2025-12-01 14:54:58.629 UTC [4032] STATEMENT:  SELECT criador_id, status FROM ordens WHERE id = $1
+2025-12-01 14:55:24.045 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 14:55:24.391 UTC [609] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.018 s, total=0.346 s; sync files=4, longest=0.011 s, average=0.005 s; distance=11 kB, estimate=73 kB; lsn=0/1C54200, redo lsn=0/1C541A8
+2025-12-01 15:00:24.491 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:00:25.283 UTC [609] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.703 s, sync=0.018 s, total=0.792 s; sync files=6, longest=0.009 s, average=0.003 s; distance=29 kB, estimate=69 kB; lsn=0/1C5B738, redo lsn=0/1C5B6E0
+2025-12-01 15:05:24.382 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:05:24.730 UTC [609] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.014 s, total=0.348 s; sync files=4, longest=0.010 s, average=0.004 s; distance=16 kB, estimate=63 kB; lsn=0/1C5F798, redo lsn=0/1C5F740
+2025-12-01 15:10:24.829 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:10:26.578 UTC [609] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.676 s, sync=0.040 s, total=1.749 s; sync files=13, longest=0.020 s, average=0.004 s; distance=84 kB, estimate=84 kB; lsn=0/1C747B0, redo lsn=0/1C74758
+2025-12-01 15:11:27.344 UTC [4930] ERROR:  syntax error at or near "utf" at character 1
+2025-12-01 15:11:27.344 UTC [4930] STATEMENT:  utf
+	UTF
+	SELECT CURRENT_TIMESTAMP;
+2025-12-01 15:11:37.231 UTC [4930] ERROR:  syntax error at or near "utf" at character 1
+2025-12-01 15:11:37.231 UTC [4930] STATEMENT:  utf
+	UTF
+	SELECT CURRENT_TIMESTAMP;
+2025-12-01 15:15:24.678 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:15:25.521 UTC [609] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.015 s, total=0.844 s; sync files=7, longest=0.007 s, average=0.003 s; distance=22 kB, estimate=77 kB; lsn=0/1C7A348, redo lsn=0/1C7A2B8
+2025-12-01 15:19:52.969 UTC [5520] ERROR:  column "data_limite" can only be updated to DEFAULT
+2025-12-01 15:19:52.969 UTC [5520] DETAIL:  Column "data_limite" is a generated column.
+2025-12-01 15:19:52.969 UTC [5520] STATEMENT:  UPDATE ordens
+	SET data_limite = '2025-11-30 10:00:00'
+	WHERE id=9;
+2025-12-01 15:20:24.622 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:20:25.354 UTC [609] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.709 s, sync=0.014 s, total=0.732 s; sync files=8, longest=0.003 s, average=0.002 s; distance=25 kB, estimate=72 kB; lsn=0/1C809E8, redo lsn=0/1C80990
+2025-12-01 15:25:24.454 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:25:26.423 UTC [609] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.918 s, sync=0.023 s, total=1.970 s; sync files=13, longest=0.005 s, average=0.002 s; distance=67 kB, estimate=72 kB; lsn=0/1C91850, redo lsn=0/1C917F8
+2025-12-01 15:35:24.622 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:35:24.758 UTC [609] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.012 s, total=0.137 s; sync files=2, longest=0.011 s, average=0.006 s; distance=7 kB, estimate=65 kB; lsn=0/1C934E0, redo lsn=0/1C93488
+2025-12-01 15:40:24.858 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:40:25.926 UTC [609] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.019 s, sync=0.024 s, total=1.069 s; sync files=11, longest=0.009 s, average=0.003 s; distance=24 kB, estimate=61 kB; lsn=0/1C99818, redo lsn=0/1C997C0
+2025-12-01 15:45:25.027 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:45:26.394 UTC [609] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.030 s, total=1.368 s; sync files=8, longest=0.015 s, average=0.004 s; distance=82 kB, estimate=82 kB; lsn=0/1CAE2F0, redo lsn=0/1CAE298
+2025-12-01 15:50:25.493 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:50:27.774 UTC [609] LOG:  checkpoint complete: wrote 23 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.226 s, sync=0.030 s, total=2.281 s; sync files=17, longest=0.006 s, average=0.002 s; distance=79 kB, estimate=82 kB; lsn=0/1CC1F20, redo lsn=0/1CC1EC8
+2025-12-01 15:55:25.873 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 15:55:28.276 UTC [609] LOG:  checkpoint complete: wrote 24 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.347 s, sync=0.033 s, total=2.404 s; sync files=20, longest=0.005 s, average=0.002 s; distance=70 kB, estimate=81 kB; lsn=0/1CD39C8, redo lsn=0/1CD3970
+2025-12-01 16:00:25.376 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:00:27.482 UTC [609] LOG:  checkpoint complete: wrote 22 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.048 s, sync=0.033 s, total=2.107 s; sync files=17, longest=0.004 s, average=0.002 s; distance=97 kB, estimate=97 kB; lsn=0/1CEBE78, redo lsn=0/1CEBDE8
+2025-12-01 16:05:25.582 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:05:27.425 UTC [609] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.807 s, sync=0.028 s, total=1.843 s; sync files=15, longest=0.005 s, average=0.002 s; distance=55 kB, estimate=92 kB; lsn=0/1CFC720, redo lsn=0/1CF9BB0
+2025-12-01 16:10:25.525 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:10:27.922 UTC [609] LOG:  checkpoint complete: wrote 24 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.331 s, sync=0.038 s, total=2.398 s; sync files=18, longest=0.007 s, average=0.003 s; distance=114 kB, estimate=114 kB; lsn=0/1D164D0, redo lsn=0/1D16478
+2025-12-01 16:15:26.023 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:15:26.877 UTC [609] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.021 s, total=0.855 s; sync files=5, longest=0.013 s, average=0.005 s; distance=47 kB, estimate=107 kB; lsn=0/1D223E8, redo lsn=0/1D22390
+2025-12-01 16:20:26.977 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:20:28.942 UTC [609] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.920 s, sync=0.019 s, total=1.966 s; sync files=14, longest=0.003 s, average=0.002 s; distance=75 kB, estimate=104 kB; lsn=0/1D353C8, redo lsn=0/1D35370
+2025-12-01 16:25:27.042 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:25:27.390 UTC [609] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.305 s, sync=0.015 s, total=0.348 s; sync files=4, longest=0.009 s, average=0.004 s; distance=12 kB, estimate=95 kB; lsn=0/1D385F0, redo lsn=0/1D38598
+2025-12-01 16:30:27.492 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:30:28.458 UTC [609] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.903 s, sync=0.025 s, total=0.966 s; sync files=6, longest=0.018 s, average=0.005 s; distance=74 kB, estimate=93 kB; lsn=0/1D4AF90, redo lsn=0/1D4AF38
+2025-12-01 16:35:27.557 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:35:29.691 UTC [609] LOG:  checkpoint complete: wrote 21 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.009 s, sync=0.100 s, total=2.134 s; sync files=15, longest=0.098 s, average=0.007 s; distance=113 kB, estimate=113 kB; lsn=0/1D676F0, redo lsn=0/1D67698
+2025-12-01 16:40:27.790 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:40:28.130 UTC [609] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.013 s, total=0.341 s; sync files=4, longest=0.008 s, average=0.004 s; distance=16 kB, estimate=104 kB; lsn=0/1D6B700, redo lsn=0/1D6B6A8
+2025-12-01 16:45:27.230 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:45:28.919 UTC [609] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.621 s, sync=0.040 s, total=1.689 s; sync files=13, longest=0.018 s, average=0.004 s; distance=95 kB, estimate=103 kB; lsn=0/1D835B8, redo lsn=0/1D83560
+2025-12-01 16:50:28.019 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 16:50:28.977 UTC [609] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.906 s, sync=0.015 s, total=0.959 s; sync files=7, longest=0.006 s, average=0.003 s; distance=30 kB, estimate=95 kB; lsn=0/1D8AE20, redo lsn=0/1D8AD90
+2025-12-01 17:10:29.377 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 17:10:29.803 UTC [609] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.010 s, total=0.427 s; sync files=5, longest=0.004 s, average=0.002 s; distance=27 kB, estimate=89 kB; lsn=0/1D91BC8, redo lsn=0/1D91B70
+2025-12-01 17:15:29.903 UTC [609] LOG:  checkpoint starting: time
+2025-12-01 17:15:31.469 UTC [609] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.515 s, sync=0.029 s, total=1.566 s; sync files=12, longest=0.007 s, average=0.003 s; distance=60 kB, estimate=86 kB; lsn=0/1DA0DD8, redo lsn=0/1DA0D80
+2025-12-01 18:59:54.021 UTC [13094] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-01 18:59:54.024 UTC [13094] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-01 18:59:54.024 UTC [13094] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 18:59:54.033 UTC [13094] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-01 18:59:54.044 UTC [13104] LOG:  database system was interrupted; last known up at 2025-12-01 17:15:31 UTC
+2025-12-01 18:59:54.218 UTC [13104] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-01 18:59:54.226 UTC [13104] LOG:  redo starts at 0/1DA0D80
+2025-12-01 18:59:54.227 UTC [13104] LOG:  invalid record length at 0/1DB1BC0: expected at least 24, got 0
+2025-12-01 18:59:54.227 UTC [13104] LOG:  redo done at 0/1DB1B88 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-01 18:59:54.317 UTC [13102] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-01 18:59:54.614 UTC [13102] LOG:  checkpoint complete: wrote 23 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.202 s, total=0.301 s; sync files=17, longest=0.087 s, average=0.012 s; distance=67 kB, estimate=67 kB; lsn=0/1DB1BC0, redo lsn=0/1DB1BC0
+2025-12-01 18:59:54.621 UTC [13094] LOG:  database system is ready to accept connections
+2025-12-01 19:04:54.714 UTC [13102] LOG:  checkpoint starting: time
+2025-12-01 19:04:55.862 UTC [13102] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.104 s, sync=0.024 s, total=1.148 s; sync files=7, longest=0.016 s, average=0.004 s; distance=53 kB, estimate=66 kB; lsn=0/1DBF170, redo lsn=0/1DBF118
+2025-12-01 19:05:49.020 UTC [13457] ERROR:  duplicate key value violates unique constraint "users_email_key"
+2025-12-01 19:05:49.020 UTC [13457] DETAIL:  Key (email)=(conclusaovitoria@proton.me) already exists.
+2025-12-01 19:05:49.020 UTC [13457] STATEMENT:  INSERT INTO users (nome, email, senha_hash, matricula, role)
+	       VALUES ($1, $2, $3, $4, $5)
+	       RETURNING id, nome, email, matricula, role
+2025-12-01 19:09:54.962 UTC [13102] LOG:  checkpoint starting: time
+2025-12-01 19:09:56.429 UTC [13102] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.414 s, sync=0.029 s, total=1.467 s; sync files=15, longest=0.011 s, average=0.002 s; distance=7 kB, estimate=60 kB; lsn=0/1DC0F70, redo lsn=0/1DC0F18
+2025-12-01 19:13:49.296 UTC [13094] LOG:  received fast shutdown request
+2025-12-01 19:13:49.313 UTC [13094] LOG:  aborting any active transactions
+2025-12-01 19:13:49.317 UTC [13094] LOG:  background worker "logical replication launcher" (PID 13112) exited with exit code 1
+2025-12-01 19:13:49.317 UTC [13102] LOG:  shutting down
+2025-12-01 19:13:49.323 UTC [13102] LOG:  checkpoint starting: shutdown immediate
+2025-12-01 19:13:49.341 UTC [13102] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.006 s, total=0.024 s; sync files=3, longest=0.004 s, average=0.002 s; distance=1 kB, estimate=54 kB; lsn=0/1DC1448, redo lsn=0/1DC1448
+2025-12-01 19:13:49.344 UTC [13094] LOG:  database system is shut down
+2025-12-01 19:13:54.835 UTC [13876] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-01 19:13:54.911 UTC [13876] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-01 19:13:54.916 UTC [13876] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 19:13:54.927 UTC [13876] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-01 19:13:54.942 UTC [13879] LOG:  database system was shut down at 2025-12-01 19:13:49 UTC
+2025-12-01 19:13:55.018 UTC [13876] LOG:  database system is ready to accept connections
+2025-12-01 19:18:55.041 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:18:56.223 UTC [13877] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.103 s, sync=0.042 s, total=1.182 s; sync files=9, longest=0.030 s, average=0.005 s; distance=25 kB, estimate=25 kB; lsn=0/1DC7900, redo lsn=0/1DC78A8
+2025-12-01 19:23:55.322 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:23:57.355 UTC [13877] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.987 s, sync=0.035 s, total=2.034 s; sync files=14, longest=0.006 s, average=0.003 s; distance=107 kB, estimate=107 kB; lsn=0/1DE2810, redo lsn=0/1DE27B8
+2025-12-01 19:28:55.455 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:28:57.131 UTC [13877] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.624 s, sync=0.030 s, total=1.676 s; sync files=15, longest=0.008 s, average=0.002 s; distance=25 kB, estimate=99 kB; lsn=0/1DE8C58, redo lsn=0/1DE8C00
+2025-12-01 19:33:02.725 UTC [15261] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-01 19:33:02.725 UTC [15261] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-01 19:33:47.266 UTC [15290] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-01 19:33:47.266 UTC [15290] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-01 19:33:55.231 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:33:56.686 UTC [13877] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.405 s, sync=0.024 s, total=1.455 s; sync files=10, longest=0.010 s, average=0.003 s; distance=91 kB, estimate=98 kB; lsn=0/1E03CB8, redo lsn=0/1DFFA68
+2025-12-01 19:34:00.831 UTC [15291] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-01 19:34:00.831 UTC [15291] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-01 19:38:55.786 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:38:57.241 UTC [13877] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.025 s, total=1.455 s; sync files=8, longest=0.015 s, average=0.004 s; distance=69 kB, estimate=95 kB; lsn=0/1E11148, redo lsn=0/1E110F0
+2025-12-01 19:43:55.340 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:43:57.434 UTC [13877] LOG:  checkpoint complete: wrote 21 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.029 s, sync=0.034 s, total=2.094 s; sync files=21, longest=0.004 s, average=0.002 s; distance=12 kB, estimate=87 kB; lsn=0/1E14490, redo lsn=0/1E14438
+2025-12-01 19:48:55.534 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:48:59.297 UTC [13877] LOG:  checkpoint complete: wrote 37 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.690 s, sync=0.049 s, total=3.763 s; sync files=31, longest=0.004 s, average=0.002 s; distance=104 kB, estimate=104 kB; lsn=0/1E2E868, redo lsn=0/1E2E810
+2025-12-01 19:53:55.397 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:53:55.745 UTC [13877] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.307 s, sync=0.013 s, total=0.348 s; sync files=4, longest=0.009 s, average=0.004 s; distance=20 kB, estimate=96 kB; lsn=0/1E33868, redo lsn=0/1E33810
+2025-12-01 19:58:55.844 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 19:58:56.169 UTC [13877] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.008 s, total=0.325 s; sync files=4, longest=0.004 s, average=0.002 s; distance=16 kB, estimate=88 kB; lsn=0/1E37B60, redo lsn=0/1E37B08
+2025-12-01 20:03:55.269 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:03:56.243 UTC [13877] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.913 s, sync=0.025 s, total=0.974 s; sync files=6, longest=0.018 s, average=0.005 s; distance=50 kB, estimate=84 kB; lsn=0/1E44460, redo lsn=0/1E44408
+2025-12-01 20:08:55.344 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:08:56.504 UTC [13877] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.004 s, sync=0.026 s, total=1.161 s; sync files=7, longest=0.016 s, average=0.004 s; distance=38 kB, estimate=80 kB; lsn=0/1E4DDD0, redo lsn=0/1E4DD78
+2025-12-01 20:13:55.606 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:13:56.559 UTC [13877] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.906 s, sync=0.025 s, total=0.953 s; sync files=6, longest=0.018 s, average=0.005 s; distance=47 kB, estimate=76 kB; lsn=0/1E59B00, redo lsn=0/1E59AA8
+2025-12-01 20:18:55.658 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:18:56.012 UTC [13877] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.014 s, total=0.355 s; sync files=4, longest=0.009 s, average=0.004 s; distance=18 kB, estimate=70 kB; lsn=0/1E5E620, redo lsn=0/1E5E5C8
+2025-12-01 20:23:55.115 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:23:55.960 UTC [13877] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.805 s, sync=0.013 s, total=0.845 s; sync files=5, longest=0.008 s, average=0.003 s; distance=46 kB, estimate=68 kB; lsn=0/1E6A198, redo lsn=0/1E6A140
+2025-12-01 20:28:56.060 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:28:56.926 UTC [13877] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.810 s, sync=0.023 s, total=0.867 s; sync files=5, longest=0.017 s, average=0.005 s; distance=17 kB, estimate=63 kB; lsn=0/1E6E970, redo lsn=0/1E6E918
+2025-12-01 20:33:57.026 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:33:57.469 UTC [13877] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.020 s, total=0.443 s; sync files=5, longest=0.015 s, average=0.004 s; distance=18 kB, estimate=58 kB; lsn=0/1E73220, redo lsn=0/1E731C8
+2025-12-01 20:38:57.568 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:38:58.918 UTC [13877] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.026 s, total=1.351 s; sync files=8, longest=0.017 s, average=0.004 s; distance=62 kB, estimate=62 kB; lsn=0/1E82DA0, redo lsn=0/1E82D10
+2025-12-01 20:48:58.115 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 20:48:58.454 UTC [13877] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.016 s, total=0.339 s; sync files=4, longest=0.011 s, average=0.004 s; distance=18 kB, estimate=58 kB; lsn=0/1E875F0, redo lsn=0/1E87598
+2025-12-01 21:53:59.753 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 21:53:59.997 UTC [13877] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.010 s, total=0.245 s; sync files=3, longest=0.007 s, average=0.004 s; distance=2 kB, estimate=52 kB; lsn=0/1E87ED0, redo lsn=0/1E87E78
+2025-12-01 21:59:00.097 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 21:59:02.194 UTC [13877] LOG:  checkpoint complete: wrote 21 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.039 s, sync=0.035 s, total=2.097 s; sync files=21, longest=0.005 s, average=0.002 s; distance=27 kB, estimate=50 kB; lsn=0/1E8EBA0, redo lsn=0/1E8EB48
+2025-12-01 22:04:00.292 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 22:04:01.958 UTC [13877] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.615 s, sync=0.033 s, total=1.667 s; sync files=13, longest=0.009 s, average=0.003 s; distance=63 kB, estimate=63 kB; lsn=0/1E9EA60, redo lsn=0/1E9EA08
+2025-12-01 22:19:01.256 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 22:19:01.603 UTC [13877] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.018 s, total=0.347 s; sync files=4, longest=0.014 s, average=0.005 s; distance=3 kB, estimate=57 kB; lsn=0/1E9F810, redo lsn=0/1E9F7B8
+2025-12-01 22:34:01.901 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 22:34:03.687 UTC [13877] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.740 s, sync=0.026 s, total=1.787 s; sync files=18, longest=0.003 s, average=0.002 s; distance=40 kB, estimate=55 kB; lsn=0/1EA98A0, redo lsn=0/1EA9848
+2025-12-01 22:39:01.787 UTC [13877] LOG:  checkpoint starting: time
+2025-12-01 22:39:03.577 UTC [13877] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.741 s, sync=0.030 s, total=1.790 s; sync files=18, longest=0.003 s, average=0.002 s; distance=16 kB, estimate=51 kB; lsn=0/1EAD998, redo lsn=0/1EAD940
+2025-12-07 07:45:38.509 UTC [358] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 07:45:38.510 UTC [358] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 07:45:38.512 UTC [358] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 07:45:38.515 UTC [358] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 07:45:38.534 UTC [361] LOG:  database system was shut down at 2025-12-06 18:44:58 UTC
+2025-12-07 07:45:38.551 UTC [358] LOG:  database system is ready to accept connections
+2025-12-07 07:50:38.629 UTC [359] LOG:  checkpoint starting: time
+2025-12-07 07:50:42.630 UTC [359] LOG:  checkpoint complete: wrote 42 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.938 s, sync=0.037 s, total=4.001 s; sync files=19, longest=0.004 s, average=0.002 s; distance=49 kB, estimate=49 kB; lsn=0/217F3D0, redo lsn=0/217F378
+2025-12-07 07:58:23.168 UTC [1130] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 07:58:23.169 UTC [1130] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 07:58:23.171 UTC [1130] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 07:58:23.177 UTC [1130] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 07:58:23.184 UTC [1133] LOG:  database system was interrupted; last known up at 2025-12-07 07:50:42 UTC
+2025-12-07 07:58:23.212 UTC [1133] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 07:58:23.219 UTC [1133] LOG:  redo starts at 0/217F378
+2025-12-07 07:58:23.219 UTC [1133] LOG:  invalid record length at 0/217F480: expected at least 24, got 0
+2025-12-07 07:58:23.219 UTC [1133] LOG:  redo done at 0/217F448 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 07:58:23.225 UTC [1131] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 07:58:23.354 UTC [1131] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.133 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/217F480, redo lsn=0/217F480
+2025-12-07 07:58:23.360 UTC [1130] LOG:  database system is ready to accept connections
+2025-12-07 08:03:23.455 UTC [1131] LOG:  checkpoint starting: time
+2025-12-07 08:03:25.662 UTC [1131] LOG:  checkpoint complete: wrote 22 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.122 s, sync=0.043 s, total=2.208 s; sync files=22, longest=0.006 s, average=0.002 s; distance=56 kB, estimate=56 kB; lsn=0/218D530, redo lsn=0/218D4D8
+2025-12-07 08:08:23.761 UTC [1131] LOG:  checkpoint starting: time
+2025-12-07 08:08:25.259 UTC [1131] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.404 s, sync=0.061 s, total=1.498 s; sync files=12, longest=0.041 s, average=0.006 s; distance=66 kB, estimate=66 kB; lsn=0/21A3170, redo lsn=0/219DFD0
+2025-12-07 08:13:23.358 UTC [1131] LOG:  checkpoint starting: time
+2025-12-07 08:13:25.460 UTC [1131] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.955 s, sync=0.087 s, total=2.102 s; sync files=20, longest=0.027 s, average=0.005 s; distance=50 kB, estimate=65 kB; lsn=0/21AAA00, redo lsn=0/21AA9A8
+2025-12-07 08:16:05.611 UTC [1484] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:16:05.611 UTC [1484] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:23:06.905 UTC [1492] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:23:06.905 UTC [1492] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:23:31.500 UTC [1494] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:23:31.500 UTC [1494] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:23:39.401 UTC [1495] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:23:39.401 UTC [1495] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:24:18.595 UTC [1496] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:24:18.595 UTC [1496] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:24:29.385 UTC [1498] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:24:29.385 UTC [1498] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:28:42.512 UTC [1505] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:28:42.512 UTC [1505] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:29:03.874 UTC [1506] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:29:03.874 UTC [1506] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:34:33.599 UTC [1518] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:34:33.599 UTC [1518] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:37:02.890 UTC [1526] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:37:02.890 UTC [1526] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:37:07.554 UTC [1527] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:37:07.554 UTC [1527] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:37:14.165 UTC [1528] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:37:14.165 UTC [1528] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:44:57.408 UTC [1561] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:44:57.408 UTC [1561] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:57:05.614 UTC [1130] LOG:  received fast shutdown request
+2025-12-07 08:57:05.629 UTC [1130] LOG:  aborting any active transactions
+2025-12-07 08:57:05.631 UTC [1130] LOG:  background worker "logical replication launcher" (PID 1136) exited with exit code 1
+2025-12-07 08:57:05.632 UTC [1131] LOG:  shutting down
+2025-12-07 08:57:05.701 UTC [1131] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 08:57:05.716 UTC [1131] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.085 s; sync files=1, longest=0.003 s, average=0.003 s; distance=0 kB, estimate=58 kB; lsn=0/21AAAB0, redo lsn=0/21AAAB0
+2025-12-07 08:57:05.808 UTC [1130] LOG:  database system is shut down
+2025-12-07 08:57:09.801 UTC [1736] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 08:57:09.807 UTC [1736] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 08:57:09.808 UTC [1736] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 08:57:09.813 UTC [1736] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 08:57:09.903 UTC [1739] LOG:  database system was shut down at 2025-12-07 08:57:05 UTC
+2025-12-07 08:57:09.913 UTC [1736] LOG:  database system is ready to accept connections
+2025-12-07 08:58:02.208 UTC [1921] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:02.208 UTC [1921] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:58:25.703 UTC [1979] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:25.703 UTC [1979] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:58:42.455 UTC [2036] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:42.455 UTC [2036] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:58:50.900 UTC [2061] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:58:50.900 UTC [2061] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 08:59:50.851 UTC [2095] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 08:59:50.851 UTC [2095] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:02:10.002 UTC [1737] LOG:  checkpoint starting: time
+2025-12-07 09:02:10.239 UTC [1737] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.013 s, total=0.237 s; sync files=4, longest=0.007 s, average=0.004 s; distance=4 kB, estimate=4 kB; lsn=0/21ABED0, redo lsn=0/21ABE78
+2025-12-07 09:09:49.823 UTC [2441] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:09:49.824 UTC [2441] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:09:49.825 UTC [2441] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:09:49.900 UTC [2441] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:09:49.908 UTC [2444] LOG:  database system was interrupted; last known up at 2025-12-07 09:02:10 UTC
+2025-12-07 09:09:50.022 UTC [2444] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 09:09:50.100 UTC [2444] LOG:  redo starts at 0/21ABE78
+2025-12-07 09:09:50.100 UTC [2444] LOG:  invalid record length at 0/21ABF80: expected at least 24, got 0
+2025-12-07 09:09:50.100 UTC [2444] LOG:  redo done at 0/21ABF48 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.07 s
+2025-12-07 09:09:50.107 UTC [2442] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 09:09:50.209 UTC [2442] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.089 s, total=0.106 s; sync files=2, longest=0.087 s, average=0.045 s; distance=0 kB, estimate=0 kB; lsn=0/21ABF80, redo lsn=0/21ABF80
+2025-12-07 09:09:50.216 UTC [2441] LOG:  database system is ready to accept connections
+2025-12-07 09:10:50.677 UTC [2565] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:10:50.677 UTC [2565] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:11:09.852 UTC [2622] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:11:09.852 UTC [2622] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:20:14.761 UTC [472] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:20:14.763 UTC [472] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:20:14.764 UTC [472] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:20:14.769 UTC [472] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:20:14.781 UTC [475] LOG:  database system was interrupted; last known up at 2025-12-07 09:09:50 UTC
+2025-12-07 09:20:14.809 UTC [475] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 09:20:14.834 UTC [475] LOG:  redo starts at 0/21ABFF8
+2025-12-07 09:20:14.840 UTC [475] LOG:  invalid record length at 0/21AD668: expected at least 24, got 0
+2025-12-07 09:20:14.840 UTC [475] LOG:  redo done at 0/21AD630 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 09:20:14.849 UTC [473] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 09:20:14.886 UTC [473] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.017 s, total=0.041 s; sync files=4, longest=0.010 s, average=0.005 s; distance=5 kB, estimate=5 kB; lsn=0/21AD668, redo lsn=0/21AD668
+2025-12-07 09:20:14.892 UTC [472] LOG:  database system is ready to accept connections
+2025-12-07 09:20:48.231 UTC [571] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:20:48.231 UTC [571] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:21:13.472 UTC [573] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:21:13.472 UTC [573] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:21:56.246 UTC [575] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:21:56.246 UTC [575] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:22:20.592 UTC [577] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:22:20.592 UTC [577] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:02.633 UTC [578] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:02.633 UTC [578] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:23.382 UTC [580] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:23.382 UTC [580] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:35.047 UTC [581] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:35.047 UTC [581] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:23:50.056 UTC [582] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:23:50.056 UTC [582] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:08.478 UTC [583] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:08.478 UTC [583] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:18.681 UTC [585] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:18.681 UTC [585] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:40.138 UTC [586] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:40.138 UTC [586] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:24:55.572 UTC [587] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:24:55.572 UTC [587] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:25:14.986 UTC [473] LOG:  checkpoint starting: time
+2025-12-07 09:25:15.226 UTC [473] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.013 s, total=0.241 s; sync files=3, longest=0.010 s, average=0.005 s; distance=6 kB, estimate=6 kB; lsn=0/21AF078, redo lsn=0/21AF020
+2025-12-07 09:25:46.122 UTC [593] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:25:46.122 UTC [593] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:26:07.648 UTC [594] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-07 09:26:07.648 UTC [594] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-07 09:47:04.103 UTC [472] LOG:  received fast shutdown request
+2025-12-07 09:47:04.121 UTC [472] LOG:  aborting any active transactions
+2025-12-07 09:47:04.121 UTC [568] FATAL:  terminating connection due to administrator command
+2025-12-07 09:47:04.124 UTC [472] LOG:  background worker "logical replication launcher" (PID 478) exited with exit code 1
+2025-12-07 09:47:04.141 UTC [473] LOG:  shutting down
+2025-12-07 09:47:04.150 UTC [473] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 09:47:04.169 UTC [473] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.028 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=5 kB; lsn=0/21AF128, redo lsn=0/21AF128
+2025-12-07 09:47:04.179 UTC [472] LOG:  database system is shut down
+2025-12-07 09:47:08.476 UTC [942] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:47:08.491 UTC [942] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:47:08.507 UTC [942] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:47:08.513 UTC [942] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:47:08.568 UTC [945] LOG:  database system was shut down at 2025-12-07 09:47:04 UTC
+2025-12-07 09:47:08.652 UTC [942] LOG:  database system is ready to accept connections
+2025-12-07 09:52:08.667 UTC [943] LOG:  checkpoint starting: time
+2025-12-07 09:52:08.913 UTC [943] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.016 s, total=0.246 s; sync files=4, longest=0.008 s, average=0.004 s; distance=7 kB, estimate=7 kB; lsn=0/21B0E40, redo lsn=0/21B0DE8
+2025-12-07 09:55:25.358 UTC [1574] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 09:55:25.359 UTC [1574] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 09:55:25.360 UTC [1574] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 09:55:25.365 UTC [1574] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 09:55:25.373 UTC [1577] LOG:  database system was interrupted; last known up at 2025-12-07 09:52:08 UTC
+2025-12-07 09:55:25.406 UTC [1577] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 09:55:25.419 UTC [1577] LOG:  redo starts at 0/21B0DE8
+2025-12-07 09:55:25.419 UTC [1577] LOG:  invalid record length at 0/21B0EF0: expected at least 24, got 0
+2025-12-07 09:55:25.419 UTC [1577] LOG:  redo done at 0/21B0EB8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 09:55:25.427 UTC [1575] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 09:55:25.453 UTC [1575] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.012 s, total=0.031 s; sync files=2, longest=0.008 s, average=0.006 s; distance=0 kB, estimate=0 kB; lsn=0/21B0EF0, redo lsn=0/21B0EF0
+2025-12-07 09:55:25.463 UTC [1574] LOG:  database system is ready to accept connections
+2025-12-07 10:06:41.766 UTC [1999] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:06:41.769 UTC [1999] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:06:41.772 UTC [1999] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:06:41.854 UTC [1999] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:06:41.861 UTC [2012] LOG:  database system was interrupted; last known up at 2025-12-07 09:55:25 UTC
+2025-12-07 10:06:41.963 UTC [2012] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:06:41.974 UTC [2012] LOG:  redo starts at 0/21B0F68
+2025-12-07 10:06:41.974 UTC [2012] LOG:  invalid record length at 0/21B0FA0: expected at least 24, got 0
+2025-12-07 10:06:41.974 UTC [2012] LOG:  redo done at 0/21B0F68 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:06:41.992 UTC [2010] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:06:42.079 UTC [2010] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.015 s, total=0.102 s; sync files=2, longest=0.009 s, average=0.008 s; distance=0 kB, estimate=0 kB; lsn=0/21B0FA0, redo lsn=0/21B0FA0
+2025-12-07 10:06:42.168 UTC [1999] LOG:  database system is ready to accept connections
+2025-12-07 10:13:51.783 UTC [2911] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:13:51.785 UTC [2911] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:13:51.786 UTC [2911] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:13:51.791 UTC [2911] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:13:51.799 UTC [2914] LOG:  database system was interrupted; last known up at 2025-12-07 10:06:42 UTC
+2025-12-07 10:13:51.826 UTC [2914] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:13:51.835 UTC [2914] LOG:  redo starts at 0/21B1018
+2025-12-07 10:13:51.835 UTC [2914] LOG:  invalid record length at 0/21B2FA0: expected at least 24, got 0
+2025-12-07 10:13:51.835 UTC [2914] LOG:  redo done at 0/21B2F68 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:13:51.844 UTC [2912] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:13:51.872 UTC [2912] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.012 s, total=0.033 s; sync files=4, longest=0.006 s, average=0.003 s; distance=8 kB, estimate=8 kB; lsn=0/21B2FA0, redo lsn=0/21B2FA0
+2025-12-07 10:13:51.879 UTC [2911] LOG:  database system is ready to accept connections
+2025-12-07 10:27:46.779 UTC [3505] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:27:46.780 UTC [3505] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:27:46.781 UTC [3505] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:27:46.785 UTC [3505] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:27:46.793 UTC [3508] LOG:  database system was interrupted; last known up at 2025-12-07 10:13:51 UTC
+2025-12-07 10:27:46.823 UTC [3508] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:27:47.059 UTC [3508] LOG:  redo starts at 0/21B3018
+2025-12-07 10:27:47.059 UTC [3508] LOG:  invalid record length at 0/21B3050: expected at least 24, got 0
+2025-12-07 10:27:47.059 UTC [3508] LOG:  redo done at 0/21B3018 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:27:47.076 UTC [3506] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:27:47.103 UTC [3506] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.005 s, total=0.032 s; sync files=2, longest=0.003 s, average=0.003 s; distance=0 kB, estimate=0 kB; lsn=0/21B3050, redo lsn=0/21B3050
+2025-12-07 10:27:47.117 UTC [3505] LOG:  database system is ready to accept connections
+2025-12-07 10:32:47.202 UTC [3506] LOG:  checkpoint starting: time
+2025-12-07 10:32:47.435 UTC [3506] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.012 s, total=0.234 s; sync files=3, longest=0.009 s, average=0.004 s; distance=8 kB, estimate=8 kB; lsn=0/21B53C8, redo lsn=0/21B5370
+2025-12-07 10:34:00.520 UTC [3505] LOG:  received fast shutdown request
+2025-12-07 10:34:00.531 UTC [3505] LOG:  aborting any active transactions
+2025-12-07 10:34:00.532 UTC [3603] FATAL:  terminating connection due to administrator command
+2025-12-07 10:34:00.535 UTC [3505] LOG:  background worker "logical replication launcher" (PID 3511) exited with exit code 1
+2025-12-07 10:34:00.541 UTC [3506] LOG:  shutting down
+2025-12-07 10:34:00.549 UTC [3506] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 10:34:00.560 UTC [3506] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.020 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=7 kB; lsn=0/21B5478, redo lsn=0/21B5478
+2025-12-07 10:34:00.568 UTC [3505] LOG:  database system is shut down
+2025-12-07 10:35:32.457 UTC [3950] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:35:32.461 UTC [3950] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:35:32.465 UTC [3950] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:35:32.469 UTC [3950] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:35:32.477 UTC [3953] LOG:  database system was shut down at 2025-12-07 10:34:00 UTC
+2025-12-07 10:35:32.490 UTC [3950] LOG:  database system is ready to accept connections
+2025-12-07 10:40:56.930 UTC [4286] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:40:56.931 UTC [4286] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:40:56.932 UTC [4286] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:40:56.936 UTC [4286] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:40:56.943 UTC [4289] LOG:  database system was interrupted; last known up at 2025-12-07 10:35:32 UTC
+2025-12-07 10:40:56.967 UTC [4289] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-07 10:40:56.975 UTC [4289] LOG:  redo starts at 0/21B54F0
+2025-12-07 10:40:56.976 UTC [4289] LOG:  invalid record length at 0/21B7BC0: expected at least 24, got 0
+2025-12-07 10:40:56.976 UTC [4289] LOG:  redo done at 0/21B7B88 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-07 10:40:56.982 UTC [4287] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-07 10:40:57.015 UTC [4287] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.017 s, total=0.036 s; sync files=5, longest=0.006 s, average=0.004 s; distance=9 kB, estimate=9 kB; lsn=0/21B7BC0, redo lsn=0/21B7BC0
+2025-12-07 10:40:57.024 UTC [4286] LOG:  database system is ready to accept connections
+2025-12-07 10:42:20.052 UTC [4286] LOG:  received fast shutdown request
+2025-12-07 10:42:20.063 UTC [4286] LOG:  aborting any active transactions
+2025-12-07 10:42:20.065 UTC [4286] LOG:  background worker "logical replication launcher" (PID 4292) exited with exit code 1
+2025-12-07 10:42:20.081 UTC [4287] LOG:  shutting down
+2025-12-07 10:42:20.091 UTC [4287] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 10:42:20.108 UTC [4287] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.007 s, total=0.028 s; sync files=3, longest=0.004 s, average=0.003 s; distance=4 kB, estimate=9 kB; lsn=0/21B8F40, redo lsn=0/21B8F40
+2025-12-07 10:42:20.117 UTC [4286] LOG:  database system is shut down
+2025-12-07 10:42:23.482 UTC [4472] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 10:42:23.553 UTC [4472] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 10:42:23.561 UTC [4472] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 10:42:23.567 UTC [4472] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 10:42:23.670 UTC [4475] LOG:  database system was shut down at 2025-12-07 10:42:20 UTC
+2025-12-07 10:42:23.765 UTC [4472] LOG:  database system is ready to accept connections
+2025-12-07 10:47:23.675 UTC [4473] LOG:  checkpoint starting: time
+2025-12-07 10:47:23.917 UTC [4473] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.016 s, total=0.242 s; sync files=4, longest=0.011 s, average=0.004 s; distance=5 kB, estimate=5 kB; lsn=0/21BA658, redo lsn=0/21BA600
+2025-12-07 10:50:17.009 UTC [4472] LOG:  received fast shutdown request
+2025-12-07 10:50:17.030 UTC [4472] LOG:  aborting any active transactions
+2025-12-07 10:50:17.042 UTC [4472] LOG:  background worker "logical replication launcher" (PID 4478) exited with exit code 1
+2025-12-07 10:50:17.043 UTC [4473] LOG:  shutting down
+2025-12-07 10:50:17.048 UTC [4473] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 10:50:17.063 UTC [4473] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.021 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=5 kB; lsn=0/21BA708, redo lsn=0/21BA708
+2025-12-07 10:50:17.069 UTC [4472] LOG:  database system is shut down
+2025-12-07 17:24:36.014 UTC [801] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-07 17:24:36.019 UTC [801] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-07 17:24:36.020 UTC [801] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-07 17:24:36.024 UTC [801] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-07 17:24:36.037 UTC [804] LOG:  database system was shut down at 2025-12-07 10:50:17 UTC
+2025-12-07 17:24:36.067 UTC [801] LOG:  database system is ready to accept connections
+2025-12-07 17:29:36.136 UTC [802] LOG:  checkpoint starting: time
+2025-12-07 17:29:36.981 UTC [802] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.024 s, total=0.846 s; sync files=8, longest=0.012 s, average=0.003 s; distance=40 kB, estimate=40 kB; lsn=0/21C4B20, redo lsn=0/21C4AC8
+2025-12-07 17:34:37.081 UTC [802] LOG:  checkpoint starting: time
+2025-12-07 17:34:37.415 UTC [802] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.013 s, total=0.335 s; sync files=4, longest=0.009 s, average=0.004 s; distance=12 kB, estimate=38 kB; lsn=0/21C7EE0, redo lsn=0/21C7E88
+2025-12-07 17:59:37.903 UTC [802] LOG:  checkpoint starting: time
+2025-12-07 17:59:38.349 UTC [802] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.025 s, total=0.446 s; sync files=5, longest=0.016 s, average=0.005 s; distance=26 kB, estimate=36 kB; lsn=0/21CE868, redo lsn=0/21CE810
+2025-12-07 18:07:44.244 UTC [801] LOG:  received fast shutdown request
+2025-12-07 18:07:44.257 UTC [801] LOG:  aborting any active transactions
+2025-12-07 18:07:44.261 UTC [801] LOG:  background worker "logical replication launcher" (PID 807) exited with exit code 1
+2025-12-07 18:07:44.272 UTC [802] LOG:  shutting down
+2025-12-07 18:07:44.278 UTC [802] LOG:  checkpoint starting: shutdown immediate
+2025-12-07 18:07:44.290 UTC [802] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.018 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=33 kB; lsn=0/21CE918, redo lsn=0/21CE918
+2025-12-07 18:07:44.298 UTC [801] LOG:  database system is shut down
+2025-12-08 14:35:18.627 UTC [1196] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-08 14:35:18.629 UTC [1196] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-08 14:35:18.630 UTC [1196] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-08 14:35:18.635 UTC [1196] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-08 14:35:18.653 UTC [1199] LOG:  database system was interrupted; last known up at 2025-12-08 01:51:09 UTC
+2025-12-08 14:35:18.694 UTC [1199] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-08 14:35:18.716 UTC [1199] LOG:  redo starts at 0/224FEB0
+2025-12-08 14:35:18.716 UTC [1199] LOG:  invalid record length at 0/224FFB8: expected at least 24, got 0
+2025-12-08 14:35:18.716 UTC [1199] LOG:  redo done at 0/224FF80 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-08 14:35:18.731 UTC [1197] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-08 14:35:18.794 UTC [1197] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.046 s, total=0.072 s; sync files=2, longest=0.043 s, average=0.023 s; distance=0 kB, estimate=0 kB; lsn=0/224FFB8, redo lsn=0/224FFB8
+2025-12-08 14:35:18.800 UTC [1196] LOG:  database system is ready to accept connections
+2025-12-08 14:36:56.685 UTC [1250] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-08 14:36:56.685 UTC [1250] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-08 14:40:18.894 UTC [1197] LOG:  checkpoint starting: time
+2025-12-08 14:40:19.442 UTC [1197] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.022 s, total=0.549 s; sync files=5, longest=0.011 s, average=0.005 s; distance=8 kB, estimate=8 kB; lsn=0/2252398, redo lsn=0/2252340
+2025-12-08 14:50:28.844 UTC [1305] ERROR:  database "meu_banco" already exists
+2025-12-08 14:50:28.844 UTC [1305] STATEMENT:  CREATE DATABASE meu_banco;
+2025-12-08 14:50:28.880 UTC [1307] ERROR:  role "meu_usuario" already exists
+2025-12-08 14:50:28.880 UTC [1307] STATEMENT:  CREATE ROLE meu_usuario WITH LOGIN PASSWORD 'sua_senha';
+2025-12-08 14:50:29.001 UTC [1311] ERROR:  relation "matriculas_autorizadas" already exists
+2025-12-08 14:50:29.001 UTC [1311] STATEMENT:  CREATE TABLE matriculas_autorizadas (
+	  id SERIAL PRIMARY KEY,
+	  matricula VARCHAR(13) UNIQUE NOT NULL,
+	  role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	  status VARCHAR(10) CHECK (status IN ('ativa', 'inativa')) NOT NULL,
+	  nome_pre_cadastrado VARCHAR(100)
+	);
+2025-12-08 14:50:29.003 UTC [1311] ERROR:  duplicate key value violates unique constraint "matriculas_autorizadas_matricula_key"
+2025-12-08 14:50:29.003 UTC [1311] DETAIL:  Key (matricula)=(00001) already exists.
+2025-12-08 14:50:29.003 UTC [1311] STATEMENT:  INSERT INTO matriculas_autorizadas (matricula, role, status, nome_pre_cadastrado)
+	VALUES 
+	('00001', 'professor', 'ativa', 'Obi-Wan Kenobi'),
+	('2023000000002', 'suporte', 'ativa', 'Jean-Luc Picard'),
+	('00002', 'professor', 'inativa', 'Arya Stark'),
+	('00003', 'professor', 'ativa', 'Spock'),
+	('2023000000005', 'suporte', 'ativa', 'Han Solo'),
+	('00004', 'professor', 'ativa', 'Daenerys Targaryen'),
+	('2023000000007', 'suporte', 'inativa', 'Sansa Stark'),
+	('00005', 'professor', 'ativa', 'Luke Skywalker'),
+	('2023000000009', 'suporte', 'ativa', 'Tyrion Lannister'),
+	('00006', 'professor', 'ativa', 'Leia Organa'),
+	('00007', 'professor', 'inativa', 'Joffrey Baratheon'),
+	('2023000000012', 'suporte', 'ativa', 'Rey Skywalker'),
+	('00008', 'professor', 'ativa', 'James T. Kirk'),
+	('2023000000014', 'suporte', 'inativa', 'Cersei Lannister'),
+	('2023000000015', 'admin', 'ativa', 'Daemon Targaryen');
+2025-12-08 14:50:29.093 UTC [1313] ERROR:  relation "users" already exists
+2025-12-08 14:50:29.093 UTC [1313] STATEMENT:  CREATE TABLE users (
+	    id SERIAL PRIMARY KEY,
+	    nome VARCHAR(100) NOT NULL,
+	    email VARCHAR(100) UNIQUE NOT NULL,
+	    senha_hash TEXT NOT NULL,
+	    matricula VARCHAR(13) UNIQUE NOT NULL,
+	    role VARCHAR(20) CHECK (role IN ('professor', 'suporte', 'admin')) NOT NULL,
+	    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    CONSTRAINT fk_matricula FOREIGN KEY (matricula)
+	        REFERENCES matriculas_autorizadas(matricula)
+	        ON UPDATE CASCADE
+	        ON DELETE RESTRICT
+	);
+2025-12-08 14:50:29.127 UTC [1315] ERROR:  relation "resetsenha" already exists
+2025-12-08 14:50:29.127 UTC [1315] STATEMENT:  CREATE TABLE resetSenha (
+	  id SERIAL PRIMARY KEY,
+	  user_id INT REFERENCES users(id),
+	  token TEXT NOT NULL UNIQUE,
+	  expira_em TIMESTAMP NOT NULL,
+	  usado BOOLEAN DEFAULT FALSE
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-08 14:50:29.230 UTC [1317] ERROR:  trigger "trigger_atualiza_ordem" for relation "ordens" already exists
 2025-12-08 14:50:29.230 UTC [1317] STATEMENT:  CREATE TRIGGER trigger_atualiza_ordem
@@ -739,6 +1467,7 @@
 	FOR EACH ROW
 	EXECUTE FUNCTION atualiza_data_atualizacao();
 2025-12-08 14:50:29.248 UTC [1319] ERROR:  relation "ordens_problemas" already exists
+<<<<<<< HEAD
 2025-12-08 14:50:29.248 UTC [1319] STATEMENT:  CREATE TABLE ordens_problemas (
 	    id SERIAL PRIMARY KEY,
 	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
@@ -760,6 +1489,29 @@
 	    arquivo_nome VARCHAR(255),
 	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
 	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+=======
+2025-12-08 14:50:29.248 UTC [1319] STATEMENT:  CREATE TABLE ordens_problemas (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    equipamento VARCHAR(100) NOT NULL,   -- ex: projetor, computador
+	    tipo_problema VARCHAR(100) NOT NULL -- ex: "não liga", "sem imagem"
+	);
+2025-12-08 14:50:29.271 UTC [1321] ERROR:  relation "ordens_instalacoes" already exists
+2025-12-08 14:50:29.271 UTC [1321] STATEMENT:  CREATE TABLE ordens_instalacoes (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    app_nome VARCHAR(100) NOT NULL,
+	    app_versao VARCHAR(50),
+	    app_link TEXT
+	);
+2025-12-08 14:50:29.310 UTC [1323] ERROR:  relation "ordens_anexos" already exists
+2025-12-08 14:50:29.310 UTC [1323] STATEMENT:  CREATE TABLE ordens_anexos (
+	    id SERIAL PRIMARY KEY,
+	    ordem_id INT NOT NULL REFERENCES ordens(id) ON DELETE CASCADE,
+	    arquivo_nome VARCHAR(255),
+	    arquivo_url TEXT NOT NULL, -- ou caminho no servidor
+	    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
 	);
 2025-12-08 14:50:29.342 UTC [1325] ERROR:  relation "ordens_alertas" already exists
 2025-12-08 14:50:29.342 UTC [1325] STATEMENT:  CREATE TABLE ordens_alertas (
@@ -1029,3 +1781,52 @@
 2025-12-08 23:58:42.452 UTC [500] LOG:  checkpoint starting: shutdown immediate
 2025-12-08 23:58:42.465 UTC [500] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.021 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=25 kB; lsn=0/24B4250, redo lsn=0/24B4250
 2025-12-08 23:58:42.478 UTC [499] LOG:  database system is shut down
+<<<<<<< HEAD
+2025-12-09 10:32:31.341 UTC [275] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2025-12-09 10:32:31.345 UTC [275] LOG:  listening on IPv6 address "::1", port 5432
+2025-12-09 10:32:31.346 UTC [275] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-09 10:32:31.351 UTC [275] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-09 10:32:31.477 UTC [278] LOG:  database system was shut down at 2025-12-08 23:58:42 UTC
+2025-12-09 10:32:31.858 UTC [275] LOG:  database system is ready to accept connections
+2025-12-09 10:37:31.573 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 10:37:34.907 UTC [276] LOG:  checkpoint complete: wrote 35 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.250 s, sync=0.052 s, total=3.334 s; sync files=32, longest=0.004 s, average=0.002 s; distance=79 kB, estimate=79 kB; lsn=0/24C80C0, redo lsn=0/24C8030
+2025-12-09 11:07:32.505 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 11:07:33.875 UTC [276] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.316 s, sync=0.030 s, total=1.370 s; sync files=14, longest=0.006 s, average=0.003 s; distance=33 kB, estimate=74 kB; lsn=0/24D06E0, redo lsn=0/24D0688
+2025-12-09 11:27:33.275 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 11:27:33.991 UTC [276] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.605 s, sync=0.025 s, total=0.716 s; sync files=7, longest=0.011 s, average=0.004 s; distance=15 kB, estimate=68 kB; lsn=0/24D9A78, redo lsn=0/24D4678
+2025-12-09 11:32:34.091 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 11:32:37.093 UTC [276] LOG:  checkpoint complete: wrote 30 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.945 s, sync=0.041 s, total=3.003 s; sync files=24, longest=0.003 s, average=0.002 s; distance=126 kB, estimate=126 kB; lsn=0/24F3F28, redo lsn=0/24F3ED0
+2025-12-09 11:37:34.193 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 11:37:37.139 UTC [276] LOG:  checkpoint complete: wrote 29 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.841 s, sync=0.066 s, total=2.947 s; sync files=29, longest=0.015 s, average=0.003 s; distance=65 kB, estimate=120 kB; lsn=0/250A778, redo lsn=0/2504420
+2025-12-09 11:38:57.735 UTC [847] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-09 11:38:57.735 UTC [847] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-09 11:39:22.593 UTC [848] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-09 11:39:22.593 UTC [848] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-09 11:39:42.908 UTC [850] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-09 11:39:42.908 UTC [850] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-09 11:40:22.243 UTC [851] ERROR:  relation "relatorios_historico" does not exist at character 20
+2025-12-09 11:40:22.243 UTC [851] STATEMENT:  
+	      INSERT INTO relatorios_historico 
+	        (usuario_id, nome_relatorio, tipo_relatorio, formato, tamanho_kb, arquivo_nome)
+	      VALUES ($1, $2, $3, $4, $5, $6)
+	    
+2025-12-09 11:42:34.239 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 11:42:35.099 UTC [276] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.027 s, total=0.860 s; sync files=9, longest=0.011 s, average=0.003 s; distance=29 kB, estimate=110 kB; lsn=0/250BB70, redo lsn=0/250BB18
+2025-12-09 11:47:34.203 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 11:47:34.981 UTC [276] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.703 s, sync=0.038 s, total=0.779 s; sync files=8, longest=0.011 s, average=0.005 s; distance=14 kB, estimate=101 kB; lsn=0/250F588, redo lsn=0/250F530
+2025-12-09 11:52:35.080 UTC [276] LOG:  checkpoint starting: time
+2025-12-09 11:52:35.527 UTC [276] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.020 s, total=0.447 s; sync files=5, longest=0.011 s, average=0.004 s; distance=12 kB, estimate=92 kB; lsn=0/25126E0, redo lsn=0/2512688
+=======
+>>>>>>> f4e2e7e579fcef5e01020295dc6427de3bbf0b95
